@@ -21,6 +21,11 @@ public class UserInfoService {
     @Autowired
     private UserInfoMapper userInfoMapper;
 
+    /**
+     * 查询用户详情
+     * @param id
+     * @return
+     */
     public UserInfo selectUserInfoById(Integer id){
         UserInfoExample example = new UserInfoExample();
         example.createCriteria().andIdEqualTo(id);
@@ -31,6 +36,12 @@ public class UserInfoService {
         return null;
     }
 
+    /**
+     * 查询用户列表
+     * @param userName
+     * @param page
+     * @return
+     */
     public Page selectUserInfo(String userName, Page page){
         UserInfoExample example = new UserInfoExample();
         example.setPage(page);
