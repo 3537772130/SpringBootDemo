@@ -7,7 +7,9 @@ import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,5 +58,20 @@ public class UserInfoService {
             page.setDataSource(userInfoMapper.selectByExample(example));
         }
         return page;
+    }
+
+    /**
+     * 添加/修改用户信息
+     * @param userInfo
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void addOrUpdateUserInfo(UserInfo userInfo){
+        userInfo.setUpdateTime(new Date());
+        if (NullUtil.isNotNullOrEmpty(userInfo.getId())){
+            userInfoMapper.updateByPrimaryKeySelective(userInfo);
+        } else {
+            userInfo.setCreateTime(new Date());
+            userInfoMapper.insertSelective(userInfo);
+        }
     }
 }

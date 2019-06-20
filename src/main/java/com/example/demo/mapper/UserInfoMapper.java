@@ -3,11 +3,8 @@ package com.example.demo.mapper;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface UserInfoMapper {
     long countByExample(UserInfoExample example);
 

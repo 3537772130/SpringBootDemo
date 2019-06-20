@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class UserInfo implements Serializable {
     private Integer id;
@@ -14,6 +15,10 @@ public class UserInfo implements Serializable {
     private String nickName;
 
     private Boolean sex;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -63,5 +68,21 @@ public class UserInfo implements Serializable {
 
     public void setSex(Boolean sex) {
         this.sex = sex;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
