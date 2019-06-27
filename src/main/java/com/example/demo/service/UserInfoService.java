@@ -2,9 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
-import com.example.demo.entity.UserInfo;
-import com.example.demo.entity.UserInfoExample;
-import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
