@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>error</title>
+</head>
+<body>
+    <span th:text="${errorStr}"></span>
+</body>
+<!--<body>-->
+<!--<h1>this is main</h1>-->
+<!--<h2>获取到参数userInfoJson：<span class="userInfoJson" th:text="${userInfoJson}"></h2>-->
+<!--<table>-->
+<!--    <tr>-->
+<!--        <td>编号</td>-->
+<!--        <td>账户</td>-->
+<!--        <td>昵称</td>-->
+<!--        <td>性别</td>-->
+<!--    </tr>-->
+<!--    <tr th:each="user:${list}">-->
+<!--        <td th:text="${user.id}">id</td>-->
+<!--        <td th:text="${user.userName}">userName</td>-->
+<!--        <td th:text="${user.nickName}">nickName</td>-->
+<!--        <td th:text="${user.sex ? '男':'女'}">sex</td>-->
+<!--    </tr>-->
+<!--</table>-->
+<!--<a th:href="${'/test/loadJson?userId=' + userId}">-->
+<!--    <button>加载信息</button>-->
+<!--</a>-->
+<!--</body>-->
+<!--<script type="text/javascript" th:inline="javascript">-->
+<!--    var id = [[${userId}]];-->
+<!--    alert(id);-->
+<!--</script>-->
+</html>

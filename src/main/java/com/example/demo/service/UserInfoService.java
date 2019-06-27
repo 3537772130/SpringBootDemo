@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
+import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.UserInfoExample;
+import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
@@ -22,6 +25,21 @@ import java.util.List;
 public class UserInfoService {
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    /**
+     * 查询web用户信息
+     * @param userName
+     * @return
+     */
+    public UserInfo selectUserInfoByUserName(String userName){
+        UserInfoExample example = new UserInfoExample();
+        example.createCriteria().andUserNameEqualTo(userName);
+        List<UserInfo> list = userInfoMapper.selectByExample(example);
+        if (NullUtil.isNotNullOrEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
 
     /**
      * 查询用户详情

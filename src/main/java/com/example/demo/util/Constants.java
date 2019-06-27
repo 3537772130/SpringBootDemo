@@ -16,4 +16,6 @@ public class Constants {
     public static final String DATE_TIME_ZH = "YYYY年MM月DD日";
     public static final String JODD_FMT_YYYYMMDD = "YYYYMMDD";
     public static final String JODD_FMT_HHMMSS = "hhmmss";
+
+    public static final String WEB_USER_INFO = "WEB_USER_INFO";
 }
