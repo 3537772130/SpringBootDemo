@@ -40,8 +40,10 @@
             left: 550px;
             box-shadow: 0px 10px 5px #DCDCDC;
             background-color: #FFFFFF;
+            opacity: 0.9;
         }
-        .m-form>table{
+
+        .m-form table {
             width: 100%;
         }
         .f-title{
@@ -51,6 +53,11 @@
             font-size: 16px;
             font-weight: bold;
             text-align: center;
+        }
+
+        .f-title > p {
+            position: absolute;
+            bottom: 5px;
         }
         .f-lab{
             width: 35%;
@@ -95,7 +102,9 @@
             <form id="loginForm">
                 <table>
                     <tr>
-                        <td colspan="2" class="f-title">登录平台</td>
+                        <td class="f-title" colspan="2">
+                            <p>登录平台</p>
+                        </td>
                     </tr>
                     <tr>
                         <td class="f-lab">用户名：</td>
@@ -128,9 +137,9 @@
             var userName = $("#userName").val();
             var password = $("#password").val();
             if (isEmpty(userName)){
-                layer.alert("用户名不能为空");
+                layer.msg("用户名不能为空");
             } else if (isEmpty(password)){
-                layer.alert("密码不能为空");
+                layer.msg("密码不能为空");
             } else {
                 var index = layer.load();
                 $.ajax({
@@ -139,9 +148,9 @@
                     dataType: "JSON",
                     data: $("#loginForm").serialize(),
                     success: function (data) {
-                        layer.alert(data.data);
+                        layer.msg(data.data);
                         if (data.code == "1") {
-                            window.location.href = "/user/toMain";
+                            window.location.href = "/user/loadMain";
                         }
                     },
                     complete: function () {
@@ -170,8 +179,8 @@
             }
         } else {
             var element = document.documentElement;
-            if (element.webkitRequestFullscreen) {
-                element.webkitRequestFullscreen();
+            if (element.webkitRequestFullScreen) {
+                element.webkitRequestFullScreen();
             } else if (element.mozRequestFullScreen) {
                 element.mozRequestFullScreen();
             } else if (element.msRequestFullscreen){

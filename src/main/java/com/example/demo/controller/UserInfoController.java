@@ -20,15 +20,11 @@ import javax.servlet.http.HttpServletRequest;
  * @create: 2019-06-14 14:50
  **/
 @Controller
+@RequestMapping(value = "/user")
 public class UserInfoController {
     private static final Logger log = LoggerFactory.getLogger(UserInfoController.class);
     @Autowired
     private UserInfoService userInfoService;
-
-    @RequestMapping(value = "toTest")
-    public String toTest(){
-        return "/test";
-    }
 
     /**
      * 加载index页面
@@ -101,8 +97,15 @@ public class UserInfoController {
         }
     }
 
-    @RequestMapping(value = "/user/toMain")
-    public String toMain(HttpServletRequest request, Model model){
+    /**
+     * 加载用户主页
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/loadMain")
+    public String loadMain(HttpServletRequest request, Model model) {
         try {
             UserInfo userInfo = (UserInfo) SerializeUtil.unserialize((byte[])request.getSession().getAttribute(Constants.WEB_USER_INFO));
             if (null == userInfo){
@@ -112,13 +115,13 @@ public class UserInfoController {
             model.addAttribute("userName", userInfo.getUserName());
             return "/user/main";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("加载主页出错：{}", e);
             model.addAttribute("errorStr", "加载出错");
             return "/error";
         }
     }
 
-    @RequestMapping(value = "/user/addOrUpdateUserInfo")
+    @RequestMapping(value = "/addOrUpdateUserInfo")
     @ResponseBody
     public Object addOrUpdateUserInfo(UserInfo userInfo){
         if (NullUtil.isNullOrEmpty(userInfo.getId())){
