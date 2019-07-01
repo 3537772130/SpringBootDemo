@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
     <title>Title</title>
 </head>
-<body>
-    <h1>hello word!</h1>
-    <a href="/test/toMain?userId=1">加载主页</a>
+<body onload="openSystem()">
+
 </body>
+<script language='javascript' type='text/javascript'>
+    function openSystem() {
+        window.location.href = "/loadLogin";
+        // var width = window.screen.width;
+        // var height = window.screen.height;
+        // var now = new Date();
+        // var number = now.getSeconds();
+        // var winName = String(number);
+        // var features = "fullscreen=1,resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=no,top=0px,left=0px,width=" + width + "px,height=" + height + "px";
+        // var rulewin;
+        // rulewin = window.open("/loadLogin", winName, features);
+        // rulewin.focus();
+        // window.opener = null;
+        // window.open("", "_self");
+        // window.close();
+    }
+</script>
 </html>
