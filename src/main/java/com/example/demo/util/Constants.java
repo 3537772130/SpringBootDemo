@@ -18,4 +18,5 @@ public class Constants {
     public static final String JODD_FMT_HHMMSS = "hhmmss";
 
     public static final String WEB_USER_INFO = "WEB_USER_INFO";
+    public static final String VUE_USER_INFO = "VUE_USER_INFO";
 }

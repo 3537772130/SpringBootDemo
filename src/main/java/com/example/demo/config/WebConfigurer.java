@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.config.intercepors.LoginInterceptor;
+import com.example.demo.config.intercepors.VueUserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfigurer implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptor loginInterceptor;
+    @Autowired
+    private VueUserInterceptor vueUserInterceptor;
 
     // 这个方法是用来配置静态资源的，比如html，js，css，等等
     @Override
@@ -31,5 +34,6 @@ public class WebConfigurer implements WebMvcConfigurer {
         String login = "/user/loadLogin";
         String register = "/user/loadRegister";
         registry.addInterceptor(loginInterceptor).addPathPatterns("/user/**").excludePathPatterns(login, register);
+        registry.addInterceptor(vueUserInterceptor).addPathPatterns("/api/user/**");
     }
 }

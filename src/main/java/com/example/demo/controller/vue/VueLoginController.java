@@ -33,7 +33,7 @@ public class VueLoginController {
      */
     @RequestMapping(value = "checkLogin")
     public Object checkLogin(HttpServletRequest request) {
-        UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) request.getSession().getAttribute(Constants.WEB_USER_INFO));
+        UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) request.getSession().getAttribute(Constants.VUE_USER_INFO));
         if (null == user) {
             return AjaxResponse.error("请先登录");
         }
@@ -67,7 +67,7 @@ public class VueLoginController {
                 log.error("用户名：{}，输入的密码错误：{}", info.getUserName(), info.getUserPass());
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            request.getSession().setAttribute(Constants.WEB_USER_INFO, SerializeUtil.serialize(userInfo));
+            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo));
             return AjaxResponse.success("登录成功");
         } catch (Exception e) {
             log.error("登录出错：{}", e);
@@ -84,7 +84,7 @@ public class VueLoginController {
     @RequestMapping(value = "exitLogin")
     public Object exitLogin(HttpServletRequest request) {
         try {
-            request.getSession().removeAttribute(Constants.WEB_USER_INFO);
+            request.getSession().removeAttribute(Constants.VUE_USER_INFO);
             return AjaxResponse.success();
         } catch (Exception e) {
             log.error("退出登录出错{}", e);
