@@ -67,7 +67,7 @@ public class VueLoginController {
                 log.error("用户名：{}，输入的密码错误：{}", info.getUserName(), info.getUserPass());
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo));
+            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
             return AjaxResponse.success("登录成功");
         } catch (Exception e) {
             log.error("登录出错：{}", e);

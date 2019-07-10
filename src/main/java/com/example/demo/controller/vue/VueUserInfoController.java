@@ -11,10 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @program: SpringBootDemo
  * @description: vue用户信息控制层
@@ -30,18 +26,14 @@ public class VueUserInfoController {
 
     /**
      * 获取登录信息
-     * @param request
+     * @param user
      * @return
      */
     @RequestMapping(value = "getUserInfo")
-    public Object getUserInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, HttpServletRequest request) {
-//        UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) request.getSession().getAttribute(Constants.VUE_USER_INFO));
+    public Object getUserInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user) {
         if (null == user) {
             return AjaxResponse.error("请先登录");
         }
-        Map map = new HashMap<>();
-        map.put("userName", user.getUserName());
-        map.put("nickName", user.getNickName());
-        return AjaxResponse.success(map);
+        return AjaxResponse.success(user);
     }
 }

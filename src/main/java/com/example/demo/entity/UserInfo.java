@@ -1,5 +1,8 @@
 package com.example.demo.entity;
 
+import com.example.demo.util.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,8 +19,10 @@ public class UserInfo implements Serializable {
 
     private Boolean sex;
 
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date createTime;
 
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -84,5 +89,11 @@ public class UserInfo implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public UserInfo getUserInfo(UserInfo info) {
+        info.setUserPass("");
+        info.setEncryptionStr("");
+        return info;
     }
 }
