@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
@@ -153,5 +154,11 @@ public class UserInfoController {
         Page page = PageUtil.initPage(request);
         page = userInfoService.selectUserInfo(userName, page);
         return AjaxResponse.dataTables(page);
+    }
+
+    @RequestMapping(value = "/loadSocket")
+    public String loadSocket(@SessionScope(Constants.WEB_USER_INFO) UserInfo info, Model model) {
+        model.addAttribute("uId", info.getId());
+        return "/socket/socket";
     }
 }
