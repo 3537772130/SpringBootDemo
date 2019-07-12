@@ -57,7 +57,7 @@ public class VueUserInfoController {
                 return AjaxResponse.error("昵称不能含有特殊字符");
             }
             info.setId(user.getId());
-            userInfoService.addOrUpdateUserInfo(info);
+            userInfoService.addOrUpdateUserInfo(info.getUserInfoToPassword(info));
             return AjaxResponse.success(info.getUserInfo(info));
         } catch (Exception e) {
             log.error("修改用户信息出错{}", e);
