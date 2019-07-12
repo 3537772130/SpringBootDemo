@@ -3,8 +3,7 @@ package com.example.demo.controller.vue;
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.UserInfoService;
-import com.example.demo.util.AjaxResponse;
-import com.example.demo.util.Constants;
+import com.example.demo.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @create: 2019-07-03 16:03
  **/
 @RestController
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/api/user/")
 public class VueUserInfoController {
     private static final Logger log = LoggerFactory.getLogger(VueUserInfoController.class);
     @Autowired
@@ -26,6 +25,7 @@ public class VueUserInfoController {
 
     /**
      * 获取登录信息
+     *
      * @param user
      * @return
      */
@@ -35,5 +35,61 @@ public class VueUserInfoController {
             return AjaxResponse.error("请先登录");
         }
         return AjaxResponse.success(user);
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param user
+     * @param info
+     * @return
+     */
+    @RequestMapping(value = "updateUserInfo")
+    public Object updateUserInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, UserInfo info) {
+        try {
+            if (null == info) {
+                return AjaxResponse.error("提交信息失败");
+            }
+            if (NullUtil.isNullOrEmpty(info.getNickName())) {
+                return AjaxResponse.error("用户昵称不能为空");
+            }
+            if (RegularUtil.checkName(user.getNickName().trim())) {
+                return AjaxResponse.error("昵称不能含有特殊字符");
+            }
+            info.setId(user.getId());
+            userInfoService.addOrUpdateUserInfo(info);
+            return AjaxResponse.success(info.getUserInfo(info));
+        } catch (Exception e) {
+            log.error("修改用户信息出错{}", e);
+            return AjaxResponse.error("修改信息失败");
+        }
+    }
+
+    /**
+     * 修改用户密码(登录状态下)
+     *
+     * @param user
+     * @param oldPass
+     * @param newPass
+     * @return
+     */
+    @RequestMapping(value = "updateUserInfoByPassword")
+    public Object updateUserInfoByPassword(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, String oldPass, String newPass) {
+        try {
+            UserInfo userInfo = userInfoService.selectUserInfoById(user.getId());
+            String cipher = DesUtil.encrypt(oldPass, userInfo.getEncryptionStr());
+            cipher = MD5Util.MD5(cipher);
+            if (!cipher.equals(userInfo.getUserPass())) {
+                return AjaxResponse.error("原密码输入错误");
+            }
+            cipher = DesUtil.encrypt(newPass, userInfo.getEncryptionStr());
+            cipher = MD5Util.MD5(cipher);
+            userInfo.setUserPass(cipher);
+            userInfoService.addOrUpdateUserInfo(userInfo.getUserInfoToPassword(userInfo));
+            return AjaxResponse.success("修改密码成功");
+        } catch (Exception e) {
+            log.error("修改密码出错{}", e);
+            return AjaxResponse.error("修改密码失败");
+        }
     }
 }

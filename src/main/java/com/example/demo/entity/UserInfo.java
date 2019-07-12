@@ -96,4 +96,18 @@ public class UserInfo implements Serializable {
         info.setEncryptionStr("");
         return info;
     }
+
+    public UserInfo getUserInfoToUpdate(UserInfo info) {
+        info.setUserName("");
+        info.setUserPass("");
+        info.setEncryptionStr("");
+        return info;
+    }
+
+    public UserInfo getUserInfoToPassword(UserInfo info) {
+        UserInfo user = new UserInfo();
+        user.setId(info.getId());
+        user.setUserPass(info.userPass);
+        return user;
+    }
 }

@@ -74,4 +74,17 @@ public class RegularUtil {
         Matcher m = p.matcher(paymentCode);
         return m.matches();
     }
+
+    /**
+     * 正则校验名称不能含特殊字符
+     *
+     * @param name
+     * @return
+     */
+    public static boolean checkName(String name) {
+        String reg = "^([\\u4e00-\\u9fa5]|[\\uFE30-\\uFFA0]|[\\w])+$";
+        Pattern p = Pattern.compile(reg);
+        Matcher m = p.matcher(name);
+        return m.matches();
+    }
 }
