@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
     /**
-     * @Title: isNumeric
-     * @Description: TODO(是否是整数)
      * @return boolean 返回类型
      * @throws
+     * @Title: isNumeric
+     * @Description: TODO(是否是整数)
      */
     public static boolean isNumeric(String value) {
         Pattern pattern = Pattern.compile("^\\-?[0-9]+$");
@@ -40,11 +40,11 @@ public class StringUtils {
     }
 
     /**
-     * @Title: IsIpAddress
-     * @Description: TODO(是否是IP地址)
      * @param value
      * @return boolean 返回类型
      * @throws
+     * @Title: IsIpAddress
+     * @Description: TODO(是否是IP地址)
      */
     public static boolean isIpAddress(String value) {
         Pattern pattern = Pattern.compile("^(\\d(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])\\d\\.){3}\\d(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])\\d$");
@@ -105,18 +105,17 @@ public class StringUtils {
     }
 
     /**
-     * @Title: isNumeric
-     * @Description: TODO(是否是整数)
      * @return boolean 返回类型
      * @throws
+     * @Title: isNumeric
+     * @Description: TODO(是否是整数)
      */
-    public static boolean isNumericForLength(String value,int length) {
-        Pattern pattern = Pattern.compile("^\\-?[0-9]{"+length+"}$");
+    public static boolean isNumericForLength(String value, int length) {
+        Pattern pattern = Pattern.compile("^\\-?[0-9]{" + length + "}$");
         return pattern.matcher(value).matches();
     }
+
     public static void main(String[] args) {
-
-
         System.out.println(isNumericForLength("111", 3));
     }
 }

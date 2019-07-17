@@ -87,4 +87,17 @@ public class RegularUtil {
         Matcher m = p.matcher(name);
         return m.matches();
     }
+
+    /**
+     * 正则校验字符串是否纯中文
+     *
+     * @param str
+     * @return
+     */
+    public static boolean checkPureChinese(String str) {
+        String reg = "^[\\u4e00-\\u9fa5]+$";
+        Pattern p = Pattern.compile(reg);
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
 }

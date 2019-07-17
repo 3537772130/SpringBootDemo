@@ -1,0 +1,130 @@
+/*全局*/
+/*修改浏览器默认的聚焦黄色背景为白色*/
+input:-webkit-autofill, select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+/*login.html*/
+.login > .parent-level {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+.login > .parent-level > .p-main {
+    width: 950px;
+    height: 100%;
+    margin: auto;
+}
+
+.login > .parent-level > .p-main .c-title {
+    font-size: 24px;
+    font-weight: bold;
+    height: 120px;
+    line-height: 120px;
+    text-indent: 35px;
+}
+
+.login > .parent-level > .p-main .c-img {
+    width: 100%;
+    height: 570px;
+    background-color: #0e90d2;
+    box-shadow: 10px 10px 5px #D3D3D3;
+}
+
+.login > .parent-level > .p-main .c-img > img {
+    width: 100%;
+    height: 100%;
+}
+
+.login > .parent-level > .p-main > .m-form {
+    width: 350px;
+    height: 280px;
+    position: relative;
+    top: -400px;
+    left: 550px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    opacity: 0.8;
+}
+
+.login > .parent-level > .p-main > .m-form table {
+    width: 100%;
+}
+
+.p-main > .m-form table .f-title {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.p-main > .m-form table .f-title > p {
+    position: relative;
+    top: 20px;
+}
+
+.p-main > .m-form table .f-lab {
+    width: 35%;
+    height: 30px;
+    line-height: 30px;
+    text-align: right;
+}
+
+.p-main > .m-form table .f-data {
+    width: 65%;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+}
+
+.p-main > .m-form table .f-data > span {
+    color: red;
+    font-size: 14px;
+}
+
+.p-main > .m-form table .f-data > input {
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    border-bottom: 1px #D3D3D3 solid;
+}
+
+.p-main > .m-form table .click-but {
+    width: 175px;
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    background-color: #0e90d2;
+    margin-top: 10px;
+}
+
+.p-main > .m-form table .click-but:hover {
+    cursor: pointer;
+}
+
+.p-main > .m-form table .login-link {
+    display: inline-block;
+    font-size: 14px;
+    color: #0e90d2;
+    margin-top: 15px;
+}
+
+.p-main > .m-form table .login-link:hover {
+    cursor: pointer;
+    color: #aa0000;
+}
+
+
+/*main.html*/
+.main .main-nick {
+    display: inline-block;
+    border: 1px red solid;
+}

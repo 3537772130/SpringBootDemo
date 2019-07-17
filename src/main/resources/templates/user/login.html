@@ -5,98 +5,16 @@
     <title>登录</title>
     <script src="/js/jquery/jquery-1.10.2.min.js"  type="text/javascript"></script>
     <script src="/js/layer/layer.js"  type="text/javascript"></script>
-    <style type="text/css">
-        .parent-level {
-            width: 100%;
-            height: 100%;
-            margin: auto;
-        }
-        .p-main{
-            width: 950px;
-            height: 100%;
-            margin: auto;
-        }
-        .m-content{
-            /*border:1px red solid;*/
-        }
-        .c-title{
-            font-size: 24px;
-            font-weight: bold;
-            height: 120px;
-            line-height: 120px;
-            text-indent: 35px;
-        }
-        .c-img{
-            width: 100%;
-            height: 270px;
-            background-color: #0e90d2;
-            box-shadow: 10px 10px 5px #D3D3D3;
-        }
-        .m-form{
-            width: 350px;
-            height: 600px;
-            position: relative;
-            top: -350px;
-            left: 550px;
-            box-shadow: 0px 10px 5px #DCDCDC;
-            background-color: #FFFFFF;
-            opacity: 0.9;
-        }
-
-        .m-form table {
-            width: 100%;
-        }
-        .f-title{
-            width: 100%;
-            height: 150px;
-            line-height: 150px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .f-title > p {
-            position: absolute;
-            bottom: 5px;
-        }
-        .f-lab{
-            width: 35%;
-            height: 30px;
-            line-height: 30px;
-            text-align: right;
-        }
-        .f-data{
-            width: 65%;
-            height: 30px;
-            line-height: 30px;
-            text-align: left;
-        }
-        .f-data>span{
-            color: red;
-            font-size: 14px;
-        }
-        .f-data>button{
-            width: 75px;
-            height: 30px;
-            line-height: 30px;
-            border: 1px #0e90d2 solid;
-            font-size: 14px;
-            font-weight: bold;
-            color: #0e90d2;
-            text-align: center;
-            background: -webkit-linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* Safari 5.1 - 6.0 */
-            background: -o-linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* Opera 11.1 - 12.0 */
-            background: -moz-linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* Firefox 3.6 - 15 */
-            background: linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* 标准的语法 */
-        }
-    </style>
+    <link href="/css/pc/style.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body class="login">
 <div class="parent-level">
     <div class="p-main">
         <div class="m-content">
             <div class="c-title">系统登录</div>
-            <div class="c-img"></div>
+            <div class="c-img">
+                <img src="/images/pc/login-bg.jpg">
+            </div>
         </div>
         <div class="m-form">
             <form id="loginForm">
@@ -108,50 +26,63 @@
                     </tr>
                     <tr>
                         <td class="f-lab">用户名：</td>
-                        <td class="f-data"><input type="text" id="userName" name="userName" th:value="adm"></td>
+                        <td class="f-data"><input id="userName" name="userName" placeholder="请输入用户名"
+                                                  th:value="17601301913" type="text"></td>
                     </tr>
                     <tr>
                         <td class="f-lab">密&nbsp;&nbsp;&nbsp;码：</td>
-                        <td class="f-data"><input type="password" id="password" name="password" th:value="aaa123456"></td>
+                        <td class="f-data"><input id="password" name="password" placeholder="请输入密码" th:value="zhouhuahu"
+                                                  type="password">
+                        </td>
                     </tr>
                     <tr>
-                        <td class="f-lab"></td>
-                        <td class="f-data"><checkbox></checkbox><span>记住密码</span></td>
+                        <td colspan="2" style="text-align: center;">
+                            <button class="click-but" id="clickLogin" type="button">登录</button>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="f-lab"></td>
-                        <td class="f-data"><button id="clickLogin" type="button">登录</button></td>
+                        <td style="text-align: right;">
+                            <a class="login-link">忘记密码</a>
+                        </td>
+                        <td style="text-align: center;">
+                            <a class="login-link" style="margin-left: 50px;">马上注册</a>
+                        </td>
                     </tr>
                 </table>
             </form>
         </div>
     </div>
 </div>
-<button id="but" onclick="launchFullscreen()">开启全屏</button>
+<button id="but" onclick="launchFullscreen()" style="display: none;">开启全屏</button>
 </body>
-<script language="JavaScript">
+<script language="JavaScript" th:inline="javascript">
     $(function () {
+        var loginStatus = [[${loginStatus}]];
+        if (loginStatus) {
+            layer.alert("登录账户已过期！请重新登录")
+        }
         $("#but").click();
 
         $("#clickLogin").click(function () {
             var userName = $("#userName").val();
             var password = $("#password").val();
-            if (isEmpty(userName)){
+            if (isEmpty(userName)) {
                 layer.msg("用户名不能为空");
-            } else if (isEmpty(password)){
+            } else if (isEmpty(password)) {
                 layer.msg("密码不能为空");
             } else {
                 var index = layer.load();
                 $.ajax({
-                    url: "/user//doLogin",
+                    url: "/web/doLogin",
                     type: "POST",
                     dataType: "JSON",
                     data: $("#loginForm").serialize(),
                     success: function (data) {
-                        layer.msg(data.data);
-                        if (data.code == "1") {
-                            window.location.href = "/user/loadMain";
-                        }
+                        layer.msg(data.data, {time: 2000}, function () {
+                            if (data.code == "1") {
+                                window.location.href = "/web/user/loadMain";
+                            }
+                        });
                     },
                     complete: function () {
                         layer.close(index);
@@ -162,10 +93,10 @@
     })
 
     //判断字符是否为空的方法
-    function isEmpty(obj){
-        if(typeof obj == "undefined" || obj == null || obj == ""){
+    function isEmpty(obj) {
+        if (typeof obj == "undefined" || obj == null || obj == "") {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -183,7 +114,7 @@
                 element.webkitRequestFullScreen();
             } else if (element.mozRequestFullScreen) {
                 element.mozRequestFullScreen();
-            } else if (element.msRequestFullscreen){
+            } else if (element.msRequestFullscreen) {
                 element.msRequestFullscreen();
             } else {
                 element.requestFullscreen();
