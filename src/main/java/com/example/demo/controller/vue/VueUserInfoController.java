@@ -55,6 +55,9 @@ public class VueUserInfoController {
             if (NullUtil.isNullOrEmpty(info.getNickName())) {
                 return AjaxResponse.error("用户昵称不能为空");
             }
+            if (info.getNickName().getBytes().length > 20) {
+                return AjaxResponse.error("昵称长度过长");
+            }
             if (!RegularUtil.checkName(info.getNickName().trim())) {
                 return AjaxResponse.error("昵称不能含有特殊字符");
             }
