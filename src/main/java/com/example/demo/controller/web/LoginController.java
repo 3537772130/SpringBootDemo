@@ -42,7 +42,13 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "loadLogin")
-    public String loadLogin(boolean loginStatus, Model model) {
+    public String loadLogin(HttpServletRequest request, Model model) {
+        boolean loginStatus = false;
+        Object obj = request.getSession().getAttribute("loginStatus");
+        if (null != obj) {
+            loginStatus = (boolean) obj;
+            request.getSession().removeAttribute("loginStatus");
+        }
         model.addAttribute("loginStatus", NullUtil.isNullOrEmpty(loginStatus) ? false : loginStatus);
         return "/user/login";
     }

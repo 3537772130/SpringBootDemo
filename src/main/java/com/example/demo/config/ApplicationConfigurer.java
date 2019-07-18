@@ -5,6 +5,7 @@ import com.example.demo.config.intercepors.LoginInterceptor;
 import com.example.demo.config.intercepors.VueUserInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import java.util.List;
 
@@ -28,6 +30,17 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
 
     public ApplicationConfigurer() {
         log.info("ApplicationConfigurer容器初始化...");
+    }
+
+    /**
+     * socket配置类, 往 spring 容器中注入ServerEndpointExporter实例
+     *
+     * @return
+     */
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        log.info("注入ServerEndpointExporter实例");
+        return new ServerEndpointExporter();
     }
 
     /**

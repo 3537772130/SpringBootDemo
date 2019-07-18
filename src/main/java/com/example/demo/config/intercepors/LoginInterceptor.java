@@ -30,7 +30,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) session.getAttribute(Constants.WEB_USER_INFO));
         if (user == null){
-            request.setAttribute("loginStatus", true);
+            request.getSession().setAttribute("loginStatus", true);
             request.getRequestDispatcher("/web/toIndex").forward(request, response);
             return false;
         }else {

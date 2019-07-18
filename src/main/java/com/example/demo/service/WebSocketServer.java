@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author: Mr.ZhouHuaHu
  * @create: 2019-07-11 09:04
  **/
-@ServerEndpoint("/websocket/{uId}")
+@ServerEndpoint("/websocket/{sId}")
 @Component
 public class WebSocketServer {
     private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
@@ -28,20 +28,20 @@ public class WebSocketServer {
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
-    //接收uId
-    private String uId = "";
+    //接收sId
+    private String sId = "";
 
     /**
      * 群发自定义消息
      */
-    public static void sendInfo(@PathParam("uId") String uId, String message) {
-        log.info("推送消息到窗口" + uId + "，推送内容:" + message);
+    public static void sendInfo(@PathParam("sId") String sId, String message) {
+        log.info("推送消息到窗口" + sId + "，推送内容:" + message);
         for (WebSocketServer item : webSocketSet) {
             try {
-                //这里可以设定只推送给这个uId的，为null则全部推送
-                if (uId == null) {
+                //这里可以设定只推送给这个sId的，为null则全部推送
+                if (sId == null) {
                     item.sendMessage(message);
-                } else if (item.uId.equals(uId)) {
+                } else if (item.sId.equals(sId)) {
                     item.sendMessage(message);
                 }
             } catch (IOException e) {
@@ -67,12 +67,12 @@ public class WebSocketServer {
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("uId") String uId) {
+    public void onOpen(Session session, @PathParam("sId") String sId) {
         this.session = session;
         webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
-        log.info("有新窗口开始监听:" + uId + ",当前在线人数为" + getOnlineCount());
-        this.uId = uId;
+        log.info("有新窗口开始监听:" + sId + ",当前在线人数为" + getOnlineCount());
+        this.sId = sId;
         try {
             sendMessage("连接成功");
         } catch (IOException e) {
@@ -97,7 +97,7 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("收到来自窗口" + uId + "的信息:" + message);
+        log.info("收到来自窗口" + sId + "的信息:" + message);
         //群发消息
         for (WebSocketServer item : webSocketSet) {
             try {

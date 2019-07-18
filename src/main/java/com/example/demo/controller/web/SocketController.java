@@ -1,15 +1,18 @@
 package com.example.demo.controller.web;
 
+import com.example.demo.config.annotation.SessionScope;
+import com.example.demo.entity.UserInfo;
 import com.example.demo.service.WebSocketServer;
+import com.example.demo.util.AjaxResponse;
+import com.example.demo.util.Constants;
+import jodd.datetime.JDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @program: SpringBootDemo
@@ -18,6 +21,7 @@ import java.io.IOException;
  * @create: 2019-07-11 15:10
  **/
 @RestController
+@RequestMapping(value = "/web/user/socket")
 public class SocketController {
     private static final Logger log = LoggerFactory.getLogger(SocketController.class);
     @Resource
@@ -26,13 +30,13 @@ public class SocketController {
     /**
      * 给指定用户推送消息
      *
-     * @param userName 用户名
+     * @param sId 用户编号
      * @param message  消息
      * @throws IOException
      */
-    @RequestMapping(value = "/socket", method = RequestMethod.GET)
-    public void testSocket1(@RequestParam String userName, @RequestParam String message) {
-        webSocketServer.sendInfo(userName, message);
+    @RequestMapping(value = "/pushMessage", method = RequestMethod.GET)
+    public void pushMessage(@RequestParam String sId, @RequestParam String message) {
+        webSocketServer.sendInfo(sId, message);
     }
 
     /**
@@ -41,8 +45,27 @@ public class SocketController {
      * @param message 消息
      * @throws IOException
      */
-    @RequestMapping(value = "/socket/all", method = RequestMethod.GET)
-    public void testSocket2(@RequestParam String message) {
+    @RequestMapping(value = "/pushMessageToAll", method = RequestMethod.GET)
+    public void pushMessageToAll(@RequestParam String message) {
         webSocketServer.sendInfo(null, message);
+    }
+
+    /**
+     * 发送模拟系统消息
+     *
+     * @param info
+     * @return
+     */
+    @RequestMapping(value = "/sendImitateSystemNews")
+    @ResponseBody
+    public Object sendImitateSystemNews(@SessionScope(Constants.WEB_USER_INFO) UserInfo info) {
+        try {
+            JDateTime time = new JDateTime(new Date());
+            webSocketServer.sendInfo(info.getId().toString(), "模拟系统信息：" + time.toString());
+            return AjaxResponse.success("发送成功");
+        } catch (Exception e) {
+            log.error("模拟系统推送信息出错{}", e);
+            return AjaxResponse.error("发送失败");
+        }
     }
 }

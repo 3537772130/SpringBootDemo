@@ -53,7 +53,7 @@
         </div>
     </div>
 </div>
-<button id="but" onclick="launchFullscreen()" style="display: none;">开启全屏</button>
+<!--<button id="but" onclick="launchFullscreen()" >开启全屏</button>-->
 </body>
 <script language="JavaScript" th:inline="javascript">
     $(function () {
@@ -61,7 +61,7 @@
         if (loginStatus) {
             layer.alert("登录账户已过期！请重新登录")
         }
-        $("#but").click();
+        // $("#but").click();
 
         $("#clickLogin").click(function () {
             var userName = $("#userName").val();

@@ -34,14 +34,14 @@ public class UserInfoController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/loadMain")
+    @RequestMapping(value = "loadMain")
     public String loadMain(@SessionScope(Constants.WEB_USER_INFO) UserInfo userInfo, Model model) {
         try {
             if (null == userInfo) {
                 model.addAttribute("errorStr", "未获取到登录信息");
                 return "/error";
             }
-            log.info("nickName[byte]长度为：{}", userInfo.getNickName().getBytes().length);
+//            log.info("nickName[byte]长度为：{}", userInfo.getNickName().getBytes().length);
             model.addAttribute("user", userInfo);
             return "/user/main";
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class UserInfoController {
         }
     }
 
-    @RequestMapping(value = "/addOrUpdateUserInfo")
+    @RequestMapping(value = "addOrUpdateUserInfo")
     @ResponseBody
     public Object addOrUpdateUserInfo(UserInfo userInfo) {
         if (NullUtil.isNullOrEmpty(userInfo.getId())) {
@@ -88,9 +88,9 @@ public class UserInfoController {
         return AjaxResponse.dataTables(page);
     }
 
-    @RequestMapping(value = "/loadSocket")
+    @RequestMapping(value = "loadSocket")
     public String loadSocket(@SessionScope(Constants.WEB_USER_INFO) UserInfo info, Model model) {
-        model.addAttribute("uId", info.getId());
+        model.addAttribute("sId", info.getId());
         return "/socket/socket";
     }
 
