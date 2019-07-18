@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @program: SpringBootDemo
  * @description: vue用户信息控制层
@@ -45,7 +47,7 @@ public class VueUserInfoController {
      * @return
      */
     @RequestMapping(value = "updateUserInfo")
-    public Object updateUserInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, UserInfo info) {
+    public Object updateUserInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, UserInfo info, HttpServletRequest request) {
         try {
             if (null == info) {
                 return AjaxResponse.error("提交信息失败");
@@ -53,11 +55,12 @@ public class VueUserInfoController {
             if (NullUtil.isNullOrEmpty(info.getNickName())) {
                 return AjaxResponse.error("用户昵称不能为空");
             }
-            if (RegularUtil.checkName(user.getNickName().trim())) {
+            if (!RegularUtil.checkName(info.getNickName().trim())) {
                 return AjaxResponse.error("昵称不能含有特殊字符");
             }
             info.setId(user.getId());
-            userInfoService.addOrUpdateUserInfo(info.getUserInfoToPassword(info));
+            info = userInfoService.addOrUpdateUserInfo(info.getUserInfo(info));
+            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(info.getUserInfo(info)));
             return AjaxResponse.success(info.getUserInfo(info));
         } catch (Exception e) {
             log.error("修改用户信息出错{}", e);
@@ -76,6 +79,18 @@ public class VueUserInfoController {
     @RequestMapping(value = "updateUserInfoByPassword")
     public Object updateUserInfoByPassword(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, String oldPass, String newPass) {
         try {
+            if (NullUtil.isNullOrEmpty(oldPass)) {
+                return AjaxResponse.error("请输入原密码");
+            }
+            if (oldPass.length() < 6 || oldPass.length() > 20) {
+                return AjaxResponse.error("原密码长度不符");
+            }
+            if (NullUtil.isNullOrEmpty(newPass)) {
+                return AjaxResponse.error("请输入新密码");
+            }
+            if (newPass.length() < 6 || newPass.length() > 20) {
+                return AjaxResponse.error("新密码长度不符");
+            }
             UserInfo userInfo = userInfoService.selectUserInfoById(user.getId());
             String cipher = DesUtil.encrypt(oldPass, userInfo.getEncryptionStr());
             cipher = MD5Util.MD5(cipher);

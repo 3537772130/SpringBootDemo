@@ -92,15 +92,15 @@ public class UserInfo implements Serializable {
     }
 
     public UserInfo getUserInfo(UserInfo info) {
-        info.setUserPass("");
-        info.setEncryptionStr("");
+        info.setUserPass(null);
+        info.setEncryptionStr(null);
         return info;
     }
 
     public UserInfo getUserInfoToUpdate(UserInfo info) {
-        info.setUserName("");
-        info.setUserPass("");
-        info.setEncryptionStr("");
+        info.setUserName(null);
+        info.setUserPass(null);
+        info.setEncryptionStr(null);
         return info;
     }
 

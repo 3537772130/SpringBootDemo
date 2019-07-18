@@ -3,6 +3,8 @@ package com.example.demo.config.intercepors;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.util.Constants;
 import com.example.demo.util.SerializeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,11 +22,13 @@ import javax.servlet.http.HttpSession;
  **/
 @Component
 public class VueUserInterceptor implements HandlerInterceptor {
+    private static final Logger log = LoggerFactory.getLogger(VueUserInterceptor.class);
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) session.getAttribute(Constants.VUE_USER_INFO));
         if (user == null) {
+            log.info("===> 登录过期");
             return false;
         } else {
             return true;

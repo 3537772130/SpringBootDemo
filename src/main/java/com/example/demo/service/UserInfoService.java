@@ -80,7 +80,7 @@ public class UserInfoService {
      * @param userInfo
      */
     @Transactional(rollbackFor = Exception.class)
-    public void addOrUpdateUserInfo(UserInfo userInfo){
+    public UserInfo addOrUpdateUserInfo(UserInfo userInfo) {
         userInfo.setUpdateTime(new Date());
         if (NullUtil.isNotNullOrEmpty(userInfo.getId())){
             userInfoMapper.updateByPrimaryKeySelective(userInfo);
@@ -88,5 +88,6 @@ public class UserInfoService {
             userInfo.setCreateTime(new Date());
             userInfoMapper.insertSelective(userInfo);
         }
+        return selectUserInfoById(userInfo.getId());
     }
 }

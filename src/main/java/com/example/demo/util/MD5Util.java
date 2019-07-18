@@ -45,7 +45,7 @@ public class MD5Util {
     }
 
     public static void main(String[] args) {
-        String password = "zhouhuahu";
+        String password = "123456";
         String checkCode = RandomUtil.getRandomStr32();
         System.out.println("密码加密串：" + checkCode);
         String cipher = DesUtil.encrypt(password, checkCode);

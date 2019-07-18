@@ -91,4 +91,14 @@ public class VueLoginController {
             return AjaxResponse.error("退出登录失败");
         }
     }
+
+    /**
+     * 登录过期
+     *
+     * @return
+     */
+    @RequestMapping(value = "loginExpire")
+    public Object loginExpire() {
+        return AjaxResponse.msg("0", "登录过期");
+    }
 }
