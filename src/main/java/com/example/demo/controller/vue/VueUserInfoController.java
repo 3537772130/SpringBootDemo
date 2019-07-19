@@ -80,7 +80,7 @@ public class VueUserInfoController {
      * @return
      */
     @RequestMapping(value = "updateUserInfoByPassword")
-    public Object updateUserInfoByPassword(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, String oldPass, String newPass) {
+    public Object updateUserInfoByPassword(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, String oldPass, String newPass, HttpServletRequest request) {
         try {
             if (NullUtil.isNullOrEmpty(oldPass)) {
                 return AjaxResponse.error("请输入原密码");
@@ -104,6 +104,7 @@ public class VueUserInfoController {
             cipher = MD5Util.MD5(cipher);
             userInfo.setUserPass(cipher);
             userInfoService.addOrUpdateUserInfo(userInfo.getUserInfoToPassword(userInfo));
+            request.getSession().removeAttribute(Constants.VUE_USER_INFO);
             return AjaxResponse.success("修改密码成功");
         } catch (Exception e) {
             log.error("修改密码出错{}", e);

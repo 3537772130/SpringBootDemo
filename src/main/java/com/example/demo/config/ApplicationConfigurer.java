@@ -52,7 +52,7 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
         argumentResolvers.add(new SessionScopeMethod());
-        log.info("已初始化函数参数分解器");
+        log.info("已注入函数参数分解器");
     }
 
     /**
@@ -64,7 +64,7 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         super.addResourceHandlers(registry);
-        log.info("已初始化姿态资源映射");
+        log.info("已注入静态资源映射");
     }
 
     /**
@@ -77,7 +77,7 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/web/user/**");
         registry.addInterceptor(new VueUserInterceptor()).addPathPatterns("/api/user/**");
         super.addInterceptors(registry);
-        log.info("已初始化拦截器");
+        log.info("已注入拦截器");
     }
 
     /**
