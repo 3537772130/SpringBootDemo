@@ -74,13 +74,13 @@ public class VueUserInfoController {
     /**
      * 修改用户密码(登录状态下)
      *
-     * @param user
+     * @param userInfo
      * @param oldPass
      * @param newPass
      * @return
      */
     @RequestMapping(value = "updateUserInfoByPassword")
-    public Object updateUserInfoByPassword(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, String oldPass, String newPass, HttpServletRequest request) {
+    public Object updateUserInfoByPassword(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, String oldPass, String newPass, HttpServletRequest request) {
         try {
             if (NullUtil.isNullOrEmpty(oldPass)) {
                 return AjaxResponse.error("请输入原密码");
@@ -94,18 +94,7 @@ public class VueUserInfoController {
             if (newPass.length() < 6 || newPass.length() > 20) {
                 return AjaxResponse.error("新密码长度不符");
             }
-            UserInfo userInfo = userInfoService.selectUserInfoById(user.getId());
-            String cipher = DesUtil.encrypt(oldPass, userInfo.getEncryptionStr());
-            cipher = MD5Util.MD5(cipher);
-            if (!cipher.equals(userInfo.getUserPass())) {
-                return AjaxResponse.error("原密码输入错误");
-            }
-            cipher = DesUtil.encrypt(newPass, userInfo.getEncryptionStr());
-            cipher = MD5Util.MD5(cipher);
-            userInfo.setUserPass(cipher);
-            userInfoService.addOrUpdateUserInfo(userInfo.getUserInfoToPassword(userInfo));
-            request.getSession().removeAttribute(Constants.VUE_USER_INFO);
-            return AjaxResponse.success("修改密码成功");
+            return userInfoService.updateUserInfoByPassword(userInfo.getId(), oldPass, newPass, request);
         } catch (Exception e) {
             log.error("修改密码出错{}", e);
             return AjaxResponse.error("修改密码失败");

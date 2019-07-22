@@ -29,10 +29,10 @@ public class VueUserInterceptor implements HandlerInterceptor {
         UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) session.getAttribute(Constants.VUE_USER_INFO));
         if (user == null) {
             log.info("===> 登录过期");
+            request.getRequestDispatcher("/api/error").forward(request, response);
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {

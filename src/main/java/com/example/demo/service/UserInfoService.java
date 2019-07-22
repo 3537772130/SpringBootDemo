@@ -3,12 +3,12 @@ package com.example.demo.service;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
 import com.example.demo.mapper.UserInfoMapper;
-import com.example.demo.util.NullUtil;
-import com.example.demo.util.Page;
+import com.example.demo.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -89,5 +89,46 @@ public class UserInfoService {
             userInfoMapper.insertSelective(userInfo);
         }
         return selectUserInfoById(userInfo.getId());
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param id
+     * @param oldPass
+     * @param newPass
+     * @param request
+     * @return
+     */
+    public Object updateUserInfoByPassword(Integer id, String oldPass, String newPass, HttpServletRequest request) {
+        UserInfo userInfo = selectUserInfoById(id);
+        String cipher = DesUtil.encrypt(oldPass, userInfo.getEncryptionStr());
+        cipher = MD5Util.MD5(cipher);
+        if (!cipher.equals(userInfo.getUserPass())) {
+            return AjaxResponse.error("原密码输入错误");
+        }
+        cipher = DesUtil.encrypt(newPass, userInfo.getEncryptionStr());
+        cipher = MD5Util.MD5(cipher);
+        userInfo.setUserPass(cipher);
+        addOrUpdateUserInfo(userInfo.getUserInfoToPassword(userInfo));
+        request.getSession().removeAttribute(Constants.VUE_USER_INFO);
+        return AjaxResponse.success("修改密码成功");
+    }
+
+    /**
+     * 添加用户信息
+     *
+     * @param userInfo
+     */
+    public void saveUserInfo(UserInfo userInfo) {
+        userInfo.setId(null);
+        userInfo.setNickName(userInfo.getNickName().trim());
+        userInfo.setEncryptionStr(RandomUtil.getRandomStr32());
+        String cipher = DesUtil.encrypt(userInfo.getUserPass(), userInfo.getEncryptionStr());
+        cipher = MD5Util.MD5(cipher);
+        userInfo.setUserPass(cipher);
+        userInfo.setCreateTime(new Date());
+        userInfo.setUpdateTime(new Date());
+        userInfoMapper.insertSelective(userInfo);
     }
 }

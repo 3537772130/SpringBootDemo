@@ -26,6 +26,16 @@ public class VueLoginController {
     public UserInfoService userInfoService;
 
     /**
+     * 登录拦截，返回错误码
+     *
+     * @return
+     */
+    @RequestMapping(value = "error")
+    public Object error() {
+        return AjaxResponse.msg("0", "当前访问人数过多，请稍后再试");
+    }
+
+    /**
      * 检查登录状态
      *
      * @param request
@@ -93,12 +103,60 @@ public class VueLoginController {
     }
 
     /**
-     * 登录过期
-     *
+     * 检测手机号码是否已注册
+     * @param userName
      * @return
      */
-    @RequestMapping(value = "loginExpire")
-    public Object loginExpire() {
-        return AjaxResponse.msg("0", "登录过期");
+    @RequestMapping(value = "mobileWhetherRegistered")
+    public Object mobileWhetherRegistered(String userName) {
+        UserInfo info = userInfoService.selectUserInfoByUserName(userName);
+        if (null == info) {
+            return AjaxResponse.success();
+        }
+        return AjaxResponse.error("该账户已被注册");
+    }
+
+    /**
+     * 注册用户
+     *
+     * @param info
+     * @return
+     */
+    @RequestMapping(value = "doRegister")
+    public Object doRegister(UserInfo info) {
+        try {
+            if (null == info) {
+                return AjaxResponse.error("未获取到信息");
+            }
+            if (NullUtil.isNullOrEmpty(info.getUserName())) {
+                return AjaxResponse.error("用户名不能为空");
+            }
+            if (!RegularUtil.checkMobile(info.getUserName())) {
+                return AjaxResponse.error("用户名格式不正确");
+            }
+            if (NullUtil.isNullOrEmpty(info.getNickName())) {
+                return AjaxResponse.error("昵称不能为空");
+            }
+            if (info.getNickName().trim().getBytes().length > 20) {
+                return AjaxResponse.error("昵称长度过长");
+            }
+            if (!RegularUtil.checkName(info.getNickName().trim())) {
+                return AjaxResponse.error("昵称不能含有特殊字符");
+            }
+            if (NullUtil.isNullOrEmpty(info.getSex())) {
+                return AjaxResponse.error("请选择性别");
+            }
+            if (NullUtil.isNullOrEmpty(info.getUserPass())) {
+                return AjaxResponse.error("登录密码不能为空");
+            }
+            if (info.getUserPass().length() < 6 || info.getUserPass().length() > 20) {
+                return AjaxResponse.error("登录密码长度不符");
+            }
+            userInfoService.saveUserInfo(info);
+            return AjaxResponse.success("注册成功");
+        } catch (Exception e) {
+            log.error("注册失败{}", e);
+            return AjaxResponse.error("注册失败");
+        }
     }
 }

@@ -19,6 +19,8 @@ public class UserInfo implements Serializable {
 
     private Boolean sex;
 
+    private String headPortrait;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date createTime;
 
@@ -73,6 +75,14 @@ public class UserInfo implements Serializable {
 
     public void setSex(Boolean sex) {
         this.sex = sex;
+    }
+
+    public String getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait == null ? null : headPortrait.trim();
     }
 
     public Date getCreateTime() {

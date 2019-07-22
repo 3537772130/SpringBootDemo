@@ -8,6 +8,7 @@
     <result column="encryption_str" jdbcType="VARCHAR" property="encryptionStr" />
     <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
     <result column="sex" jdbcType="BIT" property="sex" />
+    <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -70,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_name, user_pass, encryption_str, nick_name, sex, create_time, update_time
+    id, user_name, user_pass, encryption_str, nick_name, sex, head_portrait, create_time,
+    update_time
   </sql>
   <select id="selectByExample" parameterType="com.example.demo.entity.UserInfoExample" resultMap="BaseResultMap">
     select
@@ -88,7 +90,7 @@
     <include refid="PageSuffix" />
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user_info
     where id = #{id,jdbcType=INTEGER}
@@ -104,12 +106,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.example.demo.entity.UserInfo">
-    insert into user_info (id, user_name, user_pass, 
-      encryption_str, nick_name, sex, 
-      create_time, update_time)
-    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPass,jdbcType=VARCHAR}, 
-      #{encryptionStr,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into user_info (id, user_name, user_pass,
+      encryption_str, nick_name, sex,
+      head_portrait, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPass,jdbcType=VARCHAR},
+      #{encryptionStr,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{sex,jdbcType=BIT},
+      #{headPortrait,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.UserInfo" useGeneratedKeys="true">
     insert into user_info
@@ -131,6 +135,9 @@
       </if>
       <if test="sex != null">
         sex,
+      </if>
+      <if test="headPortrait != null">
+        head_portrait,
       </if>
       <if test="createTime != null">
         create_time,
@@ -157,6 +164,9 @@
       </if>
       <if test="sex != null">
         #{sex,jdbcType=BIT},
+      </if>
+      <if test="headPortrait != null">
+        #{headPortrait,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -193,6 +203,9 @@
       <if test="record.sex != null">
         sex = #{record.sex,jdbcType=BIT},
       </if>
+      <if test="record.headPortrait != null">
+        head_portrait = #{record.headPortrait,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -212,6 +225,7 @@
       encryption_str = #{record.encryptionStr,jdbcType=VARCHAR},
       nick_name = #{record.nickName,jdbcType=VARCHAR},
       sex = #{record.sex,jdbcType=BIT},
+    head_portrait = #{record.headPortrait,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -236,6 +250,9 @@
       <if test="sex != null">
         sex = #{sex,jdbcType=BIT},
       </if>
+      <if test="headPortrait != null">
+        head_portrait = #{headPortrait,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -252,6 +269,7 @@
       encryption_str = #{encryptionStr,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=BIT},
+      head_portrait = #{headPortrait,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
