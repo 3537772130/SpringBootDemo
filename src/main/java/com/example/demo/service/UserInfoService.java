@@ -127,6 +127,7 @@ public class UserInfoService {
         String cipher = DesUtil.encrypt(userInfo.getUserPass(), userInfo.getEncryptionStr());
         cipher = MD5Util.MD5(cipher);
         userInfo.setUserPass(cipher);
+        userInfo.setHeadPortrait("/static/img/default-avatar.929932e.jpeg");
         userInfo.setCreateTime(new Date());
         userInfo.setUpdateTime(new Date());
         userInfoMapper.insertSelective(userInfo);
