@@ -74,10 +74,15 @@ public class VueLoginController {
             String cipher = DesUtil.encrypt(info.getUserPass(), userInfo.getEncryptionStr());
             cipher = MD5Util.MD5(cipher);
             if (!cipher.equals(userInfo.getUserPass())) {
-                log.error("用户名：{}，输入的密码错误：{}", info.getUserName(), info.getUserPass());
+                log.error("用户：{}，输入的密码错误：{}", info.getUserName(), info.getUserPass());
                 return AjaxResponse.error("用户名或密码不匹配");
             }
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
+            try {
+                userInfoService.getIpAddressDetails(request);
+            } catch (Exception e) {
+                log.error("获取IP地址详情出错{}", e);
+            }
             return AjaxResponse.success(userInfo.getUserInfo(userInfo));
         } catch (Exception e) {
             log.error("登录出错：{}", e);

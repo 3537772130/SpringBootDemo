@@ -16,6 +16,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @program: SpringBootDemo
@@ -33,6 +36,18 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
     }
 
     /**
+     * 定义异步线程任务
+     *
+     * @author chen.nie
+     * @date 2018/6/27
+     **/
+    @Bean
+    public Executor taskExecutor() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        return executorService;
+    }
+
+    /**
      * socket配置类, 往 spring 容器中注入ServerEndpointExporter实例
      *
      * @return
@@ -42,6 +57,19 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
         log.info("注入ServerEndpointExporter实例");
         return new ServerEndpointExporter();
     }
+
+//    @Bean
+//    public RestTemplate restTemplate(ClientHttpRequestFactory factory){
+//        return new RestTemplate(factory);
+//    }
+//
+//    @Bean
+//    public ClientHttpRequestFactory simpleClientHttpRequestFactory(){
+//        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+//        factory.setConnectTimeout(15000);
+//        factory.setReadTimeout(5000);
+//        return factory;
+//    }
 
     /**
      * 初始化函数参数分解器

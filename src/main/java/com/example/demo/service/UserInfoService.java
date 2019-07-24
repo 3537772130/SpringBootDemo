@@ -4,9 +4,12 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.util.*;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -20,6 +23,8 @@ import java.util.List;
  **/
 @Service
 public class UserInfoService {
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private UserInfoMapper userInfoMapper;
 
@@ -127,9 +132,38 @@ public class UserInfoService {
         String cipher = DesUtil.encrypt(userInfo.getUserPass(), userInfo.getEncryptionStr());
         cipher = MD5Util.MD5(cipher);
         userInfo.setUserPass(cipher);
-        userInfo.setHeadPortrait("/static/img/default-avatar.929932e.jpeg");
+        userInfo.setHeadPortrait("/static/personal/default-avatar.jpeg");
         userInfo.setCreateTime(new Date());
         userInfo.setUpdateTime(new Date());
         userInfoMapper.insertSelective(userInfo);
+    }
+
+    @Async
+    public void getIpAddressDetails(HttpServletRequest request) {
+        // 参数ip
+        String ip = "219.136.134.157";
+        // json_result用于接收返回的json数据
+        String json_result = null;
+        json_result = IpUtil.getAddresses("ip=" + ip, "utf-8");
+        JSONObject json = JSONObject.fromObject(json_result);
+        System.out.println("json数据： " + json);
+        String country = JSONObject.fromObject(json.get("data")).get("country").toString();
+        String region = JSONObject.fromObject(json.get("data")).get("region").toString();
+        String city = JSONObject.fromObject(json.get("data")).get("city").toString();
+        String county = JSONObject.fromObject(json.get("data")).get("county").toString();
+        String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();
+        String area = JSONObject.fromObject(json.get("data")).get("area").toString();
+        System.out.println("国家： " + country);
+        System.out.println("地区： " + area);
+        System.out.println("省份: " + region);
+        System.out.println("城市： " + city);
+        System.out.println("区/县： " + county);
+        System.out.println("互联网服务提供商： " + isp);
+
+        String address = country + "/";
+        address += region + "/";
+        address += city + "/";
+        address += county;
+        System.out.println(address);
     }
 }

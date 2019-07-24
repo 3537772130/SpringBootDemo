@@ -79,7 +79,7 @@ public class LoginController {
             String cipher = DesUtil.encrypt(password, userInfo.getEncryptionStr());
             cipher = MD5Util.MD5(cipher);
             if (!cipher.equals(userInfo.getUserPass())) {
-                log.error("用户名：{}，输入的密码错误：{}", userName, password);
+                log.error("用户：{}，输入的密码错误：{}", userName, password);
                 return AjaxResponse.error("用户名或密码不匹配");
             }
             request.getSession().setAttribute(Constants.WEB_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
