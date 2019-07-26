@@ -2,6 +2,7 @@ package com.example.demo.controller.vue;
 
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.UserLoginLog;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
 import org.slf4j.Logger;
@@ -99,5 +100,24 @@ public class VueUserInfoController {
             log.error("修改密码出错{}", e);
             return AjaxResponse.error("修改密码失败");
         }
+    }
+
+    /**
+     * 查询用户登录记录
+     *
+     * @param userInfo
+     * @param log
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "selectUserLoginLogToPage")
+    public Object selectUserLoginLogToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, UserLoginLog log, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        log.setUserId(userInfo.getId());
+        page = userInfoService.selectUserLoginLogToPage(log, page);
+        if (null == page.getDataSource()) {
+            return AjaxResponse.error("未找到相关记录");
+        }
+        return AjaxResponse.success(page);
     }
 }

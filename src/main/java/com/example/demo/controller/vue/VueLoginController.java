@@ -78,11 +78,11 @@ public class VueLoginController {
                 return AjaxResponse.error("用户名或密码不匹配");
             }
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
-            try {
-                userInfoService.getIpAddressDetails(request);
-            } catch (Exception e) {
-                log.error("获取IP地址详情出错{}", e);
-            }
+//            try {
+//                userInfoService.getIpAddressDetails(request);
+//            } catch (Exception e) {
+//                log.error("获取IP地址详情出错{}", e);
+//            }
             return AjaxResponse.success(userInfo.getUserInfo(userInfo));
         } catch (Exception e) {
             log.error("登录出错：{}", e);

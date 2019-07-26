@@ -1,30 +1,25 @@
 package com.example.demo;
 
-import com.example.demo.util.NullUtil;
+import com.example.demo.mapper.UserLoginLogMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@MapperScan(basePackages = "com.example.demo.mapper.*")
 public class DemoApplicationTests {
+    private static Integer index = 0;
     @Autowired
-    private RestTemplate restTemplate;
+    private UserLoginLogMapper userLoginLogMapper;
+
 
     @Test
     public void contextLoads() {
-        String ip = "192.168.5.52";
-        //新浪查询失败查询阿里
-        String sina = restTemplate.getForObject("http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip={ip}", String.class, ip);
-        if (NullUtil.isNotNullOrEmpty(sina)) {
-            System.out.println(sina);
-        } else {
-            sina = restTemplate.getForObject("http://ip.taobao.com/service/getIpInfo.php?ip={ip}", String.class, ip);
-            System.out.println(sina);
-        }
+
     }
 
 }

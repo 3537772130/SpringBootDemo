@@ -2,14 +2,16 @@ package com.example.demo.service;
 
 import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
+import com.example.demo.entity.UserLoginLog;
+import com.example.demo.entity.UserLoginLogExample;
 import com.example.demo.mapper.UserInfoMapper;
+import com.example.demo.mapper.UserLoginLogMapper;
 import com.example.demo.util.*;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -24,9 +26,9 @@ import java.util.List;
 @Service
 public class UserInfoService {
     @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private UserLoginLogMapper userLoginLogMapper;
 
     /**
      * 查询web用户信息
@@ -137,6 +139,46 @@ public class UserInfoService {
         userInfo.setUpdateTime(new Date());
         userInfoMapper.insertSelective(userInfo);
     }
+
+    /**
+     * 分页-查询用户登录记录
+     *
+     * @param log
+     * @param page
+     * @return
+     */
+    public Page selectUserLoginLogToPage(UserLoginLog log, Page page) {
+        UserLoginLogExample example = new UserLoginLogExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        UserLoginLogExample.Criteria c = example.createCriteria();
+        c.andUserIdEqualTo(log.getUserId());
+//        if (NullUtil.isNotNullOrEmpty(log.getCountry())){
+//            c.andCountryEqualTo(log.getCountry());
+//        }
+        if (NullUtil.isNotNullOrEmpty(log.getRegion())) {
+            c.andRegionEqualTo(log.getRegion());
+        }
+        if (NullUtil.isNotNullOrEmpty(log.getCity())) {
+            c.andCityEqualTo(log.getCity());
+        }
+        if (NullUtil.isNotNullOrEmpty(log.getCounty())) {
+            c.andCountyEqualTo(log.getCounty());
+        }
+        if (NullUtil.isNotNullOrEmpty(log.getArea())) {
+            c.andAreaLike("%" + log.getArea() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(log.getIpAddress())) {
+            c.andIpAddressLike("%" + log.getIpAddress() + "%");
+        }
+        long count = userLoginLogMapper.countByExample(example);
+        if (count > 0) {
+            page.setTotalCount(count);
+            page.setDataSource(userLoginLogMapper.selectByExample(example));
+        }
+        return page;
+    }
+
 
     @Async
     public void getIpAddressDetails(HttpServletRequest request) {
