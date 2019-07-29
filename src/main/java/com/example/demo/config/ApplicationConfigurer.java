@@ -38,10 +38,9 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
     /**
      * 定义异步线程任务
      *
-     * @author chen.nie
      * @date 2018/6/27
      **/
-    @Bean
+    @Bean("taskExecutor")
     public Executor taskExecutor() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         return executorService;
@@ -58,18 +57,6 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
         return new ServerEndpointExporter();
     }
 
-//    @Bean
-//    public RestTemplate restTemplate(ClientHttpRequestFactory factory){
-//        return new RestTemplate(factory);
-//    }
-//
-//    @Bean
-//    public ClientHttpRequestFactory simpleClientHttpRequestFactory(){
-//        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-//        factory.setConnectTimeout(15000);
-//        factory.setReadTimeout(5000);
-//        return factory;
-//    }
 
     /**
      * 初始化函数参数分解器

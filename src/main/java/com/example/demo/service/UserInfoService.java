@@ -32,14 +32,15 @@ public class UserInfoService {
 
     /**
      * 查询web用户信息
+     *
      * @param userName
      * @return
      */
-    public UserInfo selectUserInfoByUserName(String userName){
+    public UserInfo selectUserInfoByUserName(String userName) {
         UserInfoExample example = new UserInfoExample();
         example.createCriteria().andUserNameEqualTo(userName);
         List<UserInfo> list = userInfoMapper.selectByExample(example);
-        if (NullUtil.isNotNullOrEmpty(list)){
+        if (NullUtil.isNotNullOrEmpty(list)) {
             return list.get(0);
         }
         return null;
@@ -47,14 +48,15 @@ public class UserInfoService {
 
     /**
      * 查询用户详情
+     *
      * @param id
      * @return
      */
-    public UserInfo selectUserInfoById(Integer id){
+    public UserInfo selectUserInfoById(Integer id) {
         UserInfoExample example = new UserInfoExample();
         example.createCriteria().andIdEqualTo(id);
         List<UserInfo> list = userInfoMapper.selectByExample(example);
-        if (NullUtil.isNotNullOrEmpty(list)){
+        if (NullUtil.isNotNullOrEmpty(list)) {
             return list.get(0);
         }
         return null;
@@ -62,20 +64,21 @@ public class UserInfoService {
 
     /**
      * 查询用户列表
+     *
      * @param userName
      * @param page
      * @return
      */
-    public Page selectUserInfo(String userName, Page page){
+    public Page selectUserInfo(String userName, Page page) {
         UserInfoExample example = new UserInfoExample();
         example.setPage(page);
         example.setOrderByClause("id desc");
         UserInfoExample.Criteria c = example.createCriteria();
-        if (NullUtil.isNotNullOrEmpty(userName)){
+        if (NullUtil.isNotNullOrEmpty(userName)) {
             c.andUserNameLike(userName + "%");
         }
         long count = userInfoMapper.countByExample(example);
-        if (count > 0){
+        if (count > 0) {
             page.setTotalCount(count);
             page.setDataSource(userInfoMapper.selectByExample(example));
         }
@@ -84,12 +87,13 @@ public class UserInfoService {
 
     /**
      * 添加/修改用户信息
+     *
      * @param userInfo
      */
     @Transactional(rollbackFor = Exception.class)
     public UserInfo addOrUpdateUserInfo(UserInfo userInfo) {
         userInfo.setUpdateTime(new Date());
-        if (NullUtil.isNotNullOrEmpty(userInfo.getId())){
+        if (NullUtil.isNotNullOrEmpty(userInfo.getId())) {
             userInfoMapper.updateByPrimaryKeySelective(userInfo);
         } else {
             userInfo.setCreateTime(new Date());
@@ -140,6 +144,29 @@ public class UserInfoService {
         userInfoMapper.insertSelective(userInfo);
     }
 
+    @Async("taskExecutor")
+    public void saveUserLoginLog(Integer id, HttpServletRequest request) {
+        UserLoginLog record = new UserLoginLog();
+        record.setUserId(id);
+        String ip = IpUtil.getForIp(request);
+        record.setIpAddress(ip);
+        record.setLoginTime(new Date());
+        String json_result = null;
+        json_result = IpUtil.getAddresses("ip=" + ip, "UTF-8");
+        if (NullUtil.isNotNullOrEmpty(json_result)) {
+            JSONObject json = JSONObject.fromObject(json_result);
+            System.out.println("json数据： " + json);
+            JSONObject obj = JSONObject.fromObject(json.get("data"));
+            record.setCountry(obj.get("country").toString());
+            record.setRegion(obj.get("region").toString());
+            record.setCity(obj.get("city").toString());
+            record.setCounty(obj.get("county").toString());
+            record.setArea(obj.get("area").toString());
+            record.setIsp(obj.get("isp").toString());
+        }
+        userLoginLogMapper.insertSelective(record);
+    }
+
     /**
      * 分页-查询用户登录记录
      *
@@ -179,33 +206,4 @@ public class UserInfoService {
         return page;
     }
 
-
-    @Async
-    public void getIpAddressDetails(HttpServletRequest request) {
-        // 参数ip
-        String ip = "219.136.134.157";
-        // json_result用于接收返回的json数据
-        String json_result = null;
-        json_result = IpUtil.getAddresses("ip=" + ip, "utf-8");
-        JSONObject json = JSONObject.fromObject(json_result);
-        System.out.println("json数据： " + json);
-        String country = JSONObject.fromObject(json.get("data")).get("country").toString();
-        String region = JSONObject.fromObject(json.get("data")).get("region").toString();
-        String city = JSONObject.fromObject(json.get("data")).get("city").toString();
-        String county = JSONObject.fromObject(json.get("data")).get("county").toString();
-        String isp = JSONObject.fromObject(json.get("data")).get("isp").toString();
-        String area = JSONObject.fromObject(json.get("data")).get("area").toString();
-        System.out.println("国家： " + country);
-        System.out.println("地区： " + area);
-        System.out.println("省份: " + region);
-        System.out.println("城市： " + city);
-        System.out.println("区/县： " + county);
-        System.out.println("互联网服务提供商： " + isp);
-
-        String address = country + "/";
-        address += region + "/";
-        address += city + "/";
-        address += county;
-        System.out.println(address);
-    }
 }

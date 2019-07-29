@@ -1,6 +1,7 @@
 package com.example.demo.controller.vue;
 
 import com.example.demo.entity.UserInfo;
+import com.example.demo.service.RegionService;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ public class VueLoginController {
     private static final Logger log = LoggerFactory.getLogger(VueLoginController.class);
     @Autowired
     public UserInfoService userInfoService;
+    @Autowired
+    private RegionService regionService;
 
     /**
      * 登录拦截，返回错误码
@@ -78,11 +81,11 @@ public class VueLoginController {
                 return AjaxResponse.error("用户名或密码不匹配");
             }
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
-//            try {
-//                userInfoService.getIpAddressDetails(request);
-//            } catch (Exception e) {
-//                log.error("获取IP地址详情出错{}", e);
-//            }
+            try {
+                userInfoService.saveUserLoginLog(userInfo.getId(), request);
+            } catch (Exception e) {
+                log.error("添加登录日志出错{}", e);
+            }
             return AjaxResponse.success(userInfo.getUserInfo(userInfo));
         } catch (Exception e) {
             log.error("登录出错：{}", e);
@@ -162,6 +165,21 @@ public class VueLoginController {
         } catch (Exception e) {
             log.error("注册失败{}", e);
             return AjaxResponse.error("注册失败");
+        }
+    }
+
+    /**
+     * 查询地域信息集合
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "selectRegionList")
+    public Object selectRegionList(String id) {
+        if (NullUtil.isNotNullOrEmpty(id)) {
+            return AjaxResponse.success(regionService.selectRegionList(Integer.parseInt(id)));
+        } else {
+            return AjaxResponse.success(regionService.selectProvinceList());
         }
     }
 }
