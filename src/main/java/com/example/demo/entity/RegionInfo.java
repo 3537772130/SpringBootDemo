@@ -3,11 +3,16 @@ package com.example.demo.entity;
 import java.io.Serializable;
 
 public class RegionInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private String code;
+
     private String name;
+
     private Integer parentId;
+
+    private static final long serialVersionUID = 1L;
+    private Integer level;
 
     public Integer getId() {
         return id;
@@ -39,5 +44,13 @@ public class RegionInfo implements Serializable {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

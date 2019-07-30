@@ -115,9 +115,6 @@ public class VueUserInfoController {
         Page page = PageUtil.initPage(request);
         log.setUserId(userInfo.getId());
         page = userInfoService.selectUserLoginLogToPage(log, page);
-        if (null == page.getDataSource()) {
-            return AjaxResponse.error("未找到相关记录");
-        }
         return AjaxResponse.success(page);
     }
 }

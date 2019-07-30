@@ -1,9 +1,11 @@
 package com.example.demo.controller.vue;
 
+import com.example.demo.entity.RegionInfo;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @program: SpringBootDemo
@@ -170,16 +173,27 @@ public class VueLoginController {
 
     /**
      * 查询地域信息集合
-     *
      * @param id
      * @return
      */
     @RequestMapping(value = "selectRegionList")
     public Object selectRegionList(String id) {
+        List<RegionInfo> list = null;
         if (NullUtil.isNotNullOrEmpty(id)) {
-            return AjaxResponse.success(regionService.selectRegionList(Integer.parseInt(id)));
+            list = regionService.selectRegionList(Integer.parseInt(id), null);
         } else {
-            return AjaxResponse.success(regionService.selectProvinceList());
+            list = regionService.selectProvinceList();
         }
+        return AjaxResponse.success(list);
+    }
+
+    /**
+     * 查询地域信息JSON
+     *
+     * @return
+     */
+    @RequestMapping(value = "selectRegionJson")
+    public Object selectRegionJson() {
+        return AjaxResponse.success(new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
     }
 }
