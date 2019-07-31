@@ -11,7 +11,7 @@ import java.util.Map;
  * @create: 2019-06-19 17:18
  **/
 public class Constants {
-    //时间格式
+    // 时间格式
     public static final String DATE_TIME_JDK = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_TIME_JODD = "YYYY-MM-DD hh:mm:ss";
     public static final String DATE_TIME_YMDHM = "YYYY-MM-DD hh:mm";
@@ -24,7 +24,10 @@ public class Constants {
     public static final String WEB_USER_INFO = "EXAMPLE_WEB_USER_INFO";
     public static final String VUE_USER_INFO = "EXAMPLE_VUE_USER_INFO";
 
+    // 地域信息集合
+    // v-k：ID-NAME
     public static final List<Map> REGION_MAP_TO_ID = new ArrayList<>();
+    // v-k：NAME-NAME
     public static final List<Map> REGION_MAP_TO_NAME = new ArrayList<>();
 
 }
