@@ -4,6 +4,7 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserInfoExample;
 import com.example.demo.entity.UserLoginLog;
 import com.example.demo.entity.UserLoginLogExample;
+import com.example.demo.mapper.CommonMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserLoginLogMapper;
 import com.example.demo.util.*;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: SpringBootDemo
@@ -29,6 +31,8 @@ public class UserInfoService {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private UserLoginLogMapper userLoginLogMapper;
+    @Autowired
+    private CommonMapper commonMapper;
 
     /**
      * 查询web用户信息
@@ -127,6 +131,21 @@ public class UserInfoService {
     }
 
     /**
+     * 修改用户头像
+     *
+     * @param id
+     * @param headPortrait
+     * @return
+     */
+    public String updateUserInfoByHeadPortrait(Integer id, String headPortrait) {
+        UserInfo info = new UserInfo();
+        info.setId(id);
+        info.setHeadPortrait(headPortrait.replace("static\\", ""));
+        userInfoMapper.updateByPrimaryKeySelective(info);
+        return info.getHeadPortrait();
+    }
+
+    /**
      * 添加用户信息
      *
      * @param userInfo
@@ -138,12 +157,16 @@ public class UserInfoService {
         String cipher = DesUtil.encrypt(userInfo.getUserPass(), userInfo.getEncryptionStr());
         cipher = MD5Util.MD5(cipher);
         userInfo.setUserPass(cipher);
-        userInfo.setHeadPortrait("/static/personal/default-avatar.jpeg");
         userInfo.setCreateTime(new Date());
         userInfo.setUpdateTime(new Date());
         userInfoMapper.insertSelective(userInfo);
     }
 
+    /**
+     * 添加用户登录日志
+     * @param id
+     * @param request
+     */
     @Async("taskExecutor")
     public void saveUserLoginLog(Integer id, HttpServletRequest request) {
         UserLoginLog record = new UserLoginLog();
@@ -174,15 +197,12 @@ public class UserInfoService {
      * @param page
      * @return
      */
-    public Page selectUserLoginLogToPage(UserLoginLog log, Page page) {
+    public Page selectUserLoginLogToPage(UserLoginLog log, String startDate, String endDate, Page page) {
         UserLoginLogExample example = new UserLoginLogExample();
         example.setPage(page);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("login_time desc");
         UserLoginLogExample.Criteria c = example.createCriteria();
         c.andUserIdEqualTo(log.getUserId());
-//        if (NullUtil.isNotNullOrEmpty(log.getCountry())){
-//            c.andCountryEqualTo(log.getCountry());
-//        }
         if (NullUtil.isNotNullOrEmpty(log.getRegion())) {
             c.andRegionEqualTo(log.getRegion());
         }
@@ -198,6 +218,12 @@ public class UserInfoService {
         if (NullUtil.isNotNullOrEmpty(log.getIpAddress())) {
             c.andIpAddressLike("%" + log.getIpAddress() + "%");
         }
+        if (NullUtil.isNotNullOrEmpty(startDate)) {
+            c.andLoginTimeGreaterThanOrEqualTo(DateUtils.strToDate(startDate));
+        }
+        if (NullUtil.isNotNullOrEmpty(endDate)) {
+            c.andLoginTimeLessThanOrEqualTo(DateUtils.strToDate(endDate));
+        }
         long count = userLoginLogMapper.countByExample(example);
         if (count > 0) {
             page.setTotalCount(count);
@@ -206,4 +232,21 @@ public class UserInfoService {
         return page;
     }
 
+    /**
+     * 查询用户近期几个月活跃度情况
+     *
+     * @param userId
+     * @param monthNumber
+     * @return
+     */
+    public List<Map> selectUserActivity(Integer userId, Integer monthNumber) {
+        String sql = "SELECT log.user_id,log.login_time,COUNT(*) AS activity FROM ( " +
+                "SELECT id,user_id,DATE_FORMAT(login_time,'%Y-%m') AS login_time " +
+                "FROM user_login_log " +
+                "WHERE user_id = " + userId + " " +
+                "ORDER BY login_time ASC " +
+                ") AS log " +
+                "GROUP BY log.login_time ORDER BY log.login_time DESC LIMIT " + monthNumber;
+        return commonMapper.selectListMap(sql);
+    }
 }

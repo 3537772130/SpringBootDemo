@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.config.argumentResolver.SessionScopeMethod;
 import com.example.demo.config.intercepors.LoginInterceptor;
+import com.example.demo.config.intercepors.VueStaticInterceptor;
 import com.example.demo.config.intercepors.VueUserInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +92,7 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/web/user/**");
         registry.addInterceptor(new VueUserInterceptor()).addPathPatterns("/api/user/**");
+        registry.addInterceptor(new VueStaticInterceptor()).addPathPatterns("/api/images/**");
         super.addInterceptors(registry);
         log.info("已注入拦截器");
     }

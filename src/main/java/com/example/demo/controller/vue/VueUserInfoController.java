@@ -1,17 +1,27 @@
 package com.example.demo.controller.vue;
 
 import com.example.demo.config.annotation.SessionScope;
+import com.example.demo.entity.CheckResult;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserLoginLog;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @program: SpringBootDemo
@@ -103,18 +113,83 @@ public class VueUserInfoController {
     }
 
     /**
+     * 上传用户头像
+     *
+     * @param userInfo
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadUserHeadPortrait")
+    public Object uploadUserHeadPortrait(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("HeadPortrait") MultipartFile multipartFile,
+                                         HttpServletRequest request) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String oldFileName = userInfo.getHeadPortrait().replace("api\\", "static\\");
+            String fileName = "USER-" + userInfo.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
+            String filePath = "static\\images\\head-portrait\\";
+            String rootPath = GetWebProjectRealPathTool.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String headPortrait = filePath + fileName;
+            headPortrait = userInfoService.updateUserInfoByHeadPortrait(userInfo.getId(), headPortrait);
+            userInfo.setHeadPortrait("api\\" + headPortrait);
+            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
+            File file = new File(GetWebProjectRealPathTool.getClassPath(oldFileName));
+            if (file.exists()) {
+                file.delete();
+            }
+            return AjaxResponse.success("上传成功");
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.success("上传失败");
+        }
+    }
+
+    /**
      * 查询用户登录记录
      *
      * @param userInfo
      * @param log
+     * @param startDate
+     * @param endDate
      * @param request
      * @return
      */
     @RequestMapping(value = "selectUserLoginLogToPage")
-    public Object selectUserLoginLogToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, UserLoginLog log, HttpServletRequest request) {
+    public Object selectUserLoginLogToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, UserLoginLog log,
+                                           String startDate, String endDate, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         log.setUserId(userInfo.getId());
-        page = userInfoService.selectUserLoginLogToPage(log, page);
+        page = userInfoService.selectUserLoginLogToPage(log, startDate, endDate, page);
         return AjaxResponse.success(page);
+    }
+
+    /**
+     * 查询用户近期活跃情况
+     *
+     * @param userInfo
+     * @return
+     */
+    @RequestMapping(value = "selectUserActivity")
+    public Object selectUserActivity(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo) {
+        List<Map> list = userInfoService.selectUserActivity(userInfo.getId(), 6);
+        if (NullUtil.isNullOrEmpty(list)) {
+            return AjaxResponse.error("为查询到相关记录");
+        }
+        List<String> monthList = new ArrayList<>();
+        List<String> activityList = new ArrayList<>();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            Map map = list.get(i);
+            String month = map.get("login_time").toString();
+            monthList.add(Constants.MONTH_MAP.get(month.substring(5, 7)));
+            activityList.add(map.get("activity").toString());
+        }
+        Map map = new HashMap();
+        map.put("monthJson", new JSONArray(monthList).toString());
+        map.put("activityJson", new JSONArray(activityList).toString());
+        return AjaxResponse.success(map);
     }
 }
