@@ -157,7 +157,7 @@ public class ImageUtil {
             String printText = st.nextToken();
             //判断字符宽度, 保存最宽的字符的宽度
             Rectangle2D rec = getRectangle2D(map, printText);
-            tempWidth = (int) rec.getWidth();
+            tempWidth = (int) rec.getWidth() + 10;
             if (textWidth < tempWidth) {
                 textWidth = tempWidth;
             }

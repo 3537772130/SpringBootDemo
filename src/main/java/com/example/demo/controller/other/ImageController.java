@@ -15,6 +15,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import java.net.URLEncoder;
 
 /**
  * @program: SpringBootDemo
@@ -59,15 +60,17 @@ public class ImageController {
      * @return
      */
     @RequestMapping("/api/image/getImage")
-    public String getImage(ImageInfo info) {
+    public String getImage(ImageInfo info) throws Exception {
+        String fontFamily = NullUtil.isNotNullOrEmpty(info.getFontFamily()) ? URLEncoder.encode(info.getFontFamily(), "utf-8") : null;
+        String text = NullUtil.isNotNullOrEmpty(info.getText()) ? URLEncoder.encode(info.getText(), "utf-8") : null;
         String param = "?italic=" + info.getItalic() +
                 "&bold=" + info.getBold() +
                 "&layout=" + info.getLayout() +
                 "&align=" + info.getAlign() +
-                "&fontFamily=" + info.getFontFamily() +
+                "&fontFamily=" + fontFamily +
                 "&fontSize=" + info.getFontSize() +
                 "&color=" + info.getColor() +
-                "&text=" + info.getText() +
+                "&text=" + text +
                 "&width=" + info.getWidth() +
                 "&height=" + info.getHeight();
         return "redirect:/image/getImage" + param;

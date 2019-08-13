@@ -14,7 +14,7 @@ public class ImageInfo {
     private String align = "centre";// 对齐方式
     private String fontFamily = "黑体";// 字体
     private Integer fontSize = 24;// 字体大小
-    private String color = "3100463";// 字体颜色
+    private String color = "3100463";// 字体颜色 十进制颜色码
     private String text;// 文本信息
     private Integer width = 200;// 图片宽度
     private Integer height = 60;// 图片高度
