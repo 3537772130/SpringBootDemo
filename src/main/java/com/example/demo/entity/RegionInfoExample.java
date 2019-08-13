@@ -176,143 +176,73 @@ public class RegionInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andCodeIsNull() {
-            addCriterion("code is null");
+        public Criteria andAreaNameIsNull() {
+            addCriterion("area_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andCodeIsNotNull() {
-            addCriterion("code is not null");
+        public Criteria andAreaNameIsNotNull() {
+            addCriterion("area_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCodeEqualTo(String value) {
-            addCriterion("code =", value, "code");
+        public Criteria andAreaNameEqualTo(String value) {
+            addCriterion("area_name =", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeNotEqualTo(String value) {
-            addCriterion("code <>", value, "code");
+        public Criteria andAreaNameNotEqualTo(String value) {
+            addCriterion("area_name <>", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeGreaterThan(String value) {
-            addCriterion("code >", value, "code");
+        public Criteria andAreaNameGreaterThan(String value) {
+            addCriterion("area_name >", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("code >=", value, "code");
+        public Criteria andAreaNameGreaterThanOrEqualTo(String value) {
+            addCriterion("area_name >=", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeLessThan(String value) {
-            addCriterion("code <", value, "code");
+        public Criteria andAreaNameLessThan(String value) {
+            addCriterion("area_name <", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeLessThanOrEqualTo(String value) {
-            addCriterion("code <=", value, "code");
+        public Criteria andAreaNameLessThanOrEqualTo(String value) {
+            addCriterion("area_name <=", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeLike(String value) {
-            addCriterion("code like", value, "code");
+        public Criteria andAreaNameLike(String value) {
+            addCriterion("area_name like", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeNotLike(String value) {
-            addCriterion("code not like", value, "code");
+        public Criteria andAreaNameNotLike(String value) {
+            addCriterion("area_name not like", value, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeIn(List<String> values) {
-            addCriterion("code in", values, "code");
+        public Criteria andAreaNameIn(List<String> values) {
+            addCriterion("area_name in", values, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeNotIn(List<String> values) {
-            addCriterion("code not in", values, "code");
+        public Criteria andAreaNameNotIn(List<String> values) {
+            addCriterion("area_name not in", values, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeBetween(String value1, String value2) {
-            addCriterion("code between", value1, value2, "code");
+        public Criteria andAreaNameBetween(String value1, String value2) {
+            addCriterion("area_name between", value1, value2, "areaName");
             return (Criteria) this;
         }
 
-        public Criteria andCodeNotBetween(String value1, String value2) {
-            addCriterion("code not between", value1, value2, "code");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameIsNull() {
-            addCriterion("name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameIsNotNull() {
-            addCriterion("name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameEqualTo(String value) {
-            addCriterion("name =", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameNotEqualTo(String value) {
-            addCriterion("name <>", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameGreaterThan(String value) {
-            addCriterion("name >", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameGreaterThanOrEqualTo(String value) {
-            addCriterion("name >=", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameLessThan(String value) {
-            addCriterion("name <", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameLessThanOrEqualTo(String value) {
-            addCriterion("name <=", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameLike(String value) {
-            addCriterion("name like", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameNotLike(String value) {
-            addCriterion("name not like", value, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameIn(List<String> values) {
-            addCriterion("name in", values, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameNotIn(List<String> values) {
-            addCriterion("name not in", values, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameBetween(String value1, String value2) {
-            addCriterion("name between", value1, value2, "name");
-            return (Criteria) this;
-        }
-
-        public Criteria andNameNotBetween(String value1, String value2) {
-            addCriterion("name not between", value1, value2, "name");
+        public Criteria andAreaNameNotBetween(String value1, String value2) {
+            addCriterion("area_name not between", value1, value2, "areaName");
             return (Criteria) this;
         }
 
@@ -376,6 +306,76 @@ public class RegionInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andShortNameIsNull() {
+            addCriterion("short_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameIsNotNull() {
+            addCriterion("short_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameEqualTo(String value) {
+            addCriterion("short_name =", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameNotEqualTo(String value) {
+            addCriterion("short_name <>", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameGreaterThan(String value) {
+            addCriterion("short_name >", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameGreaterThanOrEqualTo(String value) {
+            addCriterion("short_name >=", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameLessThan(String value) {
+            addCriterion("short_name <", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameLessThanOrEqualTo(String value) {
+            addCriterion("short_name <=", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameLike(String value) {
+            addCriterion("short_name like", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameNotLike(String value) {
+            addCriterion("short_name not like", value, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameIn(List<String> values) {
+            addCriterion("short_name in", values, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameNotIn(List<String> values) {
+            addCriterion("short_name not in", values, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameBetween(String value1, String value2) {
+            addCriterion("short_name between", value1, value2, "shortName");
+            return (Criteria) this;
+        }
+
+        public Criteria andShortNameNotBetween(String value1, String value2) {
+            addCriterion("short_name not between", value1, value2, "shortName");
+            return (Criteria) this;
+        }
+
         public Criteria andLevelIsNull() {
             addCriterion("level is null");
             return (Criteria) this;
@@ -433,6 +433,426 @@ public class RegionInfoExample {
 
         public Criteria andLevelNotBetween(Integer value1, Integer value2) {
             addCriterion("level not between", value1, value2, "level");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagIsNull() {
+            addCriterion("flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagIsNotNull() {
+            addCriterion("flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagEqualTo(Integer value) {
+            addCriterion("flag =", value, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagNotEqualTo(Integer value) {
+            addCriterion("flag <>", value, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagGreaterThan(Integer value) {
+            addCriterion("flag >", value, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("flag >=", value, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagLessThan(Integer value) {
+            addCriterion("flag <", value, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("flag <=", value, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagIn(List<Integer> values) {
+            addCriterion("flag in", values, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagNotIn(List<Integer> values) {
+            addCriterion("flag not in", values, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagBetween(Integer value1, Integer value2) {
+            addCriterion("flag between", value1, value2, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("flag not between", value1, value2, "flag");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngIsNull() {
+            addCriterion("WGS84_LNG is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngIsNotNull() {
+            addCriterion("WGS84_LNG is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngEqualTo(Double value) {
+            addCriterion("WGS84_LNG =", value, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngNotEqualTo(Double value) {
+            addCriterion("WGS84_LNG <>", value, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngGreaterThan(Double value) {
+            addCriterion("WGS84_LNG >", value, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngGreaterThanOrEqualTo(Double value) {
+            addCriterion("WGS84_LNG >=", value, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngLessThan(Double value) {
+            addCriterion("WGS84_LNG <", value, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngLessThanOrEqualTo(Double value) {
+            addCriterion("WGS84_LNG <=", value, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngIn(List<Double> values) {
+            addCriterion("WGS84_LNG in", values, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngNotIn(List<Double> values) {
+            addCriterion("WGS84_LNG not in", values, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngBetween(Double value1, Double value2) {
+            addCriterion("WGS84_LNG between", value1, value2, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LngNotBetween(Double value1, Double value2) {
+            addCriterion("WGS84_LNG not between", value1, value2, "wgs84Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatIsNull() {
+            addCriterion("WGS84_LAT is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatIsNotNull() {
+            addCriterion("WGS84_LAT is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatEqualTo(Double value) {
+            addCriterion("WGS84_LAT =", value, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatNotEqualTo(Double value) {
+            addCriterion("WGS84_LAT <>", value, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatGreaterThan(Double value) {
+            addCriterion("WGS84_LAT >", value, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatGreaterThanOrEqualTo(Double value) {
+            addCriterion("WGS84_LAT >=", value, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatLessThan(Double value) {
+            addCriterion("WGS84_LAT <", value, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatLessThanOrEqualTo(Double value) {
+            addCriterion("WGS84_LAT <=", value, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatIn(List<Double> values) {
+            addCriterion("WGS84_LAT in", values, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatNotIn(List<Double> values) {
+            addCriterion("WGS84_LAT not in", values, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatBetween(Double value1, Double value2) {
+            addCriterion("WGS84_LAT between", value1, value2, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andWgs84LatNotBetween(Double value1, Double value2) {
+            addCriterion("WGS84_LAT not between", value1, value2, "wgs84Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngIsNull() {
+            addCriterion("GCJ02_LNG is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngIsNotNull() {
+            addCriterion("GCJ02_LNG is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngEqualTo(Double value) {
+            addCriterion("GCJ02_LNG =", value, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngNotEqualTo(Double value) {
+            addCriterion("GCJ02_LNG <>", value, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngGreaterThan(Double value) {
+            addCriterion("GCJ02_LNG >", value, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngGreaterThanOrEqualTo(Double value) {
+            addCriterion("GCJ02_LNG >=", value, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngLessThan(Double value) {
+            addCriterion("GCJ02_LNG <", value, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngLessThanOrEqualTo(Double value) {
+            addCriterion("GCJ02_LNG <=", value, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngIn(List<Double> values) {
+            addCriterion("GCJ02_LNG in", values, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngNotIn(List<Double> values) {
+            addCriterion("GCJ02_LNG not in", values, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngBetween(Double value1, Double value2) {
+            addCriterion("GCJ02_LNG between", value1, value2, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LngNotBetween(Double value1, Double value2) {
+            addCriterion("GCJ02_LNG not between", value1, value2, "gcj02Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatIsNull() {
+            addCriterion("GCJ02_LAT is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatIsNotNull() {
+            addCriterion("GCJ02_LAT is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatEqualTo(Double value) {
+            addCriterion("GCJ02_LAT =", value, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatNotEqualTo(Double value) {
+            addCriterion("GCJ02_LAT <>", value, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatGreaterThan(Double value) {
+            addCriterion("GCJ02_LAT >", value, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatGreaterThanOrEqualTo(Double value) {
+            addCriterion("GCJ02_LAT >=", value, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatLessThan(Double value) {
+            addCriterion("GCJ02_LAT <", value, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatLessThanOrEqualTo(Double value) {
+            addCriterion("GCJ02_LAT <=", value, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatIn(List<Double> values) {
+            addCriterion("GCJ02_LAT in", values, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatNotIn(List<Double> values) {
+            addCriterion("GCJ02_LAT not in", values, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatBetween(Double value1, Double value2) {
+            addCriterion("GCJ02_LAT between", value1, value2, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andGcj02LatNotBetween(Double value1, Double value2) {
+            addCriterion("GCJ02_LAT not between", value1, value2, "gcj02Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngIsNull() {
+            addCriterion("BD09_LNG is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngIsNotNull() {
+            addCriterion("BD09_LNG is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngEqualTo(Double value) {
+            addCriterion("BD09_LNG =", value, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngNotEqualTo(Double value) {
+            addCriterion("BD09_LNG <>", value, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngGreaterThan(Double value) {
+            addCriterion("BD09_LNG >", value, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngGreaterThanOrEqualTo(Double value) {
+            addCriterion("BD09_LNG >=", value, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngLessThan(Double value) {
+            addCriterion("BD09_LNG <", value, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngLessThanOrEqualTo(Double value) {
+            addCriterion("BD09_LNG <=", value, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngIn(List<Double> values) {
+            addCriterion("BD09_LNG in", values, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngNotIn(List<Double> values) {
+            addCriterion("BD09_LNG not in", values, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngBetween(Double value1, Double value2) {
+            addCriterion("BD09_LNG between", value1, value2, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LngNotBetween(Double value1, Double value2) {
+            addCriterion("BD09_LNG not between", value1, value2, "bd09Lng");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatIsNull() {
+            addCriterion("BD09_LAT is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatIsNotNull() {
+            addCriterion("BD09_LAT is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatEqualTo(Double value) {
+            addCriterion("BD09_LAT =", value, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatNotEqualTo(Double value) {
+            addCriterion("BD09_LAT <>", value, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatGreaterThan(Double value) {
+            addCriterion("BD09_LAT >", value, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatGreaterThanOrEqualTo(Double value) {
+            addCriterion("BD09_LAT >=", value, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatLessThan(Double value) {
+            addCriterion("BD09_LAT <", value, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatLessThanOrEqualTo(Double value) {
+            addCriterion("BD09_LAT <=", value, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatIn(List<Double> values) {
+            addCriterion("BD09_LAT in", values, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatNotIn(List<Double> values) {
+            addCriterion("BD09_LAT not in", values, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatBetween(Double value1, Double value2) {
+            addCriterion("BD09_LAT between", value1, value2, "bd09Lat");
+            return (Criteria) this;
+        }
+
+        public Criteria andBd09LatNotBetween(Double value1, Double value2) {
+            addCriterion("BD09_LAT not between", value1, value2, "bd09Lat");
             return (Criteria) this;
         }
     }

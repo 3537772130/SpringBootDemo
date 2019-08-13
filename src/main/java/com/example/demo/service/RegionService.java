@@ -58,23 +58,23 @@ public class RegionService implements ApplicationRunner {
                 Map map2 = new HashMap();
                 map2.put("parentId", record2.getParentId());
                 map2.put("value", record2.getId());
-                map2.put("label", record2.getName());
+                map2.put("label", record2.getAreaName());
                 List<Map> list3 = new ArrayList<>();
                 Map map22 = new HashMap();
                 map22.put("parentId", record2.getParentId());
-                map22.put("value", record2.getName());
-                map22.put("label", record2.getName());
+                map22.put("value", record2.getAreaName());
+                map22.put("label", record2.getAreaName());
                 List<Map> list33 = new ArrayList<>();
                 for (int k = 0; k < countyList.size(); k++) {
                     RegionInfo record3 = countyList.get(k);
                     if (record2.getId().intValue() == record3.getParentId().intValue()) {
                         Map map3 = new HashMap();
                         map3.put("value", record3.getId());
-                        map3.put("label", record3.getName());
+                        map3.put("label", record3.getAreaName());
                         list3.add(map3);
                         Map map33 = new HashMap();
-                        map33.put("value", record3.getName());
-                        map33.put("label", record3.getName());
+                        map33.put("value", record3.getAreaName());
+                        map33.put("label", record3.getAreaName());
                         list33.add(map33);
                     }
                     continue;
@@ -90,11 +90,11 @@ public class RegionService implements ApplicationRunner {
                 RegionInfo record1 = provinceList.get(i);
                 Map map1 = new HashMap();
                 map1.put("value", record1.getId());
-                map1.put("label", record1.getName());
+                map1.put("label", record1.getAreaName());
                 List<Map> list0 = new ArrayList<>();
                 Map map11 = new HashMap();
-                map11.put("value", record1.getName());
-                map11.put("label", record1.getName());
+                map11.put("value", record1.getAreaName());
+                map11.put("label", record1.getAreaName());
                 List<Map> list00 = new ArrayList<>();
                 for (int k = 0; k < list2.size(); k++) {
                     Map map4 = list2.get(k);

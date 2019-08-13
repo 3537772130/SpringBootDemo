@@ -21,11 +21,14 @@ public class Constants {
     public static final String DATE_TIME_ZH = "YYYY年MM月DD日";
     public static final String JODD_FMT_YYYYMMDD = "YYYYMMDD";
     public static final String JODD_FMT_HHMMSS = "hhmmss";
-
+    //图形验证码
+    public static final String FIGURE_CODE = "figure_code";
+    // 后台管理用户信息
     public static final String WEB_USER_INFO = "EXAMPLE_WEB_USER_INFO";
+    // 前端普通用户信息
     public static final String VUE_USER_INFO = "EXAMPLE_VUE_USER_INFO";
 
-    //文件格式
+    // 文件格式
     public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";//上传图片文件类型
     public static final String UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE = "application/x-zip-compressed,application/x-7z-compressed,application/x-gzip";//上传模板压缩文件类型
 
