@@ -71,14 +71,14 @@ public class LoginController {
             if (NullUtil.isNullOrEmpty(password)) {
                 return AjaxResponse.error("密码不能为空");
             }
-            UserInfo userInfo = userInfoService.selectUserInfoByUserName(userName);
+            UserInfo userInfo = userInfoService.selectUserInfoByMobile(userName);
             if (null == userInfo) {
                 log.error("用户名不存在：{}", userName);
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            String cipher = DesUtil.encrypt(password, userInfo.getEncryptionStr());
+            String cipher = DesUtil.encrypt(password, userInfo.getEncrypted());
             cipher = MD5Util.MD5(cipher);
-            if (!cipher.equals(userInfo.getUserPass())) {
+            if (!cipher.equals(userInfo.getPassword())) {
                 log.error("用户：{}，输入的密码错误：{}", userName, password);
                 return AjaxResponse.error("用户名或密码不匹配");
             }

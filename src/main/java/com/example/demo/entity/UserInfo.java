@@ -9,23 +9,36 @@ import java.util.Date;
 public class UserInfo implements Serializable {
     private Integer id;
 
-    private String userName;
+    private String mobile;
 
-    private String userPass;
+    private String password;
 
-    private String encryptionStr;
+    private String encrypted;
 
     private String nickName;
 
-    private Boolean sex;
+    private String avatarUrl;
 
-    private String headPortrait;
+    private Boolean gender;
+
+    private String birthday;
+
+    private String email;
+
+    private Boolean isDealer;
+
+    private Double balance;
+
+    private Double freeBalance;
+
+    private Integer integral;
+
+    private Integer goodsCount;
 
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
-    private Date createTime;
+    private Date createDate;
 
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
-    private Date updateTime;
+    private Boolean status;
 
     private static final long serialVersionUID = 1L;
 
@@ -37,28 +50,28 @@ public class UserInfo implements Serializable {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
     }
 
-    public String getUserPass() {
-        return userPass;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUserPass(String userPass) {
-        this.userPass = userPass == null ? null : userPass.trim();
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
     }
 
-    public String getEncryptionStr() {
-        return encryptionStr;
+    public String getEncrypted() {
+        return encrypted;
     }
 
-    public void setEncryptionStr(String encryptionStr) {
-        this.encryptionStr = encryptionStr == null ? null : encryptionStr.trim();
+    public void setEncrypted(String encrypted) {
+        this.encrypted = encrypted == null ? null : encrypted.trim();
     }
 
     public String getNickName() {
@@ -69,55 +82,111 @@ public class UserInfo implements Serializable {
         this.nickName = nickName == null ? null : nickName.trim();
     }
 
-    public Boolean getSex() {
-        return sex;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setSex(Boolean sex) {
-        this.sex = sex;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
     }
 
-    public String getHeadPortrait() {
-        return headPortrait;
+    public Boolean getGender() {
+        return gender;
     }
 
-    public void setHeadPortrait(String headPortrait) {
-        this.headPortrait = headPortrait == null ? null : headPortrait.trim();
+    public void setGender(Boolean gender) {
+        this.gender = gender;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday == null ? null : birthday.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public Boolean getIsDealer() {
+        return isDealer;
+    }
+
+    public void setIsDealer(Boolean isDealer) {
+        this.isDealer = isDealer;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public Double getFreeBalance() {
+        return freeBalance;
+    }
+
+    public void setFreeBalance(Double freeBalance) {
+        this.freeBalance = freeBalance;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
+    public Integer getGoodsCount() {
+        return goodsCount;
+    }
+
+    public void setGoodsCount(Integer goodsCount) {
+        this.goodsCount = goodsCount;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public UserInfo getUserInfo(UserInfo info) {
-        info.setUserPass(null);
-        info.setEncryptionStr(null);
+        info.setPassword(null);
+        info.setEncrypted(null);
         return info;
     }
 
     public UserInfo getUserInfoToUpdate(UserInfo info) {
-        info.setUserName(null);
-        info.setUserPass(null);
-        info.setEncryptionStr(null);
+        info.setMobile(null);
+        info.setPassword(null);
+        info.setEncrypted(null);
         return info;
     }
 
     public UserInfo getUserInfoToPassword(UserInfo info) {
         UserInfo user = new UserInfo();
         user.setId(info.getId());
-        user.setUserPass(info.userPass);
+        user.setPassword(info.getPassword());
         return user;
     }
 }

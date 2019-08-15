@@ -66,25 +66,28 @@ public class VueLoginController {
     @RequestMapping(value = "doLogin", method = RequestMethod.POST)
     public Object doLogin(UserInfo info, HttpServletRequest request) {
         try {
-            if (NullUtil.isNullOrEmpty(info.getUserName())) {
+            if (NullUtil.isNullOrEmpty(info.getMobile())) {
                 return AjaxResponse.error("用户名不能为空");
             }
-            if (NullUtil.isNullOrEmpty(info.getUserPass())) {
+            if (NullUtil.isNullOrEmpty(info.getPassword())) {
                 return AjaxResponse.error("密码不能为空");
             }
-            UserInfo userInfo = userInfoService.selectUserInfoByUserName(info.getUserName());
+            UserInfo userInfo = userInfoService.selectUserInfoByMobile(info.getMobile());
             if (null == userInfo) {
-                log.error("用户名不存在：{}", info.getUserName());
+                log.error("用户名不存在：{}", info.getMobile());
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            String cipher = DesUtil.encrypt(info.getUserPass(), userInfo.getEncryptionStr());
+            if (!userInfo.getStatus()) {
+                return AjaxResponse.error("账户已禁用");
+            }
+            String cipher = DesUtil.encrypt(info.getPassword(), userInfo.getEncrypted());
             cipher = MD5Util.MD5(cipher);
-            if (!cipher.equals(userInfo.getUserPass())) {
-                log.error("用户：{}，输入的密码错误：{}", info.getUserName(), info.getUserPass());
+            if (!cipher.equals(userInfo.getPassword())) {
+                log.error("用户：{}，输入的密码错误：{}", info.getMobile(), info.getPassword());
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            if (NullUtil.isNotNullOrEmpty(userInfo.getHeadPortrait())) {
-                userInfo.setHeadPortrait("api\\" + userInfo.getHeadPortrait());
+            if (NullUtil.isNotNullOrEmpty(userInfo.getAvatarUrl())) {
+                userInfo.setAvatarUrl("api\\" + userInfo.getAvatarUrl());
             }
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
             try {
@@ -118,12 +121,12 @@ public class VueLoginController {
 
     /**
      * 检测手机号码是否已注册
-     * @param userName
+     * @param mobile
      * @return
      */
     @RequestMapping(value = "mobileWhetherRegistered")
-    public Object mobileWhetherRegistered(String userName) {
-        UserInfo info = userInfoService.selectUserInfoByUserName(userName);
+    public Object mobileWhetherRegistered(String mobile) {
+        UserInfo info = userInfoService.selectUserInfoByMobile(mobile);
         if (null == info) {
             return AjaxResponse.success();
         }
@@ -142,10 +145,10 @@ public class VueLoginController {
             if (null == info) {
                 return AjaxResponse.error("未获取到信息");
             }
-            if (NullUtil.isNullOrEmpty(info.getUserName())) {
+            if (NullUtil.isNullOrEmpty(info.getMobile())) {
                 return AjaxResponse.error("用户名不能为空");
             }
-            if (!RegularUtil.checkMobile(info.getUserName())) {
+            if (!RegularUtil.checkMobile(info.getMobile())) {
                 return AjaxResponse.error("用户名格式不正确");
             }
             if (NullUtil.isNullOrEmpty(info.getNickName())) {
@@ -157,13 +160,13 @@ public class VueLoginController {
             if (!RegularUtil.checkName(info.getNickName().trim())) {
                 return AjaxResponse.error("昵称不能含有特殊字符");
             }
-            if (NullUtil.isNullOrEmpty(info.getSex())) {
+            if (NullUtil.isNullOrEmpty(info.getGender())) {
                 return AjaxResponse.error("请选择性别");
             }
-            if (NullUtil.isNullOrEmpty(info.getUserPass())) {
+            if (NullUtil.isNullOrEmpty(info.getPassword())) {
                 return AjaxResponse.error("登录密码不能为空");
             }
-            if (info.getUserPass().length() < 6 || info.getUserPass().length() > 20) {
+            if (info.getPassword().length() < 6 || info.getPassword().length() > 20) {
                 return AjaxResponse.error("登录密码长度不符");
             }
             userInfoService.saveUserInfo(info);

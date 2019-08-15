@@ -37,12 +37,12 @@ public class UserInfoService {
     /**
      * 查询web用户信息
      *
-     * @param userName
+     * @param mobile
      * @return
      */
-    public UserInfo selectUserInfoByUserName(String userName) {
+    public UserInfo selectUserInfoByMobile(String mobile) {
         UserInfoExample example = new UserInfoExample();
-        example.createCriteria().andUserNameEqualTo(userName);
+        example.createCriteria().andMobileEqualTo(mobile);
         List<UserInfo> list = userInfoMapper.selectByExample(example);
         if (NullUtil.isNotNullOrEmpty(list)) {
             return list.get(0);
@@ -69,17 +69,17 @@ public class UserInfoService {
     /**
      * 查询用户列表
      *
-     * @param userName
+     * @param mobile
      * @param page
      * @return
      */
-    public Page selectUserInfo(String userName, Page page) {
+    public Page selectUserInfo(String mobile, Page page) {
         UserInfoExample example = new UserInfoExample();
         example.setPage(page);
         example.setOrderByClause("id desc");
         UserInfoExample.Criteria c = example.createCriteria();
-        if (NullUtil.isNotNullOrEmpty(userName)) {
-            c.andUserNameLike(userName + "%");
+        if (NullUtil.isNotNullOrEmpty(mobile)) {
+            c.andMobileLike(mobile + "%");
         }
         long count = userInfoMapper.countByExample(example);
         if (count > 0) {
@@ -96,11 +96,10 @@ public class UserInfoService {
      */
     @Transactional(rollbackFor = Exception.class)
     public UserInfo addOrUpdateUserInfo(UserInfo userInfo) {
-        userInfo.setUpdateTime(new Date());
         if (NullUtil.isNotNullOrEmpty(userInfo.getId())) {
             userInfoMapper.updateByPrimaryKeySelective(userInfo);
         } else {
-            userInfo.setCreateTime(new Date());
+            userInfo.setCreateDate(new Date());
             userInfoMapper.insertSelective(userInfo);
         }
         return selectUserInfoById(userInfo.getId());
@@ -117,14 +116,14 @@ public class UserInfoService {
      */
     public Object updateUserInfoByPassword(Integer id, String oldPass, String newPass, HttpServletRequest request) {
         UserInfo userInfo = selectUserInfoById(id);
-        String cipher = DesUtil.encrypt(oldPass, userInfo.getEncryptionStr());
+        String cipher = DesUtil.encrypt(oldPass, userInfo.getEncrypted());
         cipher = MD5Util.MD5(cipher);
-        if (!cipher.equals(userInfo.getUserPass())) {
+        if (!cipher.equals(userInfo.getPassword())) {
             return AjaxResponse.error("原密码输入错误");
         }
-        cipher = DesUtil.encrypt(newPass, userInfo.getEncryptionStr());
+        cipher = DesUtil.encrypt(newPass, userInfo.getEncrypted());
         cipher = MD5Util.MD5(cipher);
-        userInfo.setUserPass(cipher);
+        userInfo.setPassword(cipher);
         addOrUpdateUserInfo(userInfo.getUserInfoToPassword(userInfo));
         request.getSession().removeAttribute(Constants.VUE_USER_INFO);
         return AjaxResponse.success("修改密码成功");
@@ -137,12 +136,12 @@ public class UserInfoService {
      * @param headPortrait
      * @return
      */
-    public String updateUserInfoByHeadPortrait(Integer id, String headPortrait) {
+    public String updateUserInfoByAvatarUrl(Integer id, String headPortrait) {
         UserInfo info = new UserInfo();
         info.setId(id);
-        info.setHeadPortrait(headPortrait.replace("static\\", ""));
+        info.setAvatarUrl(headPortrait.replace("static\\", ""));
         userInfoMapper.updateByPrimaryKeySelective(info);
-        return info.getHeadPortrait();
+        return info.getAvatarUrl();
     }
 
     /**
@@ -153,12 +152,11 @@ public class UserInfoService {
     public void saveUserInfo(UserInfo userInfo) {
         userInfo.setId(null);
         userInfo.setNickName(userInfo.getNickName().trim());
-        userInfo.setEncryptionStr(RandomUtil.getRandomStr32());
-        String cipher = DesUtil.encrypt(userInfo.getUserPass(), userInfo.getEncryptionStr());
+        userInfo.setEncrypted(RandomUtil.getRandomStr32());
+        String cipher = DesUtil.encrypt(userInfo.getPassword(), userInfo.getEncrypted());
         cipher = MD5Util.MD5(cipher);
-        userInfo.setUserPass(cipher);
-        userInfo.setCreateTime(new Date());
-        userInfo.setUpdateTime(new Date());
+        userInfo.setPassword(cipher);
+        userInfo.setCreateDate(new Date());
         userInfoMapper.insertSelective(userInfo);
     }
 

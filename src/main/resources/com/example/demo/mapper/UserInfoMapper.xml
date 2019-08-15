@@ -3,14 +3,21 @@
 <mapper namespace="com.example.demo.mapper.UserInfoMapper">
   <resultMap id="BaseResultMap" type="com.example.demo.entity.UserInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="user_pass" jdbcType="VARCHAR" property="userPass" />
-    <result column="encryption_str" jdbcType="VARCHAR" property="encryptionStr" />
+      <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+      <result column="password" jdbcType="VARCHAR" property="password"/>
+      <result column="encrypted" jdbcType="VARCHAR" property="encrypted"/>
     <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="sex" jdbcType="BIT" property="sex" />
-    <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+      <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
+      <result column="gender" jdbcType="BIT" property="gender"/>
+      <result column="birthday" jdbcType="VARCHAR" property="birthday"/>
+      <result column="email" jdbcType="VARCHAR" property="email"/>
+      <result column="is_dealer" jdbcType="BIT" property="isDealer"/>
+      <result column="balance" jdbcType="DOUBLE" property="balance"/>
+      <result column="free_balance" jdbcType="DOUBLE" property="freeBalance"/>
+      <result column="integral" jdbcType="INTEGER" property="integral"/>
+      <result column="goods_count" jdbcType="INTEGER" property="goodsCount"/>
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+      <result column="status" jdbcType="BIT" property="status"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -71,8 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_name, user_pass, encryption_str, nick_name, sex, head_portrait, create_time,
-    update_time
+    id, mobile, password, encrypted, nick_name, avatar_url, gender, birthday, email,
+    is_dealer, balance, free_balance, integral, goods_count, create_date, status
   </sql>
   <select id="selectByExample" parameterType="com.example.demo.entity.UserInfoExample" resultMap="BaseResultMap">
     select
@@ -90,7 +97,7 @@
     <include refid="PageSuffix" />
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
+      select
     <include refid="Base_Column_List" />
     from user_info
     where id = #{id,jdbcType=INTEGER}
@@ -106,14 +113,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.example.demo.entity.UserInfo">
-    insert into user_info (id, user_name, user_pass,
-      encryption_str, nick_name, sex,
-      head_portrait, create_time, update_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPass,jdbcType=VARCHAR},
-      #{encryptionStr,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{sex,jdbcType=BIT},
-      #{headPortrait,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into user_info (id, mobile, password,
+      encrypted, nick_name, avatar_url,
+      gender, birthday, email,
+      is_dealer, balance, free_balance,
+      integral, goods_count, create_date,
+      status)
+    values (#{id,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{encrypted,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR},
+      #{gender,jdbcType=BIT}, #{birthday,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{isDealer,jdbcType=BIT}, #{balance,jdbcType=DOUBLE}, #{freeBalance,jdbcType=DOUBLE},
+      #{integral,jdbcType=INTEGER}, #{goodsCount,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+      #{status,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.UserInfo" useGeneratedKeys="true">
     insert into user_info
@@ -121,58 +132,100 @@
       <if test="id != null">
         id,
       </if>
-      <if test="userName != null">
-        user_name,
+        <if test="mobile != null">
+            mobile,
       </if>
-      <if test="userPass != null">
-        user_pass,
+        <if test="password != null">
+            password,
       </if>
-      <if test="encryptionStr != null">
-        encryption_str,
+        <if test="encrypted != null">
+            encrypted,
       </if>
       <if test="nickName != null">
         nick_name,
       </if>
-      <if test="sex != null">
-        sex,
+        <if test="avatarUrl != null">
+            avatar_url,
+        </if>
+        <if test="gender != null">
+            gender,
+        </if>
+        <if test="birthday != null">
+            birthday,
+        </if>
+        <if test="email != null">
+            email,
+        </if>
+        <if test="isDealer != null">
+            is_dealer,
+        </if>
+        <if test="balance != null">
+            balance,
+        </if>
+        <if test="freeBalance != null">
+            free_balance,
+        </if>
+        <if test="integral != null">
+            integral,
       </if>
-      <if test="headPortrait != null">
-        head_portrait,
+        <if test="goodsCount != null">
+            goods_count,
       </if>
-      <if test="createTime != null">
-        create_time,
+        <if test="createDate != null">
+            create_date,
       </if>
-      <if test="updateTime != null">
-        update_time,
+        <if test="status != null">
+            status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
+        <if test="mobile != null">
+            #{mobile,jdbcType=VARCHAR},
       </if>
-      <if test="userPass != null">
-        #{userPass,jdbcType=VARCHAR},
+        <if test="password != null">
+            #{password,jdbcType=VARCHAR},
       </if>
-      <if test="encryptionStr != null">
-        #{encryptionStr,jdbcType=VARCHAR},
+        <if test="encrypted != null">
+            #{encrypted,jdbcType=VARCHAR},
       </if>
       <if test="nickName != null">
         #{nickName,jdbcType=VARCHAR},
       </if>
-      <if test="sex != null">
-        #{sex,jdbcType=BIT},
+        <if test="avatarUrl != null">
+            #{avatarUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="gender != null">
+            #{gender,jdbcType=BIT},
+        </if>
+        <if test="birthday != null">
+            #{birthday,jdbcType=VARCHAR},
+        </if>
+        <if test="email != null">
+            #{email,jdbcType=VARCHAR},
+        </if>
+        <if test="isDealer != null">
+            #{isDealer,jdbcType=BIT},
+        </if>
+        <if test="balance != null">
+            #{balance,jdbcType=DOUBLE},
+        </if>
+        <if test="freeBalance != null">
+            #{freeBalance,jdbcType=DOUBLE},
+        </if>
+        <if test="integral != null">
+            #{integral,jdbcType=INTEGER},
       </if>
-      <if test="headPortrait != null">
-        #{headPortrait,jdbcType=VARCHAR},
+        <if test="goodsCount != null">
+            #{goodsCount,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+        <if test="createDate != null">
+            #{createDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+        <if test="status != null">
+            #{status,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -188,29 +241,50 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.userName != null">
-        user_name = #{record.userName,jdbcType=VARCHAR},
+        <if test="record.mobile != null">
+            mobile = #{record.mobile,jdbcType=VARCHAR},
       </if>
-      <if test="record.userPass != null">
-        user_pass = #{record.userPass,jdbcType=VARCHAR},
+        <if test="record.password != null">
+            password = #{record.password,jdbcType=VARCHAR},
       </if>
-      <if test="record.encryptionStr != null">
-        encryption_str = #{record.encryptionStr,jdbcType=VARCHAR},
+        <if test="record.encrypted != null">
+            encrypted = #{record.encrypted,jdbcType=VARCHAR},
       </if>
       <if test="record.nickName != null">
         nick_name = #{record.nickName,jdbcType=VARCHAR},
       </if>
-      <if test="record.sex != null">
-        sex = #{record.sex,jdbcType=BIT},
+        <if test="record.avatarUrl != null">
+            avatar_url = #{record.avatarUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="record.gender != null">
+            gender = #{record.gender,jdbcType=BIT},
+        </if>
+        <if test="record.birthday != null">
+            birthday = #{record.birthday,jdbcType=VARCHAR},
+        </if>
+        <if test="record.email != null">
+            email = #{record.email,jdbcType=VARCHAR},
+        </if>
+        <if test="record.isDealer != null">
+            is_dealer = #{record.isDealer,jdbcType=BIT},
+        </if>
+        <if test="record.balance != null">
+            balance = #{record.balance,jdbcType=DOUBLE},
+        </if>
+        <if test="record.freeBalance != null">
+            free_balance = #{record.freeBalance,jdbcType=DOUBLE},
+        </if>
+        <if test="record.integral != null">
+            integral = #{record.integral,jdbcType=INTEGER},
       </if>
-      <if test="record.headPortrait != null">
-        head_portrait = #{record.headPortrait,jdbcType=VARCHAR},
+        <if test="record.goodsCount != null">
+            goods_count = #{record.goodsCount,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+        <if test="record.createDate != null">
+            create_date = #{record.createDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+        <if test="record.status != null">
+            status = #{record.status,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -220,14 +294,21 @@
   <update id="updateByExample" parameterType="map">
     update user_info
     set id = #{record.id,jdbcType=INTEGER},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      user_pass = #{record.userPass,jdbcType=VARCHAR},
-      encryption_str = #{record.encryptionStr,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      encrypted = #{record.encrypted,jdbcType=VARCHAR},
       nick_name = #{record.nickName,jdbcType=VARCHAR},
-      sex = #{record.sex,jdbcType=BIT},
-    head_portrait = #{record.headPortrait,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      avatar_url = #{record.avatarUrl,jdbcType=VARCHAR},
+      gender = #{record.gender,jdbcType=BIT},
+      birthday = #{record.birthday,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      is_dealer = #{record.isDealer,jdbcType=BIT},
+      balance = #{record.balance,jdbcType=DOUBLE},
+      free_balance = #{record.freeBalance,jdbcType=DOUBLE},
+      integral = #{record.integral,jdbcType=INTEGER},
+      goods_count = #{record.goodsCount,jdbcType=INTEGER},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -235,43 +316,71 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.UserInfo">
     update user_info
     <set>
-      <if test="userName != null">
-        user_name = #{userName,jdbcType=VARCHAR},
+        <if test="mobile != null">
+            mobile = #{mobile,jdbcType=VARCHAR},
       </if>
-      <if test="userPass != null">
-        user_pass = #{userPass,jdbcType=VARCHAR},
+        <if test="password != null">
+            password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="encryptionStr != null">
-        encryption_str = #{encryptionStr,jdbcType=VARCHAR},
+        <if test="encrypted != null">
+            encrypted = #{encrypted,jdbcType=VARCHAR},
       </if>
       <if test="nickName != null">
         nick_name = #{nickName,jdbcType=VARCHAR},
       </if>
-      <if test="sex != null">
-        sex = #{sex,jdbcType=BIT},
+        <if test="avatarUrl != null">
+            avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+        </if>
+        <if test="gender != null">
+            gender = #{gender,jdbcType=BIT},
+        </if>
+        <if test="birthday != null">
+            birthday = #{birthday,jdbcType=VARCHAR},
+        </if>
+        <if test="email != null">
+            email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="headPortrait != null">
-        head_portrait = #{headPortrait,jdbcType=VARCHAR},
+        <if test="isDealer != null">
+            is_dealer = #{isDealer,jdbcType=BIT},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+        <if test="balance != null">
+            balance = #{balance,jdbcType=DOUBLE},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        <if test="freeBalance != null">
+            free_balance = #{freeBalance,jdbcType=DOUBLE},
+        </if>
+        <if test="integral != null">
+            integral = #{integral,jdbcType=INTEGER},
+        </if>
+        <if test="goodsCount != null">
+            goods_count = #{goodsCount,jdbcType=INTEGER},
+        </if>
+        <if test="createDate != null">
+            create_date = #{createDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.UserInfo">
     update user_info
-    set user_name = #{userName,jdbcType=VARCHAR},
-      user_pass = #{userPass,jdbcType=VARCHAR},
-      encryption_str = #{encryptionStr,jdbcType=VARCHAR},
+    set mobile = #{mobile,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      encrypted = #{encrypted,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},
-      sex = #{sex,jdbcType=BIT},
-      head_portrait = #{headPortrait,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=BIT},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      is_dealer = #{isDealer,jdbcType=BIT},
+      balance = #{balance,jdbcType=DOUBLE},
+      free_balance = #{freeBalance,jdbcType=DOUBLE},
+      integral = #{integral,jdbcType=INTEGER},
+      goods_count = #{goodsCount,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <sql id="PageSuffix">

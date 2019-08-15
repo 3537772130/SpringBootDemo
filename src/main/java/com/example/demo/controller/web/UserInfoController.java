@@ -55,16 +55,16 @@ public class UserInfoController {
     @ResponseBody
     public Object addOrUpdateUserInfo(UserInfo userInfo) {
         if (NullUtil.isNullOrEmpty(userInfo.getId())) {
-            if (NullUtil.isNullOrEmpty(userInfo.getUserName())) {
+            if (NullUtil.isNullOrEmpty(userInfo.getMobile())) {
                 return AjaxResponse.error("请设置账户");
             }
-            if (!RegularUtil.checkMobile(userInfo.getUserName())) {
+            if (!RegularUtil.checkMobile(userInfo.getMobile())) {
                 return AjaxResponse.error("账户格式不正确");
             }
-            if (NullUtil.isNullOrEmpty(userInfo.getUserPass())) {
+            if (NullUtil.isNullOrEmpty(userInfo.getPassword())) {
                 return AjaxResponse.error("请设置密码");
             }
-            userInfo.setEncryptionStr(RandomUtil.getRandomStr32());
+            userInfo.setEncrypted(RandomUtil.getRandomStr32());
         }
         if (NullUtil.isNullOrEmpty(userInfo.getNickName())) {
             return AjaxResponse.error("请设置昵称");

@@ -74,6 +74,9 @@ public class VueUserInfoController {
             }
             info.setId(user.getId());
             info = userInfoService.addOrUpdateUserInfo(info.getUserInfo(info));
+            if (NullUtil.isNotNullOrEmpty(info.getAvatarUrl())) {
+                info.setAvatarUrl("api\\" + info.getAvatarUrl());
+            }
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(info.getUserInfo(info)));
             return AjaxResponse.success(info.getUserInfo(info));
         } catch (Exception e) {
@@ -119,8 +122,8 @@ public class VueUserInfoController {
      * @param multipartFile
      * @return
      */
-    @RequestMapping(value = "uploadUserHeadPortrait")
-    public Object uploadUserHeadPortrait(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("HeadPortrait") MultipartFile multipartFile,
+    @RequestMapping(value = "uploadUserAvatar")
+    public Object uploadUserAvatar(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("avatar") MultipartFile multipartFile,
                                          HttpServletRequest request) {
         try {
             //校验文件信息
@@ -128,14 +131,14 @@ public class VueUserInfoController {
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            String oldFileName = userInfo.getHeadPortrait().replace("api\\", "static\\");
+            String oldFileName = userInfo.getAvatarUrl().replace("api\\", "static\\");
             String fileName = "USER-" + userInfo.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
             String filePath = "static\\images\\head-portrait\\";
             String rootPath = GetWebProjectRealPathTool.getClassPath(filePath);
             multipartFile.transferTo(new File(rootPath + fileName));
-            String headPortrait = filePath + fileName;
-            headPortrait = userInfoService.updateUserInfoByHeadPortrait(userInfo.getId(), headPortrait);
-            userInfo.setHeadPortrait("api\\" + headPortrait);
+            String avatarUrl = filePath + fileName;
+            avatarUrl = userInfoService.updateUserInfoByAvatarUrl(userInfo.getId(), avatarUrl);
+            userInfo.setAvatarUrl("api\\" + avatarUrl);
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
             File file = new File(GetWebProjectRealPathTool.getClassPath(oldFileName));
             if (file.exists()) {
