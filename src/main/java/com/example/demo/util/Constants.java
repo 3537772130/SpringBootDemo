@@ -24,7 +24,7 @@ public class Constants {
     //图形验证码
     public static final String FIGURE_CODE = "figure_code";
     // 后台管理用户信息
-    public static final String WEB_USER_INFO = "EXAMPLE_WEB_USER_INFO";
+    public static final String WEB_MANAGER_INFO = "EXAMPLE_WEB_MANAGER_INFO";
     // 前端普通用户信息
     public static final String VUE_USER_INFO = "EXAMPLE_VUE_USER_INFO";
 

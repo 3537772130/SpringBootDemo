@@ -7,23 +7,42 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ViewManagerInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private String userName;
+
     private String password;
+
     private String encrypted;
-    private Integer parentId;
+
     private String nickName;
+
     private Integer roleId;
+
     private String roleName;
+
     private String avatarUrl;
+
     private String email;
+
     private String mobile;
+
     private String qqAccount;
+
     private String weChatAccount;
+
+    private Integer parentId;
+
+    private String parentUserName;
+
+    private String parentNickName;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date createDate;
+
     private Integer status;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -55,14 +74,6 @@ public class ViewManagerInfo implements Serializable {
 
     public void setEncrypted(String encrypted) {
         this.encrypted = encrypted == null ? null : encrypted.trim();
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
     }
 
     public String getNickName() {
@@ -127,6 +138,30 @@ public class ViewManagerInfo implements Serializable {
 
     public void setWeChatAccount(String weChatAccount) {
         this.weChatAccount = weChatAccount == null ? null : weChatAccount.trim();
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentUserName() {
+        return parentUserName;
+    }
+
+    public void setParentUserName(String parentUserName) {
+        this.parentUserName = parentUserName == null ? null : parentUserName.trim();
+    }
+
+    public String getParentNickName() {
+        return parentNickName;
+    }
+
+    public void setParentNickName(String parentNickName) {
+        this.parentNickName = parentNickName == null ? null : parentNickName.trim();
     }
 
     public Date getCreateDate() {

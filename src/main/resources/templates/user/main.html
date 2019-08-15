@@ -30,10 +30,10 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img class="layui-nav-img" src="/images/pc/default-avatar.jpeg">
-                    <span th:text="${user.nickName}"></span>
+                    <span th:text="${manager.nickName}"></span>
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a th:text="${user.userName}"></a></dd>
+                    <dd><a th:text="${manager.userName}(${roleName})"></a></dd>
                     <dd><a href="">基本资料</a></dd>
                     <dd><a href="">安全设置</a></dd>
                     <dd><a href="javascript:exitLogin()">退出登录</a></dd>

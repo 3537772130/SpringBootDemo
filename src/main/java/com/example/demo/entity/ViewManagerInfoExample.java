@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import com.example.demo.util.Page;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,20 +18,20 @@ public class ViewManagerInfoExample {
         oredCriteria = new ArrayList<Criteria>();
     }
 
-    public String getOrderByClause() {
-        return orderByClause;
-    }
-
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -68,12 +67,12 @@ public class ViewManagerInfoExample {
         distinct = false;
     }
 
-    public Page getPage() {
-        return page;
+    public void setPage(Page page) {
+        this.page=page;
     }
 
-    public void setPage(Page page) {
-        this.page = page;
+    public Page getPage() {
+        return page;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -384,66 +383,6 @@ public class ViewManagerInfoExample {
 
         public Criteria andEncryptedNotBetween(String value1, String value2) {
             addCriterion("encrypted not between", value1, value2, "encrypted");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdIsNull() {
-            addCriterion("parent_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdIsNotNull() {
-            addCriterion("parent_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdEqualTo(Integer value) {
-            addCriterion("parent_id =", value, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdNotEqualTo(Integer value) {
-            addCriterion("parent_id <>", value, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdGreaterThan(Integer value) {
-            addCriterion("parent_id >", value, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("parent_id >=", value, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdLessThan(Integer value) {
-            addCriterion("parent_id <", value, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdLessThanOrEqualTo(Integer value) {
-            addCriterion("parent_id <=", value, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdIn(List<Integer> values) {
-            addCriterion("parent_id in", values, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdNotIn(List<Integer> values) {
-            addCriterion("parent_id not in", values, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdBetween(Integer value1, Integer value2) {
-            addCriterion("parent_id between", value1, value2, "parentId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("parent_id not between", value1, value2, "parentId");
             return (Criteria) this;
         }
 
@@ -997,6 +936,206 @@ public class ViewManagerInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andParentIdIsNull() {
+            addCriterion("parent_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdIsNotNull() {
+            addCriterion("parent_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdEqualTo(Integer value) {
+            addCriterion("parent_id =", value, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdNotEqualTo(Integer value) {
+            addCriterion("parent_id <>", value, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdGreaterThan(Integer value) {
+            addCriterion("parent_id >", value, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("parent_id >=", value, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdLessThan(Integer value) {
+            addCriterion("parent_id <", value, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdLessThanOrEqualTo(Integer value) {
+            addCriterion("parent_id <=", value, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdIn(List<Integer> values) {
+            addCriterion("parent_id in", values, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdNotIn(List<Integer> values) {
+            addCriterion("parent_id not in", values, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdBetween(Integer value1, Integer value2) {
+            addCriterion("parent_id between", value1, value2, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("parent_id not between", value1, value2, "parentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameIsNull() {
+            addCriterion("parent_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameIsNotNull() {
+            addCriterion("parent_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameEqualTo(String value) {
+            addCriterion("parent_user_name =", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameNotEqualTo(String value) {
+            addCriterion("parent_user_name <>", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameGreaterThan(String value) {
+            addCriterion("parent_user_name >", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("parent_user_name >=", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameLessThan(String value) {
+            addCriterion("parent_user_name <", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameLessThanOrEqualTo(String value) {
+            addCriterion("parent_user_name <=", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameLike(String value) {
+            addCriterion("parent_user_name like", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameNotLike(String value) {
+            addCriterion("parent_user_name not like", value, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameIn(List<String> values) {
+            addCriterion("parent_user_name in", values, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameNotIn(List<String> values) {
+            addCriterion("parent_user_name not in", values, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameBetween(String value1, String value2) {
+            addCriterion("parent_user_name between", value1, value2, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentUserNameNotBetween(String value1, String value2) {
+            addCriterion("parent_user_name not between", value1, value2, "parentUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameIsNull() {
+            addCriterion("parent_nick_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameIsNotNull() {
+            addCriterion("parent_nick_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameEqualTo(String value) {
+            addCriterion("parent_nick_name =", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameNotEqualTo(String value) {
+            addCriterion("parent_nick_name <>", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameGreaterThan(String value) {
+            addCriterion("parent_nick_name >", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameGreaterThanOrEqualTo(String value) {
+            addCriterion("parent_nick_name >=", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameLessThan(String value) {
+            addCriterion("parent_nick_name <", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameLessThanOrEqualTo(String value) {
+            addCriterion("parent_nick_name <=", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameLike(String value) {
+            addCriterion("parent_nick_name like", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameNotLike(String value) {
+            addCriterion("parent_nick_name not like", value, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameIn(List<String> values) {
+            addCriterion("parent_nick_name in", values, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameNotIn(List<String> values) {
+            addCriterion("parent_nick_name not in", values, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameBetween(String value1, String value2) {
+            addCriterion("parent_nick_name between", value1, value2, "parentNickName");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentNickNameNotBetween(String value1, String value2) {
+            addCriterion("parent_nick_name not between", value1, value2, "parentNickName");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateDateIsNull() {
             addCriterion("create_date is null");
             return (Criteria) this;
@@ -1142,6 +1281,38 @@ public class ViewManagerInfoExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -1176,38 +1347,6 @@ public class ViewManagerInfoExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

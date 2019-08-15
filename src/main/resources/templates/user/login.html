@@ -27,11 +27,11 @@
                     <tr>
                         <td class="f-lab">用户名：</td>
                         <td class="f-data"><input id="userName" name="userName" placeholder="请输入用户名"
-                                                  th:value="17601301913" type="text"></td>
+                                                  th:value="admin" type="text"></td>
                     </tr>
                     <tr>
                         <td class="f-lab">密&nbsp;&nbsp;&nbsp;码：</td>
-                        <td class="f-data"><input id="password" name="password" placeholder="请输入密码" th:value="zhouhuahu"
+                        <td class="f-data"><input id="password" name="password" placeholder="请输入密码" th:value="123456"
                                                   type="password">
                         </td>
                     </tr>
@@ -80,7 +80,7 @@
                     success: function (data) {
                         layer.msg(data.data, {time: 2000}, function () {
                             if (data.code == "1") {
-                                window.location.href = "/web/user/loadMain";
+                                window.location.href = "/web/manager/loadMain";
                             }
                         });
                     },

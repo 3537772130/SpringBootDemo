@@ -6,14 +6,19 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Role implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class RoleInfo implements Serializable {
     private Integer id;
+
     private String roleName;
-    private String describe;
+
+    private String describeStr;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date createDate;
+
     private Boolean status;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -31,12 +36,12 @@ public class Role implements Serializable {
         this.roleName = roleName == null ? null : roleName.trim();
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getDescribeStr() {
+        return describeStr;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe == null ? null : describe.trim();
+    public void setDescribeStr(String describeStr) {
+        this.describeStr = describeStr == null ? null : describeStr.trim();
     }
 
     public Date getCreateDate() {

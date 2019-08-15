@@ -1,5 +1,6 @@
 package com.example.demo.config.intercepors;
 
+import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.util.Constants;
 import com.example.demo.util.SerializeUtil;
@@ -25,11 +26,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        String uri = request.getRequestURI();
-//        log.info("拦截到请求地址：{}", uri);
         HttpSession session = request.getSession();
-        UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) session.getAttribute(Constants.WEB_USER_INFO));
-        if (user == null){
+        ManagerInfo managerInfo = (ManagerInfo) SerializeUtil.unserialize((byte[]) session.getAttribute(Constants.WEB_MANAGER_INFO));
+        if (managerInfo == null){
             request.getSession().setAttribute("loginStatus", true);
             request.getRequestDispatcher("/web/toIndex").forward(request, response);
             return false;

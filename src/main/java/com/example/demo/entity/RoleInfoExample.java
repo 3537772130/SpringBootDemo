@@ -1,12 +1,11 @@
 package com.example.demo.entity;
 
 import com.example.demo.util.Page;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RoleExample {
+public class RoleInfoExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,24 +14,24 @@ public class RoleExample {
 
     protected Page page;
 
-    public RoleExample() {
+    public RoleInfoExample() {
         oredCriteria = new ArrayList<Criteria>();
-    }
-
-    public String getOrderByClause() {
-        return orderByClause;
     }
 
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -68,12 +67,12 @@ public class RoleExample {
         distinct = false;
     }
 
-    public Page getPage() {
-        return page;
+    public void setPage(Page page) {
+        this.page=page;
     }
 
-    public void setPage(Page page) {
-        this.page = page;
+    public Page getPage() {
+        return page;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -247,73 +246,73 @@ public class RoleExample {
             return (Criteria) this;
         }
 
-        public Criteria andDescribeIsNull() {
-            addCriterion("describe is null");
+        public Criteria andDescribeStrIsNull() {
+            addCriterion("describe_str is null");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeIsNotNull() {
-            addCriterion("describe is not null");
+        public Criteria andDescribeStrIsNotNull() {
+            addCriterion("describe_str is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeEqualTo(String value) {
-            addCriterion("describe =", value, "describe");
+        public Criteria andDescribeStrEqualTo(String value) {
+            addCriterion("describe_str =", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeNotEqualTo(String value) {
-            addCriterion("describe <>", value, "describe");
+        public Criteria andDescribeStrNotEqualTo(String value) {
+            addCriterion("describe_str <>", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeGreaterThan(String value) {
-            addCriterion("describe >", value, "describe");
+        public Criteria andDescribeStrGreaterThan(String value) {
+            addCriterion("describe_str >", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeGreaterThanOrEqualTo(String value) {
-            addCriterion("describe >=", value, "describe");
+        public Criteria andDescribeStrGreaterThanOrEqualTo(String value) {
+            addCriterion("describe_str >=", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeLessThan(String value) {
-            addCriterion("describe <", value, "describe");
+        public Criteria andDescribeStrLessThan(String value) {
+            addCriterion("describe_str <", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeLessThanOrEqualTo(String value) {
-            addCriterion("describe <=", value, "describe");
+        public Criteria andDescribeStrLessThanOrEqualTo(String value) {
+            addCriterion("describe_str <=", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeLike(String value) {
-            addCriterion("describe like", value, "describe");
+        public Criteria andDescribeStrLike(String value) {
+            addCriterion("describe_str like", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeNotLike(String value) {
-            addCriterion("describe not like", value, "describe");
+        public Criteria andDescribeStrNotLike(String value) {
+            addCriterion("describe_str not like", value, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeIn(List<String> values) {
-            addCriterion("describe in", values, "describe");
+        public Criteria andDescribeStrIn(List<String> values) {
+            addCriterion("describe_str in", values, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeNotIn(List<String> values) {
-            addCriterion("describe not in", values, "describe");
+        public Criteria andDescribeStrNotIn(List<String> values) {
+            addCriterion("describe_str not in", values, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeBetween(String value1, String value2) {
-            addCriterion("describe between", value1, value2, "describe");
+        public Criteria andDescribeStrBetween(String value1, String value2) {
+            addCriterion("describe_str between", value1, value2, "describeStr");
             return (Criteria) this;
         }
 
-        public Criteria andDescribeNotBetween(String value1, String value2) {
-            addCriterion("describe not between", value1, value2, "describe");
+        public Criteria andDescribeStrNotBetween(String value1, String value2) {
+            addCriterion("describe_str not between", value1, value2, "describeStr");
             return (Criteria) this;
         }
 
@@ -462,6 +461,38 @@ public class RoleExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -496,38 +527,6 @@ public class RoleExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.demo.controller.web;
 
 import com.example.demo.config.annotation.SessionScope;
+import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.WebSocketServer;
 import com.example.demo.util.AjaxResponse;
@@ -58,7 +59,7 @@ public class SocketController {
      */
     @RequestMapping(value = "/sendImitateSystemNews")
     @ResponseBody
-    public Object sendImitateSystemNews(@SessionScope(Constants.WEB_USER_INFO) UserInfo info) {
+    public Object sendImitateSystemNews(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info) {
         try {
             JDateTime time = new JDateTime(new Date());
             webSocketServer.sendInfo(info.getId().toString(), "模拟系统信息：" + time.toString());

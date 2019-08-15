@@ -135,4 +135,10 @@ public class ManagerInfo implements Serializable {
     public void setStatus(Boolean status) {
         this.status = status;
     }
+
+    public ManagerInfo getManagerInfo(ManagerInfo info){
+        info.setPassword(null);
+        info.setEncrypted(null);
+        return info;
+    }
 }

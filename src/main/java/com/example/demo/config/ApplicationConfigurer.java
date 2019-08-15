@@ -90,7 +90,7 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/web/user/**");
+        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/web/manager/**");
         registry.addInterceptor(new VueUserInterceptor()).addPathPatterns("/api/user/**");
         registry.addInterceptor(new VueStaticInterceptor()).addPathPatterns("/api/images/**");
         super.addInterceptors(registry);
