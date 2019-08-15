@@ -35,7 +35,7 @@ public class UserInfo implements Serializable {
 
     private Integer goodsCount;
 
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date createDate;
 
     private Boolean status;
