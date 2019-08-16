@@ -44,10 +44,26 @@ public class ManagerService {
      * @param userName
      * @return
      */
-    public ManagerInfo selectManagerInfoByUserName(String userName){
-        ManagerInfoExample example = new ManagerInfoExample();
+    public ViewManagerInfo selectManagerInfoByUserName(String userName) {
+        ViewManagerInfoExample example = new ViewManagerInfoExample();
         example.createCriteria().andUserNameEqualTo(userName);
-        List<ManagerInfo> list = managerInfoMapper.selectByExample(example);
+        List<ViewManagerInfo> list = viewManagerInfoMapper.selectByExample(example);
+        if (NullUtil.isNotNullOrEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 查询管理员信息
+     *
+     * @param id
+     * @return
+     */
+    public ViewManagerInfo selectViewManagerInfoById(Integer id) {
+        ViewManagerInfoExample example = new ViewManagerInfoExample();
+        example.createCriteria().andIdEqualTo(id);
+        List<ViewManagerInfo> list = viewManagerInfoMapper.selectByExample(example);
         if (NullUtil.isNotNullOrEmpty(list)){
             return list.get(0);
         }

@@ -2,7 +2,6 @@ package com.example.demo.controller.web;
 
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.ManagerInfo;
-import com.example.demo.entity.RoleInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
@@ -43,15 +42,26 @@ public class ManagerController {
                 model.addAttribute("errorStr", "未获取到登录信息");
                 return "/error";
             }
-            RoleInfo role = managerService.selectRoleInfoById(managerInfo.getRoleId());
-            model.addAttribute("manager", managerInfo);
-            model.addAttribute("roleName", role.getRoleName());
+            model.addAttribute("manager", managerService.selectViewManagerInfoById(managerInfo.getId()));
             return "/user/main";
         } catch (Exception e) {
             log.error("加载主页出错：{}", e);
             model.addAttribute("errorStr", "加载出错");
             return "/error";
         }
+    }
+
+    /**
+     * 加载账户信息
+     *
+     * @param info
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "loadAccountInfo")
+    public String loadAccountInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, Model model) {
+        model.addAttribute("manager", info);
+        return "/manager/account_info";
     }
 
     /**
@@ -70,12 +80,12 @@ public class ManagerController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "selectUserInfoByPage")
+    @RequestMapping(value = "selectManagerInfoByPage")
     @ResponseBody
-    public Object selectUserInfoByPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
+    public Object selectManagerInfoByPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
                                        ViewManagerInfo managerInfo, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
-        if (info.getParentId() == 2){
+        if (info.getParentId() == 3){
             managerInfo.setParentId(info.getId());
         }
         page = managerService.selectManagerInfoByPage(managerInfo, page);
@@ -92,7 +102,7 @@ public class ManagerController {
     @RequestMapping(value = "loadManagerInfo")
     public String loadManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, Integer id, Model model){
         ManagerInfo managerInfo = managerService.selectManagerInfoById(id);
-        if (info.getRoleId() == 2 && info.getId().intValue() != managerInfo.getParentId().intValue()){
+        if (info.getRoleId() == 3 && info.getId().intValue() != managerInfo.getParentId().intValue()){
             return "error";
         }
         model.addAttribute("manager", managerInfo.getManagerInfo(managerInfo));
@@ -138,7 +148,7 @@ public class ManagerController {
         if (!RegularUtil.checkMobile(managerInfo.getMobile())) {
             return AjaxResponse.error("手机号码格式不正确");
         }
-        if (info.getRoleId() == 2){
+        if (info.getRoleId() == 3){
             managerInfo.setParentId(info.getId());
             managerInfo.setRoleId(3);
         }

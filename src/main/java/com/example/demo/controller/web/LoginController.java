@@ -1,7 +1,6 @@
 package com.example.demo.controller.web;
 
 import com.example.demo.entity.ManagerInfo;
-import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
  * @create: 2019-07-17 11:03
  **/
 @Controller
-@RequestMapping(value = "/web/")
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
     @Autowired
@@ -33,7 +31,7 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping(value = "toIndex")
+    @RequestMapping(value = "index")
     public String toIndex() {
         return "/index";
     }
@@ -43,7 +41,7 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping(value = "loadLogin")
+    @RequestMapping(value = "/web/loadLogin")
     public String loadLogin(HttpServletRequest request, Model model) {
         boolean loginStatus = false;
         Object obj = request.getSession().getAttribute("loginStatus");
@@ -63,7 +61,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "doLogin")
+    @RequestMapping(value = "/web/doLogin")
     @ResponseBody
     public Object doLogin(String userName, String password, HttpServletRequest request) {
         try {
@@ -73,7 +71,7 @@ public class LoginController {
             if (NullUtil.isNullOrEmpty(password)) {
                 return AjaxResponse.error("密码不能为空");
             }
-            ManagerInfo managerInfo = managerService.selectManagerInfoByUserName(userName);
+            ViewManagerInfo managerInfo = managerService.selectManagerInfoByUserName(userName);
             if (null == managerInfo) {
                 log.error("用户名不存在：{}", userName);
                 return AjaxResponse.error("用户名或密码不匹配");
@@ -84,7 +82,11 @@ public class LoginController {
                 log.error("用户：{}，输入的密码错误：{}", userName, password);
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(managerInfo.getManagerInfo(managerInfo)));
+            if (managerInfo.getStatus().intValue() == 0) {
+                return AjaxResponse.error("该账户已禁用");
+            }
+            ManagerInfo manager = managerService.selectManagerInfoById(managerInfo.getId());
+            request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
             return AjaxResponse.success("登录成功");
         } catch (Exception e) {
             log.error("登录出错：{}", e);
@@ -98,7 +100,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "exitLogin")
+    @RequestMapping(value = "/web/exitLogin")
     @ResponseBody
     public Object exitLogin(HttpServletRequest request) {
         try {

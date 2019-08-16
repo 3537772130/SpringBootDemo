@@ -1,8 +1,8 @@
 package com.example.demo.config.intercepors;
 
 import com.example.demo.entity.ManagerInfo;
-import com.example.demo.entity.UserInfo;
 import com.example.demo.util.Constants;
+import com.example.demo.util.RandomUtil;
 import com.example.demo.util.SerializeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +38,10 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+
     }
 
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+        request.getSession().setAttribute("token", RandomUtil.getTimeStamp());
     }
 }

@@ -2,7 +2,6 @@ package com.example.demo.controller.web;
 
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.ManagerInfo;
-import com.example.demo.entity.UserInfo;
 import com.example.demo.service.WebSocketServer;
 import com.example.demo.util.AjaxResponse;
 import com.example.demo.util.Constants;
@@ -22,7 +21,7 @@ import java.util.Date;
  * @create: 2019-07-11 15:10
  **/
 @RestController
-@RequestMapping(value = "/web/user/socket")
+@RequestMapping(value = "/web/manager/socket")
 public class SocketController {
     private static final Logger log = LoggerFactory.getLogger(SocketController.class);
     @Resource
