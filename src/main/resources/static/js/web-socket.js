@@ -50,7 +50,7 @@ function send(message) {
 function sendImitateSystemNews() {
     var index = layer.load();
     $.ajax({
-        url: "/web/user/socket/sendImitateSystemNews",
+        url: "/web/manager/socket/sendImitateSystemNews",
         type: "POST",
         dataType: "JSON",
         success: function (data) {
