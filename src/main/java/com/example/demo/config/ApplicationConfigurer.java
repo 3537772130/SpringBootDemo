@@ -2,8 +2,9 @@ package com.example.demo.config;
 
 import com.example.demo.config.argumentResolver.SessionScopeMethod;
 import com.example.demo.config.intercepors.LoginInterceptor;
+import com.example.demo.config.intercepors.ManagerInterceptor;
+import com.example.demo.config.intercepors.UserInterceptor;
 import com.example.demo.config.intercepors.VueStaticInterceptor;
-import com.example.demo.config.intercepors.VueUserInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -90,8 +91,9 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/web/manager/**");
-        registry.addInterceptor(new VueUserInterceptor()).addPathPatterns("/api/user/**");
+        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/pc/manager/**");
+        registry.addInterceptor(new ManagerInterceptor()).addPathPatterns("/api/manager/**");
+        registry.addInterceptor(new UserInterceptor()).addPathPatterns("/api/user/**");
         registry.addInterceptor(new VueStaticInterceptor()).addPathPatterns("/api/images/**");
         super.addInterceptors(registry);
         log.info("已注入拦截器");

@@ -50,16 +50,16 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="applet-site-menu">
                 <li class="layui-nav-item layui-nav-itemed"><a class="applet-site-active"
                                                                data-type="tabAdd" id="menu_0"
-                                                               onclick="setTab('tab_0', '账户信息', '/web/manager/loadAccountInfo')">账户信息</a>
+                                                               onclick="setTab('tab_0', '账户信息', '/pc/manager/loadAccountInfo')">账户信息</a>
                 </li>
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;">用户信息</a>
                     <dl class="layui-nav-child">
                         <dd><a class="applet-site-active" data-type="tabAdd"
-                               id="menu_1" onclick="setTab('tab_1', '管理员列表', '/web/manager/loadManagerList')">管理员列表</a>
+                               id="menu_1" onclick="setTab('tab_1', '管理员列表', '/pc/manager/loadManagerList')">管理员列表</a>
                         </dd>
                         <dd><a class="applet-site-active" data-type="tabAdd"
-                               id="menu_2" onclick="setTab('tab_2', 'socket', '/web/manager/loadSocket')">socket</a>
+                               id="menu_2" onclick="setTab('tab_2', 'socket', '/pc/manager/loadSocket')">socket</a>
                         </dd>
                         <dd><a href="javascript:;">列表三</a></dd>
                         <dd><a href="">超链接</a></dd>
@@ -102,11 +102,7 @@
 </div>
 </body>
 <script type="text/javascript" th:inline="javascript">
-    var menuId, menuName, menuPath;
-    var menuInfo = {id: '', name: '', path: ''};
-    var menuList = [];
-
-    var tabId = 'tab_0', tabName = '账户信息', tabPath = '/web/manager/loadAccountInfo';
+    var menuId, tabId = 'tab_0', tabName = '账户信息', tabPath = '/pc/manager/loadAccountInfo';
     var tabInfo = {id: '', name: '', path: ''};
     var tabList = [];
 
@@ -133,10 +129,7 @@
                     }
                 }
                 if (bool) {
-                    tabInfo["id"] = tabId;
-                    tabInfo["name"] = tabName;
-                    tabInfo["path"] = tabPath;
-                    tabList.push(tabInfo);
+                    tabList.push({'id': tabId, 'name': tabName, 'path': tabPath});
                     element.tabAdd('applet-site-tab', {
                         title: tabName,
                         content: '<div id="' + tabId + '" style="widows: 100%;height: ' + (height - 51) + 'px;"></div>',
@@ -216,7 +209,7 @@
                 success: function (data) {
                     layer.msg(data.data);
                     if (data.code == "1") {
-                        window.location.href = "/web/loadLogin";
+                        window.location.href = "/pc/loadLogin";
                     }
                 },
                 complete: function () {

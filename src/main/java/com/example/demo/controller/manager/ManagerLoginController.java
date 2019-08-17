@@ -1,5 +1,6 @@
-package com.example.demo.controller.web;
+package com.example.demo.controller.manager;
 
+import com.example.demo.config.annotation.CancelAuthentication;
 import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
@@ -7,10 +8,8 @@ import com.example.demo.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,37 +19,22 @@ import javax.servlet.http.HttpServletRequest;
  * @author: Mr.ZhouHuaHu
  * @create: 2019-07-17 11:03
  **/
-@Controller
-public class LoginController {
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+@RestController
+@RequestMapping(value = "/api/manager/")
+public class ManagerLoginController {
+    private static final Logger log = LoggerFactory.getLogger(ManagerLoginController.class);
     @Autowired
     private ManagerService managerService;
 
     /**
-     * 加载index页面
+     * 登录拦截，返回错误码
      *
      * @return
      */
-    @RequestMapping(value = "index")
-    public String toIndex() {
-        return "/index";
-    }
-
-    /**
-     * 初始化登录界面
-     *
-     * @return
-     */
-    @RequestMapping(value = "/web/loadLogin")
-    public String loadLogin(HttpServletRequest request, Model model) {
-        boolean loginStatus = false;
-        Object obj = request.getSession().getAttribute("loginStatus");
-        if (null != obj) {
-            loginStatus = (boolean) obj;
-            request.getSession().removeAttribute("loginStatus");
-        }
-        model.addAttribute("loginStatus", NullUtil.isNullOrEmpty(loginStatus) ? false : loginStatus);
-        return "/user/login";
+    @RequestMapping(value = "error")
+    @CancelAuthentication
+    public Object error() {
+        return AjaxResponse.msg("0", "当前访问人数过多，请稍后再试");
     }
 
     /**
@@ -61,8 +45,8 @@ public class LoginController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/web/doLogin")
-    @ResponseBody
+    @RequestMapping(value = "doLogin")
+    @CancelAuthentication
     public Object doLogin(String userName, String password, HttpServletRequest request) {
         try {
             if (NullUtil.isNullOrEmpty(userName)) {
@@ -87,7 +71,7 @@ public class LoginController {
             }
             ManagerInfo manager = managerService.selectManagerInfoById(managerInfo.getId());
             request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
-            return AjaxResponse.success("登录成功");
+            return AjaxResponse.success(managerInfo.getManagerInfo(managerInfo));
         } catch (Exception e) {
             log.error("登录出错：{}", e);
             return AjaxResponse.error("登录失败");
@@ -95,20 +79,35 @@ public class LoginController {
     }
 
     /**
-     * 退出登录
+     * 检查登录状态
      *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/web/exitLogin")
-    @ResponseBody
-    public Object exitLogin(HttpServletRequest request) {
-        try {
-            request.getSession().removeAttribute(Constants.WEB_MANAGER_INFO);
-            return AjaxResponse.success("退出成功");
-        } catch (Exception e) {
-            log.error("退出登录出错：{}", e);
-            return AjaxResponse.error("退出登录失败");
+    @RequestMapping(value = "checkLogin")
+    @CancelAuthentication
+    public Object checkLogin(HttpServletRequest request) {
+        ManagerInfo manager = (ManagerInfo) SerializeUtil.unserialize((byte[]) request.getSession().getAttribute(Constants.WEB_MANAGER_INFO));
+        if (null == manager) {
+            return AjaxResponse.error("请先登录");
         }
+        return AjaxResponse.success();
     }
+
+    /**
+     * 检测账号是否已注册
+     *
+     * @param userName
+     * @return
+     */
+    @RequestMapping(value = "checkUserNameRegistered")
+    @CancelAuthentication
+    public Object checkUserNameRegistered(String userName) {
+        ViewManagerInfo info = managerService.selectManagerInfoByUserName(userName);
+        if (null == info) {
+            return AjaxResponse.success();
+        }
+        return AjaxResponse.error("该账户已被注册");
+    }
+
 }

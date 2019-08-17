@@ -70,14 +70,14 @@
             } else {
                 var index = layer.load();
                 $.ajax({
-                    url: "/web/doLogin",
+                    url: "/pc/doLogin",
                     type: "POST",
                     dataType: "JSON",
                     data: $("#loginForm").serialize(),
                     success: function (data) {
                         layer.msg(data.data, {time: 2000}, function () {
                             if (data.code == "1") {
-                                window.location.href = "/web/manager/loadMain";
+                                window.location.href = "/pc/manager/loadMain";
                             }
                         });
                     },

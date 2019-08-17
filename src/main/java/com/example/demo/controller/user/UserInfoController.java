@@ -1,4 +1,4 @@
-package com.example.demo.controller.vue;
+package com.example.demo.controller.user;
 
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.CheckResult;
@@ -31,23 +31,27 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping(value = "/api/user/")
-public class VueUserInfoController {
-    private static final Logger log = LoggerFactory.getLogger(VueUserInfoController.class);
+public class UserInfoController {
+    private static final Logger log = LoggerFactory.getLogger(UserInfoController.class);
     @Autowired
     public UserInfoService userInfoService;
 
+
     /**
-     * 获取登录信息
+     * 退出登录
      *
-     * @param user
+     * @param request
      * @return
      */
-    @RequestMapping(value = "getUserInfo")
-    public Object getUserInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user) {
-        if (null == user) {
-            return AjaxResponse.error("请先登录");
+    @RequestMapping(value = "exitLogin")
+    public Object exitLogin(HttpServletRequest request) {
+        try {
+            request.getSession().removeAttribute(Constants.VUE_USER_INFO);
+            return AjaxResponse.success();
+        } catch (Exception e) {
+            log.error("退出登录出错{}", e);
+            return AjaxResponse.error("退出登录失败");
         }
-        return AjaxResponse.success(user);
     }
 
     /**

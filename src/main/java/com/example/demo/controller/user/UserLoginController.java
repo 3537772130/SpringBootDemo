@@ -1,11 +1,9 @@
-package com.example.demo.controller.vue;
+package com.example.demo.controller.user;
 
-import com.example.demo.entity.RegionInfo;
+import com.example.demo.config.annotation.CancelAuthentication;
 import com.example.demo.entity.UserInfo;
-import com.example.demo.service.RegionService;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @program: SpringBootDemo
@@ -23,23 +20,12 @@ import java.util.List;
  * @create: 2019-07-05 17:10
  **/
 @RestController
-@RequestMapping(value = "/api/")
-public class VueLoginController {
-    private static final Logger log = LoggerFactory.getLogger(VueLoginController.class);
+@RequestMapping(value = "/api/user/")
+public class UserLoginController {
+    private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
     @Autowired
     public UserInfoService userInfoService;
-    @Autowired
-    private RegionService regionService;
 
-    /**
-     * 登录拦截，返回错误码
-     *
-     * @return
-     */
-    @RequestMapping(value = "error")
-    public Object error() {
-        return AjaxResponse.msg("0", "当前访问人数过多，请稍后再试");
-    }
 
     /**
      * 检查登录状态
@@ -47,7 +33,8 @@ public class VueLoginController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "checkLogin")
+    @RequestMapping(value = "user/checkLogin")
+    @CancelAuthentication
     public Object checkLogin(HttpServletRequest request) {
         UserInfo user = (UserInfo) SerializeUtil.unserialize((byte[]) request.getSession().getAttribute(Constants.VUE_USER_INFO));
         if (null == user) {
@@ -64,6 +51,7 @@ public class VueLoginController {
      * @return
      */
     @RequestMapping(value = "doLogin", method = RequestMethod.POST)
+    @CancelAuthentication
     public Object doLogin(UserInfo info, HttpServletRequest request) {
         try {
             if (NullUtil.isNullOrEmpty(info.getMobile())) {
@@ -103,29 +91,13 @@ public class VueLoginController {
     }
 
     /**
-     * 退出登录
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "exitLogin")
-    public Object exitLogin(HttpServletRequest request) {
-        try {
-            request.getSession().removeAttribute(Constants.VUE_USER_INFO);
-            return AjaxResponse.success();
-        } catch (Exception e) {
-            log.error("退出登录出错{}", e);
-            return AjaxResponse.error("退出登录失败");
-        }
-    }
-
-    /**
      * 检测手机号码是否已注册
      * @param mobile
      * @return
      */
-    @RequestMapping(value = "mobileWhetherRegistered")
-    public Object mobileWhetherRegistered(String mobile) {
+    @RequestMapping(value = "checkMobilRegistered")
+    @CancelAuthentication
+    public Object checkMobilRegistered(String mobile) {
         UserInfo info = userInfoService.selectUserInfoByMobile(mobile);
         if (null == info) {
             return AjaxResponse.success();
@@ -140,6 +112,7 @@ public class VueLoginController {
      * @return
      */
     @RequestMapping(value = "doRegister")
+    @CancelAuthentication
     public Object doRegister(UserInfo info) {
         try {
             if (null == info) {
@@ -177,29 +150,5 @@ public class VueLoginController {
         }
     }
 
-    /**
-     * 查询地域信息集合
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "selectRegionList")
-    public Object selectRegionList(String id) {
-        List<RegionInfo> list = null;
-        if (NullUtil.isNotNullOrEmpty(id)) {
-            list = regionService.selectRegionList(Integer.parseInt(id), null);
-        } else {
-            list = regionService.selectProvinceList();
-        }
-        return AjaxResponse.success(list);
-    }
 
-    /**
-     * 查询地域信息JSON
-     *
-     * @return
-     */
-    @RequestMapping(value = "selectRegionJson")
-    public Object selectRegionJson() {
-        return AjaxResponse.success(new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
-    }
 }

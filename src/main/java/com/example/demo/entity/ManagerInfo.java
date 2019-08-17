@@ -7,22 +7,39 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ManagerInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private String userName;
+
     private String password;
+
     private String encrypted;
+
     private Integer parentId;
+
     private String nickName;
+
     private Integer roleId;
+
     private String avatarUrl;
+
     private String email;
+
     private String mobile;
+
     private String qqAccount;
+
     private String weChatAccount;
+
+    private static final long serialVersionUID = 1L;
+    private String province;
+    private String city;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date createDate;
+
     private Boolean status;
+    private String county;
 
     public Integer getId() {
         return id;
@@ -118,6 +135,30 @@ public class ManagerInfo implements Serializable {
 
     public void setWeChatAccount(String weChatAccount) {
         this.weChatAccount = weChatAccount == null ? null : weChatAccount.trim();
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county == null ? null : county.trim();
     }
 
     public Date getCreateDate() {

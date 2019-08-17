@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 
-public class RoleInfo implements Serializable {
+public class ManagerRole implements Serializable {
     private Integer id;
 
     private String roleName;
@@ -14,7 +14,7 @@ public class RoleInfo implements Serializable {
     private String describeStr;
 
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
-    private Date createDate;
+    private Date updateDate;
 
     private Boolean status;
 
@@ -44,12 +44,12 @@ public class RoleInfo implements Serializable {
         this.describeStr = describeStr == null ? null : describeStr.trim();
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getUpdateDate() {
+        return updateDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     public Boolean getStatus() {

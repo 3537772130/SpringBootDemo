@@ -7,8 +7,7 @@ import com.example.demo.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: demo
@@ -24,7 +23,7 @@ public class ManagerService {
     @Autowired
     private ViewManagerInfoMapper viewManagerInfoMapper;
     @Autowired
-    private RoleInfoMapper roleInfoMapper;
+    private ManagerRoleMapper managerRoleMapper;
     @Autowired
     private ManagerLogMapper managerLogMapper;
     @Autowired
@@ -76,7 +75,7 @@ public class ManagerService {
      * @param page
      * @return
      */
-    public Page selectManagerInfoByPage(ViewManagerInfo info, Page page){
+    public Page selectManagerInfoToPage(ViewManagerInfo info, Page page) {
         ViewManagerInfoExample example = new ViewManagerInfoExample();
         example.setPage(page);
         example.setOrderByClause("id desc");
@@ -95,6 +94,15 @@ public class ManagerService {
         }
         if (NullUtil.isNotNullOrEmpty(info.getWeChatAccount())){
             c.andWeChatAccountLike(info.getWeChatAccount() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(info.getProvince())) {
+            c.andProvinceEqualTo(info.getProvince());
+        }
+        if (NullUtil.isNotNullOrEmpty(info.getCity())) {
+            c.andCityEqualTo(info.getCity());
+        }
+        if (NullUtil.isNotNullOrEmpty(info.getCounty())) {
+            c.andCountyEqualTo(info.getCounty());
         }
         if (NullUtil.isNotNullOrEmpty(info.getParentUserName())){
             c.andParentUserNameEqualTo(info.getParentUserName());
@@ -132,8 +140,30 @@ public class ManagerService {
      * @param id
      * @return
      */
-    public RoleInfo selectRoleInfoById(Integer id){
-        return roleInfoMapper.selectByPrimaryKey(id);
+    public ManagerRole selectManagerRoleById(Integer id) {
+        return managerRoleMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 查询角色Map集合
+     *
+     * @return
+     */
+    public List<Map> selectRoleToMap() {
+        ManagerRoleExample example = new ManagerRoleExample();
+        example.setOrderByClause("id asc");
+        List<ManagerRole> list = managerRoleMapper.selectByExample(example);
+        if (NullUtil.isNotNullOrEmpty(list)) {
+            List<Map> mapList = new ArrayList<>();
+            for (ManagerRole role : list) {
+                Map map = new HashMap();
+                map.put("id", role.getId());
+                map.put("name", role.getRoleName());
+                mapList.add(map);
+            }
+            return mapList;
+        }
+        return null;
     }
 
     /**
@@ -142,21 +172,21 @@ public class ManagerService {
      * @param page
      * @return
      */
-    public Page selectRoleInfoByRoleName(RoleInfo info, Page page){
-        RoleInfoExample example = new RoleInfoExample();
+    public Page selectRoleToPage(ManagerRole info, Page page) {
+        ManagerRoleExample example = new ManagerRoleExample();
         example.setPage(page);
         example.setOrderByClause("id desc");
-        RoleInfoExample.Criteria c = example.createCriteria();
+        ManagerRoleExample.Criteria c = example.createCriteria();
         if (NullUtil.isNotNullOrEmpty(info.getRoleName())){
             c.andRoleNameLike("%" + info.getRoleName() + "%");
         }
         if (NullUtil.isNotNullOrEmpty(info.getStatus())){
             c.andStatusEqualTo(info.getStatus());
         }
-        long count = roleInfoMapper.countByExample(example);
+        long count = managerRoleMapper.countByExample(example);
         if (count > 0){
             page.setTotalCount(count);
-            page.setDataSource(roleInfoMapper.selectByExample(example));
+            page.setDataSource(managerRoleMapper.selectByExample(example));
         }
         return page;
     }
@@ -165,12 +195,12 @@ public class ManagerService {
      * 更新管理员角色信息
      * @param info
      */
-    public void updateRoleInfo(RoleInfo info){
-        if (NullUtil.isNotNullOrEmpty(info.getId())){
-            roleInfoMapper.updateByPrimaryKeySelective(info);
+    public void updateManagerRole(ManagerRole info) {
+        info.setUpdateDate(new Date());
+        if (NullUtil.isNotNullOrEmpty(info.getId())) {
+            managerRoleMapper.updateByPrimaryKeySelective(info);
         } else {
-            info.setCreateDate(new Date());
-            roleInfoMapper.insertSelective(info);
+            managerRoleMapper.insertSelective(info);
         }
     }
 }

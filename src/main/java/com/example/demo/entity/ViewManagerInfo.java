@@ -31,6 +31,12 @@ public class ViewManagerInfo implements Serializable {
 
     private String weChatAccount;
 
+    private String province;
+
+    private String city;
+
+    private String county;
+
     private Integer parentId;
 
     private String parentUserName;
@@ -140,6 +146,30 @@ public class ViewManagerInfo implements Serializable {
         this.weChatAccount = weChatAccount == null ? null : weChatAccount.trim();
     }
 
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county == null ? null : county.trim();
+    }
+
     public Integer getParentId() {
         return parentId;
     }
@@ -178,5 +208,11 @@ public class ViewManagerInfo implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public ViewManagerInfo getManagerInfo(ViewManagerInfo info) {
+        info.setPassword(null);
+        info.setEncrypted(null);
+        return info;
     }
 }

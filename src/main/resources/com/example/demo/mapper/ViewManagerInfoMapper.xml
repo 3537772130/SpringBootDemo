@@ -14,6 +14,9 @@
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="QQ_account" jdbcType="VARCHAR" property="qqAccount" />
     <result column="we_chat_account" jdbcType="VARCHAR" property="weChatAccount" />
+      <result column="province" jdbcType="VARCHAR" property="province"/>
+      <result column="city" jdbcType="VARCHAR" property="city"/>
+      <result column="county" jdbcType="VARCHAR" property="county"/>
     <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="parent_user_name" jdbcType="VARCHAR" property="parentUserName" />
     <result column="parent_nick_name" jdbcType="VARCHAR" property="parentNickName" />
@@ -50,9 +53,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_name, password, encrypted, nick_name, role_id, role_name, avatar_url, email, 
-    mobile, QQ_account, we_chat_account, parent_id, parent_user_name, parent_nick_name, 
-    create_date, status
+    id, user_name, password, encrypted, nick_name, role_id, role_name, avatar_url, email,
+    mobile, QQ_account, we_chat_account, province, city, county, parent_id, parent_user_name,
+    parent_nick_name, create_date, status
   </sql>
   <select id="selectByExample" parameterType="com.example.demo.entity.ViewManagerInfoExample" resultMap="BaseResultMap">
     select

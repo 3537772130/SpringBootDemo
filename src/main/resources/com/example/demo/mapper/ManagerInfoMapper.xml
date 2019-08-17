@@ -14,6 +14,9 @@
         <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
         <result column="QQ_account" jdbcType="VARCHAR" property="qqAccount"/>
         <result column="we_chat_account" jdbcType="VARCHAR" property="weChatAccount"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="county" jdbcType="VARCHAR" property="county"/>
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
         <result column="status" jdbcType="BIT" property="status"/>
     </resultMap>
@@ -79,7 +82,7 @@
     </sql>
     <sql id="Base_Column_List">
     id, user_name, password, encrypted, parent_id, nick_name, role_id, avatar_url, email,
-    mobile, QQ_account, we_chat_account, create_date, status
+    mobile, QQ_account, we_chat_account, province, city, county, create_date, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ManagerInfoExample" resultMap="BaseResultMap">
         select
@@ -117,11 +120,13 @@
       encrypted, parent_id, nick_name,
       role_id, avatar_url, email,
       mobile, QQ_account, we_chat_account,
+      province, city, county,
       create_date, status)
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{encrypted,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{nickName,jdbcType=VARCHAR},
       #{roleId,jdbcType=INTEGER}, #{avatarUrl,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{qqAccount,jdbcType=VARCHAR}, #{weChatAccount,jdbcType=VARCHAR},
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR},
       #{createDate,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.ManagerInfo"
@@ -163,6 +168,15 @@
             </if>
             <if test="weChatAccount != null">
                 we_chat_account,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="county != null">
+                county,
             </if>
             <if test="createDate != null">
                 create_date,
@@ -207,6 +221,15 @@
             </if>
             <if test="weChatAccount != null">
                 #{weChatAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                #{county,jdbcType=VARCHAR},
             </if>
             <if test="createDate != null">
                 #{createDate,jdbcType=TIMESTAMP},
@@ -261,6 +284,15 @@
             <if test="record.weChatAccount != null">
                 we_chat_account = #{record.weChatAccount,jdbcType=VARCHAR},
             </if>
+            <if test="record.province != null">
+                province = #{record.province,jdbcType=VARCHAR},
+            </if>
+            <if test="record.city != null">
+                city = #{record.city,jdbcType=VARCHAR},
+            </if>
+            <if test="record.county != null">
+                county = #{record.county,jdbcType=VARCHAR},
+            </if>
             <if test="record.createDate != null">
                 create_date = #{record.createDate,jdbcType=TIMESTAMP},
             </if>
@@ -286,6 +318,9 @@
         mobile = #{record.mobile,jdbcType=VARCHAR},
         QQ_account = #{record.qqAccount,jdbcType=VARCHAR},
         we_chat_account = #{record.weChatAccount,jdbcType=VARCHAR},
+        province = #{record.province,jdbcType=VARCHAR},
+        city = #{record.city,jdbcType=VARCHAR},
+        county = #{record.county,jdbcType=VARCHAR},
         create_date = #{record.createDate,jdbcType=TIMESTAMP},
         status = #{record.status,jdbcType=BIT}
         <if test="_parameter != null">
@@ -328,6 +363,15 @@
             <if test="weChatAccount != null">
                 we_chat_account = #{weChatAccount,jdbcType=VARCHAR},
             </if>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                county = #{county,jdbcType=VARCHAR},
+            </if>
             <if test="createDate != null">
                 create_date = #{createDate,jdbcType=TIMESTAMP},
             </if>
@@ -350,6 +394,9 @@
       mobile = #{mobile,jdbcType=VARCHAR},
       QQ_account = #{qqAccount,jdbcType=VARCHAR},
       we_chat_account = #{weChatAccount,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      county = #{county,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}

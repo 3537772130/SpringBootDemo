@@ -60,7 +60,7 @@ public class ImageController {
      * @return
      */
     @RequestMapping("/api/image/getImage")
-    public String getImage(ImageInfo info) throws Exception {
+    public String getApiImage(ImageInfo info) throws Exception {
         String fontFamily = NullUtil.isNotNullOrEmpty(info.getFontFamily()) ? URLEncoder.encode(info.getFontFamily(), "utf-8") : null;
         String text = NullUtil.isNotNullOrEmpty(info.getText()) ? URLEncoder.encode(info.getText(), "utf-8") : null;
         String param = "?italic=" + info.getItalic() +
