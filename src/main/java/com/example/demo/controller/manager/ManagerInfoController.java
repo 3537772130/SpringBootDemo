@@ -71,7 +71,7 @@ public class ManagerInfoController {
     public Object getManagerInfo(Integer id) {
         ManagerInfo managerInfo = managerService.selectManagerInfoById(id);
         if (null != managerInfo) {
-            managerInfo.setPassword("");
+            managerInfo.setPassword(null);
             managerInfo.setEncrypted(null);
             return AjaxResponse.success(managerInfo);
         }
@@ -109,11 +109,13 @@ public class ManagerInfoController {
             String cipher = DesUtil.encrypt(managerInfo.getPassword(), managerInfo.getEncrypted());
             cipher = MD5Util.MD5(cipher);
             managerInfo.setPassword(cipher);
+        } else {
+            managerInfo.setPassword(null);
         }
         if (NullUtil.isNullOrEmpty(managerInfo.getNickName())) {
             return AjaxResponse.error("请设置昵称");
         }
-        if (managerInfo.getNickName().getBytes().length > 20) {
+        if (managerInfo.getNickName().getBytes().length > 30) {
             return AjaxResponse.error("昵称长度过长");
         }
         if (NullUtil.isNullOrEmpty(managerInfo.getMobile())) {
