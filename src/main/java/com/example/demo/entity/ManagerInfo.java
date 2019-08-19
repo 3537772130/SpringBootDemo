@@ -15,6 +15,8 @@ public class ManagerInfo implements Serializable {
 
     private String encrypted;
 
+    private static final long serialVersionUID = 1L;
+
     private Integer parentId;
 
     private String nickName;
@@ -31,9 +33,10 @@ public class ManagerInfo implements Serializable {
 
     private String weChatAccount;
 
-    private static final long serialVersionUID = 1L;
     private String province;
+
     private String city;
+    private String extensionCode;
 
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date createDate;
@@ -71,6 +74,14 @@ public class ManagerInfo implements Serializable {
 
     public void setEncrypted(String encrypted) {
         this.encrypted = encrypted == null ? null : encrypted.trim();
+    }
+
+    public String getExtensionCode() {
+        return extensionCode;
+    }
+
+    public void setExtensionCode(String extensionCode) {
+        this.extensionCode = extensionCode == null ? null : extensionCode.trim();
     }
 
     public Integer getParentId() {

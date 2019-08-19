@@ -15,6 +15,8 @@ public class ViewManagerInfo implements Serializable {
 
     private String encrypted;
 
+    private String extensionCode;
+
     private String nickName;
 
     private Integer roleId;
@@ -80,6 +82,14 @@ public class ViewManagerInfo implements Serializable {
 
     public void setEncrypted(String encrypted) {
         this.encrypted = encrypted == null ? null : encrypted.trim();
+    }
+
+    public String getExtensionCode() {
+        return extensionCode;
+    }
+
+    public void setExtensionCode(String extensionCode) {
+        this.extensionCode = extensionCode == null ? null : extensionCode.trim();
     }
 
     public String getNickName() {

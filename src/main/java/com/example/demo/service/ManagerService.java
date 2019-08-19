@@ -4,6 +4,7 @@ import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
+import jodd.datetime.JDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,22 @@ public class ManagerService {
         ViewManagerInfoExample example = new ViewManagerInfoExample();
         example.createCriteria().andUserNameEqualTo(userName);
         List<ViewManagerInfo> list = viewManagerInfoMapper.selectByExample(example);
+        if (NullUtil.isNotNullOrEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 查询管理员信息（业务主管、业务员）
+     *
+     * @param extensionCode
+     * @return
+     */
+    public ManagerInfo selectManagerInfoByExtensionCode(String extensionCode) {
+        ManagerInfoExample example = new ManagerInfoExample();
+        example.createCriteria().andExtensionCodeEqualTo(extensionCode).andStatusEqualTo(true);
+        List<ManagerInfo> list = managerInfoMapper.selectByExample(example);
         if (NullUtil.isNotNullOrEmpty(list)) {
             return list.get(0);
         }
@@ -131,6 +148,10 @@ public class ManagerService {
             managerInfoMapper.updateByPrimaryKeySelective(info);
         } else {
             info.setCreateDate(new Date());
+            if (info.getRoleId().intValue() == 3 || info.getRoleId().intValue() == 4) {
+                JDateTime time = new JDateTime(new Date());
+                info.setExtensionCode(time.toString("MMddHHmmss"));
+            }
             managerInfoMapper.insertSelective(info);
         }
     }

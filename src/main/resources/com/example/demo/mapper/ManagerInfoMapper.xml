@@ -6,6 +6,7 @@
         <result column="user_name" jdbcType="VARCHAR" property="userName"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="encrypted" jdbcType="VARCHAR" property="encrypted"/>
+        <result column="extension_code" jdbcType="VARCHAR" property="extensionCode"/>
         <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
         <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
         <result column="role_id" jdbcType="INTEGER" property="roleId"/>
@@ -81,8 +82,9 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_name, password, encrypted, parent_id, nick_name, role_id, avatar_url, email,
-    mobile, QQ_account, we_chat_account, province, city, county, create_date, status
+    id, user_name, password, encrypted, extension_code, parent_id, nick_name, role_id,
+    avatar_url, email, mobile, QQ_account, we_chat_account, province, city, county, create_date,
+    status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ManagerInfoExample" resultMap="BaseResultMap">
         select
@@ -117,17 +119,19 @@
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.ManagerInfo">
     insert into manager_info (id, user_name, password,
-      encrypted, parent_id, nick_name,
-      role_id, avatar_url, email,
-      mobile, QQ_account, we_chat_account,
-      province, city, county,
-      create_date, status)
+      encrypted, extension_code, parent_id,
+      nick_name, role_id, avatar_url,
+      email, mobile, QQ_account,
+      we_chat_account, province, city,
+      county, create_date, status
+      )
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-      #{encrypted,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{nickName,jdbcType=VARCHAR},
-      #{roleId,jdbcType=INTEGER}, #{avatarUrl,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-      #{mobile,jdbcType=VARCHAR}, #{qqAccount,jdbcType=VARCHAR}, #{weChatAccount,jdbcType=VARCHAR},
-      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR},
-      #{createDate,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
+      #{encrypted,jdbcType=VARCHAR}, #{extensionCode,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER},
+      #{nickName,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{avatarUrl,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{qqAccount,jdbcType=VARCHAR},
+      #{weChatAccount,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+      #{county,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}
+      )
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.ManagerInfo"
             useGeneratedKeys="true">
@@ -144,6 +148,9 @@
             </if>
             <if test="encrypted != null">
                 encrypted,
+            </if>
+            <if test="extensionCode != null">
+                extension_code,
             </if>
             <if test="parentId != null">
                 parent_id,
@@ -197,6 +204,9 @@
             </if>
             <if test="encrypted != null">
                 #{encrypted,jdbcType=VARCHAR},
+            </if>
+            <if test="extensionCode != null">
+                #{extensionCode,jdbcType=VARCHAR},
             </if>
             <if test="parentId != null">
                 #{parentId,jdbcType=INTEGER},
@@ -260,6 +270,9 @@
             <if test="record.encrypted != null">
                 encrypted = #{record.encrypted,jdbcType=VARCHAR},
             </if>
+            <if test="record.extensionCode != null">
+                extension_code = #{record.extensionCode,jdbcType=VARCHAR},
+            </if>
             <if test="record.parentId != null">
                 parent_id = #{record.parentId,jdbcType=INTEGER},
             </if>
@@ -310,6 +323,7 @@
         user_name = #{record.userName,jdbcType=VARCHAR},
         password = #{record.password,jdbcType=VARCHAR},
         encrypted = #{record.encrypted,jdbcType=VARCHAR},
+        extension_code = #{record.extensionCode,jdbcType=VARCHAR},
         parent_id = #{record.parentId,jdbcType=INTEGER},
         nick_name = #{record.nickName,jdbcType=VARCHAR},
         role_id = #{record.roleId,jdbcType=INTEGER},
@@ -338,6 +352,9 @@
             </if>
             <if test="encrypted != null">
                 encrypted = #{encrypted,jdbcType=VARCHAR},
+            </if>
+            <if test="extensionCode != null">
+                extension_code = #{extensionCode,jdbcType=VARCHAR},
             </if>
             <if test="parentId != null">
                 parent_id = #{parentId,jdbcType=INTEGER},
@@ -386,6 +403,7 @@
     set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       encrypted = #{encrypted,jdbcType=VARCHAR},
+      extension_code = #{extensionCode,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=INTEGER},
       nick_name = #{nickName,jdbcType=VARCHAR},
       role_id = #{roleId,jdbcType=INTEGER},
