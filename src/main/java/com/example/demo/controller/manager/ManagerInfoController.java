@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create: 2019-06-14 14:50
  **/
 @RestController
-@RequestMapping(value = "/api/manager/")
+@RequestMapping(value = "/api/manage/")
 public class ManagerInfoController {
     private static final Logger log = LoggerFactory.getLogger(ManagerInfoController.class);
     @Autowired

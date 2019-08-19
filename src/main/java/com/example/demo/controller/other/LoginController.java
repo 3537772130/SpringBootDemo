@@ -134,7 +134,7 @@ public class LoginController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/pc/manager/loadMain")
+    @RequestMapping(value = "/pc/manage/loadMain")
     public String loadMain(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo managerInfo, Model model) {
         try {
             if (null == managerInfo) {
@@ -157,7 +157,7 @@ public class LoginController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/pc/manager/loadAccountInfo")
+    @RequestMapping(value = "/pc/manage/loadAccountInfo")
     public String loadAccountInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, Model model) {
         model.addAttribute("manager", info);
         return "/manager/account_info";
@@ -168,7 +168,7 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping(value = "/pc/manager/loadManagerList")
+    @RequestMapping(value = "/pc/manage/loadManagerList")
     public String loadManagerList() {
         return "/manager/manager_list";
     }
@@ -181,7 +181,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/pc/manager/selectManagerInfoToPage")
+    @RequestMapping(value = "/pc/manage/selectManagerInfoToPage")
     @ResponseBody
     public Object selectManagerInfoToPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
                                           ViewManagerInfo managerInfo, HttpServletRequest request) {
@@ -201,7 +201,7 @@ public class LoginController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/pc/manager/loadManagerInfo")
+    @RequestMapping(value = "/pc/manage/loadManagerInfo")
     public String loadManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, Integer id, Model model) {
         ManagerInfo managerInfo = managerService.selectManagerInfoById(id);
         if (info.getRoleId() == 3 && info.getId().intValue() != managerInfo.getParentId().intValue()) {
@@ -217,7 +217,7 @@ public class LoginController {
      * @param managerInfo
      * @return
      */
-    @RequestMapping(value = "/pc/manager/UpdateManagerInfo")
+    @RequestMapping(value = "/pc/manage/UpdateManagerInfo")
     @ResponseBody
     public Object UpdateManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, ManagerInfo managerInfo) {
         if (null == managerInfo) {
@@ -263,7 +263,7 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(value = "/pc/manager/loadSocket")
+    @RequestMapping(value = "/pc/manage/loadSocket")
     public String loadSocket(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, Model model) {
         model.addAttribute("sId", info.getId());
         return "/socket/socket";
