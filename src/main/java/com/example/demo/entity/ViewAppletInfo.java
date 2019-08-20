@@ -1,40 +1,74 @@
 package com.example.demo.entity;
 
+import com.example.demo.util.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class ViewAppletInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private Integer userId;
+
     private String mobile;
+
     private String nickName;
+
     private String appletCode;
+
     private String appletName;
+
     private String appletSimple;
+
     private String licenseCode;
+
     private String businessScope;
+
+    private static final long serialVersionUID = 1L;
+
     private String telephone;
+
     private String managerAccount;
+
     private String managerPassword;
+
     private String appId;
+
     private String appSecret;
+
     private String province;
+
     private String city;
+
     private String county;
+
     private String addressSimple;
+
     private String addressDetails;
+
     private Double lon;
+
     private Double lat;
+
     private String appletLogo;
+
     private Integer recommenderId;
+
     private String recommenderAccount;
+
     private String recommenderName;
+
     private Boolean ifRetail;
+
     private Boolean ifSelling;
+
     private Boolean ifComplete;
-    private Date updateTime;
+    private String licenseSrc;
+
     private Boolean status;
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
+    private Date updateTime;
 
     public Integer getId() {
         return id;
@@ -106,6 +140,14 @@ public class ViewAppletInfo implements Serializable {
 
     public void setBusinessScope(String businessScope) {
         this.businessScope = businessScope == null ? null : businessScope.trim();
+    }
+
+    public String getLicenseSrc() {
+        return licenseSrc;
+    }
+
+    public void setLicenseSrc(String licenseSrc) {
+        this.licenseSrc = licenseSrc == null ? null : licenseSrc.trim();
     }
 
     public String getTelephone() {

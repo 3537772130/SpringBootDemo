@@ -9,6 +9,7 @@
         <result column="applet_simple" jdbcType="VARCHAR" property="appletSimple"/>
         <result column="license_code" jdbcType="VARCHAR" property="licenseCode"/>
         <result column="business_scope" jdbcType="VARCHAR" property="businessScope"/>
+        <result column="license_src" jdbcType="VARCHAR" property="licenseSrc"/>
         <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
         <result column="manager_account" jdbcType="VARCHAR" property="managerAccount"/>
         <result column="manager_password" jdbcType="VARCHAR" property="managerPassword"/>
@@ -91,9 +92,9 @@
     </sql>
     <sql id="Base_Column_List">
     id, user_id, applet_code, applet_name, applet_simple, license_code, business_scope,
-    telephone, manager_account, manager_password, app_id, app_secret, province, city,
-    county, address_simple, address_details, lon, lat, applet_logo, if_retail, if_selling,
-    if_complete, recommender_id, update_time, status
+    license_src, telephone, manager_account, manager_password, app_id, app_secret, province,
+    city, county, address_simple, address_details, lon, lat, applet_logo, if_retail,
+    if_selling, if_complete, recommender_id, update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.AppletInfoExample" resultMap="BaseResultMap">
         select
@@ -129,22 +130,24 @@
     <insert id="insert" parameterType="com.example.demo.entity.AppletInfo">
     insert into applet_info (id, user_id, applet_code,
       applet_name, applet_simple, license_code,
-      business_scope, telephone, manager_account,
-      manager_password, app_id, app_secret,
-      province, city, county,
-      address_simple, address_details, lon,
-      lat, applet_logo, if_retail,
-      if_selling, if_complete, recommender_id,
-      update_time, status)
+      business_scope, license_src, telephone,
+      manager_account, manager_password, app_id,
+      app_secret, province, city,
+      county, address_simple, address_details,
+      lon, lat, applet_logo,
+      if_retail, if_selling, if_complete,
+      recommender_id, update_time, status
+      )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{appletCode,jdbcType=VARCHAR},
       #{appletName,jdbcType=VARCHAR}, #{appletSimple,jdbcType=VARCHAR}, #{licenseCode,jdbcType=VARCHAR},
-      #{businessScope,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{managerAccount,jdbcType=VARCHAR},
-      #{managerPassword,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR},
-      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR},
-      #{addressSimple,jdbcType=VARCHAR}, #{addressDetails,jdbcType=VARCHAR}, #{lon,jdbcType=DOUBLE},
-      #{lat,jdbcType=DOUBLE}, #{appletLogo,jdbcType=VARCHAR}, #{ifRetail,jdbcType=BIT},
-      #{ifSelling,jdbcType=BIT}, #{ifComplete,jdbcType=BIT}, #{recommenderId,jdbcType=INTEGER},
-      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
+      #{businessScope,jdbcType=VARCHAR}, #{licenseSrc,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR},
+      #{managerAccount,jdbcType=VARCHAR}, #{managerPassword,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR},
+      #{appSecret,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+      #{county,jdbcType=VARCHAR}, #{addressSimple,jdbcType=VARCHAR}, #{addressDetails,jdbcType=VARCHAR},
+      #{lon,jdbcType=DOUBLE}, #{lat,jdbcType=DOUBLE}, #{appletLogo,jdbcType=VARCHAR},
+      #{ifRetail,jdbcType=BIT}, #{ifSelling,jdbcType=BIT}, #{ifComplete,jdbcType=BIT},
+      #{recommenderId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}
+      )
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.AppletInfo"
             useGeneratedKeys="true">
@@ -170,6 +173,9 @@
             </if>
             <if test="businessScope != null">
                 business_scope,
+            </if>
+            <if test="licenseSrc != null">
+                license_src,
             </if>
             <if test="telephone != null">
                 telephone,
@@ -250,6 +256,9 @@
             </if>
             <if test="businessScope != null">
                 #{businessScope,jdbcType=VARCHAR},
+            </if>
+            <if test="licenseSrc != null">
+                #{licenseSrc,jdbcType=VARCHAR},
             </if>
             <if test="telephone != null">
                 #{telephone,jdbcType=VARCHAR},
@@ -340,6 +349,9 @@
             <if test="record.businessScope != null">
                 business_scope = #{record.businessScope,jdbcType=VARCHAR},
             </if>
+            <if test="record.licenseSrc != null">
+                license_src = #{record.licenseSrc,jdbcType=VARCHAR},
+            </if>
             <if test="record.telephone != null">
                 telephone = #{record.telephone,jdbcType=VARCHAR},
             </if>
@@ -411,6 +423,7 @@
         applet_simple = #{record.appletSimple,jdbcType=VARCHAR},
         license_code = #{record.licenseCode,jdbcType=VARCHAR},
         business_scope = #{record.businessScope,jdbcType=VARCHAR},
+        license_src = #{record.licenseSrc,jdbcType=VARCHAR},
         telephone = #{record.telephone,jdbcType=VARCHAR},
         manager_account = #{record.managerAccount,jdbcType=VARCHAR},
         manager_password = #{record.managerPassword,jdbcType=VARCHAR},
@@ -454,6 +467,9 @@
             </if>
             <if test="businessScope != null">
                 business_scope = #{businessScope,jdbcType=VARCHAR},
+            </if>
+            <if test="licenseSrc != null">
+                license_src = #{licenseSrc,jdbcType=VARCHAR},
             </if>
             <if test="telephone != null">
                 telephone = #{telephone,jdbcType=VARCHAR},
@@ -523,6 +539,7 @@
       applet_simple = #{appletSimple,jdbcType=VARCHAR},
       license_code = #{licenseCode,jdbcType=VARCHAR},
       business_scope = #{businessScope,jdbcType=VARCHAR},
+      license_src = #{licenseSrc,jdbcType=VARCHAR},
       telephone = #{telephone,jdbcType=VARCHAR},
       manager_account = #{managerAccount,jdbcType=VARCHAR},
       manager_password = #{managerPassword,jdbcType=VARCHAR},

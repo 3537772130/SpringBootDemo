@@ -19,20 +19,20 @@ public class AppletInfoExample {
         oredCriteria = new ArrayList<Criteria>();
     }
 
-    public String getOrderByClause() {
-        return orderByClause;
-    }
-
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -584,6 +584,76 @@ public class AppletInfoExample {
 
         public Criteria andBusinessScopeNotBetween(String value1, String value2) {
             addCriterion("business_scope not between", value1, value2, "businessScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcIsNull() {
+            addCriterion("license_src is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcIsNotNull() {
+            addCriterion("license_src is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcEqualTo(String value) {
+            addCriterion("license_src =", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcNotEqualTo(String value) {
+            addCriterion("license_src <>", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcGreaterThan(String value) {
+            addCriterion("license_src >", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcGreaterThanOrEqualTo(String value) {
+            addCriterion("license_src >=", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcLessThan(String value) {
+            addCriterion("license_src <", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcLessThanOrEqualTo(String value) {
+            addCriterion("license_src <=", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcLike(String value) {
+            addCriterion("license_src like", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcNotLike(String value) {
+            addCriterion("license_src not like", value, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcIn(List<String> values) {
+            addCriterion("license_src in", values, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcNotIn(List<String> values) {
+            addCriterion("license_src not in", values, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcBetween(String value1, String value2) {
+            addCriterion("license_src between", value1, value2, "licenseSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andLicenseSrcNotBetween(String value1, String value2) {
+            addCriterion("license_src not between", value1, value2, "licenseSrc");
             return (Criteria) this;
         }
 
@@ -1862,6 +1932,38 @@ public class AppletInfoExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -1896,38 +1998,6 @@ public class AppletInfoExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

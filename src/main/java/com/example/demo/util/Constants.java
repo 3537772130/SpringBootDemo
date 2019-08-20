@@ -28,6 +28,12 @@ public class Constants {
     // 前端普通用户信息
     public static final String VUE_USER_INFO = "EXAMPLE_VUE_USER_INFO";
 
+    // 小程序上传
+    // logo路径
+    public static final String APPLET_LOGO = "applet_logo_";
+    // 营业执照照片路径
+    public static final String LICENSE_SRC = "license_src_";
+
     // 文件格式
     public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";//上传图片文件类型
     public static final String UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE = "application/x-zip-compressed,application/x-7z-compressed,application/x-gzip";//上传模板压缩文件类型

@@ -11,6 +11,7 @@
         <result column="applet_simple" jdbcType="VARCHAR" property="appletSimple"/>
         <result column="license_code" jdbcType="VARCHAR" property="licenseCode"/>
         <result column="business_scope" jdbcType="VARCHAR" property="businessScope"/>
+        <result column="license_src" jdbcType="VARCHAR" property="licenseSrc"/>
         <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
         <result column="manager_account" jdbcType="VARCHAR" property="managerAccount"/>
         <result column="manager_password" jdbcType="VARCHAR" property="managerPassword"/>
@@ -65,10 +66,10 @@
     </sql>
     <sql id="Base_Column_List">
     id, user_id, mobile, nick_name, applet_code, applet_name, applet_simple, license_code,
-    business_scope, telephone, manager_account, manager_password, app_id, app_secret,
-    province, city, county, address_simple, address_details, lon, lat, applet_logo, recommender_id,
-    recommender_account, recommender_name, if_retail, if_selling, if_complete, update_time,
-    status
+    business_scope, license_src, telephone, manager_account, manager_password, app_id,
+    app_secret, province, city, county, address_simple, address_details, lon, lat, applet_logo,
+    recommender_id, recommender_account, recommender_name, if_retail, if_selling, if_complete,
+    update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ViewAppletInfoExample"
             resultMap="BaseResultMap">

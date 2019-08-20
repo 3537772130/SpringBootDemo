@@ -8,9 +8,11 @@ import com.example.demo.mapper.AppletInfoMapper;
 import com.example.demo.mapper.ViewAppletInfoMapper;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
+import com.example.demo.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,10 +45,10 @@ public class AppletService {
      * @param userId
      * @return
      */
-    public AppletInfo selectAppletInfo(Integer id, Integer userId) {
-        AppletInfoExample example = new AppletInfoExample();
+    public ViewAppletInfo selectAppletInfo(Integer id, Integer userId) {
+        ViewAppletInfoExample example = new ViewAppletInfoExample();
         example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andIfCompleteEqualTo(true);
-        List<AppletInfo> list = appletInfoMapper.selectByExample(example);
+        List<ViewAppletInfo> list = viewAppletInfoMapper.selectByExample(example);
         return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
     }
 
@@ -56,10 +58,10 @@ public class AppletService {
      * @param userId
      * @return
      */
-    public AppletInfo selectAppletInfo(Integer userId) {
-        AppletInfoExample example = new AppletInfoExample();
+    public ViewAppletInfo selectAppletInfo(Integer userId) {
+        ViewAppletInfoExample example = new ViewAppletInfoExample();
         example.createCriteria().andUserIdEqualTo(userId).andIfCompleteEqualTo(false);
-        List<AppletInfo> list = appletInfoMapper.selectByExample(example);
+        List<ViewAppletInfo> list = viewAppletInfoMapper.selectByExample(example);
         return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
     }
 
@@ -154,5 +156,17 @@ public class AppletService {
             page.setDataSource(viewAppletInfoMapper.selectByExample(example));
         }
         return page;
+    }
+
+    public void updateAppletInfo(AppletInfo info) {
+        info.setUpdateTime(new Date());
+        if (NullUtil.isNullOrEmpty(info.getId())) {
+            info.setAppletCode("AC" + RandomUtil.getTimeStamp());
+            info.setIfSelling(false);
+            info.setStatus(false);
+            appletInfoMapper.insertSelective(info);
+        } else {
+            appletInfoMapper.updateByPrimaryKeySelective(info);
+        }
     }
 }
