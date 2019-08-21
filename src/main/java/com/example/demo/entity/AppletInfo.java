@@ -56,11 +56,11 @@ public class AppletInfo implements Serializable {
     private Boolean ifComplete;
 
     private Integer recommenderId;
-    private String licenseSrc;
 
-    private Boolean status;
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date updateTime;
+    private String licenseSrc;
+    private Boolean status;
 
     public Integer getId() {
         return id;

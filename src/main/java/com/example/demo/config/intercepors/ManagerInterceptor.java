@@ -27,10 +27,12 @@ public class ManagerInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(ManagerInterceptor.class);
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HandlerMethod handleMethod = (HandlerMethod) handler;
-        CancelAuthentication cancel = handleMethod.getMethodAnnotation(CancelAuthentication.class);
-        if (cancel != null) {
-            return true;
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handleMethod = (HandlerMethod) handler;
+            CancelAuthentication cancel = handleMethod.getMethodAnnotation(CancelAuthentication.class);
+            if (cancel != null) {
+                return true;
+            }
         }
         HttpSession session = request.getSession();
         ManagerInfo managerInfo = (ManagerInfo) SerializeUtil.unserialize((byte[]) session.getAttribute(Constants.WEB_MANAGER_INFO));

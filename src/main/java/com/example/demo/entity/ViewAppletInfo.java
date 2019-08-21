@@ -64,11 +64,11 @@ public class ViewAppletInfo implements Serializable {
     private Boolean ifSelling;
 
     private Boolean ifComplete;
-    private String licenseSrc;
 
-    private Boolean status;
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date updateTime;
+    private String licenseSrc;
+    private Boolean status;
 
     public Integer getId() {
         return id;

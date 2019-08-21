@@ -68,7 +68,16 @@ public class UserAppletController {
         return AjaxResponse.success(appletInfo);
     }
 
-    public Object updateAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo, Integer step, HttpServletRequest request) {
+    /**
+     * 更新小程序信息
+     *
+     * @param user
+     * @param appletInfo
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "updateAppletInfo")
+    public Object updateAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo, HttpServletRequest request) {
         try {
             if (null == appletInfo) {
                 return AjaxResponse.error("提交出错");
@@ -86,65 +95,77 @@ public class UserAppletController {
             } else {
                 appletInfo.setUserId(user.getId());
             }
-            switch (step) {
-                case 1:
-                    if (NullUtil.isNullOrEmpty(appletInfo.getAppletLogo())) {
-                        return AjaxResponse.error("请上传小程序LOGO");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getAppletName())) {
-                        return AjaxResponse.error("小程序名称不能为空");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getAppletSimple())) {
-                        return AjaxResponse.error("小程序简称不能为空");
-                    }
-                    break;
-                case 2:
-                    if (NullUtil.isNullOrEmpty(appletInfo.getLicenseSrc())) {
-                        return AjaxResponse.error("请上传营业执照");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getLicenseCode())) {
-                        return AjaxResponse.error("执照代码不能为空");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getBusinessScope())) {
-                        return AjaxResponse.error("营业范围不能为空");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getProvince())) {
-                        return AjaxResponse.error("请选择省份");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getCity())) {
-                        return AjaxResponse.error("请选择城市");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getCounty())) {
-                        return AjaxResponse.error("请选择区县");
-                    }
-                    break;
-                case 3:
-                    if (NullUtil.isNullOrEmpty(appletInfo.getManagerAccount())) {
-                        return AjaxResponse.error("管理账号不能为空");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getManagerPassword())) {
-                        return AjaxResponse.error("管理密码不能为空");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getAppId())) {
-                        return AjaxResponse.error("APPID不能为空");
-                    }
-                    if (NullUtil.isNullOrEmpty(appletInfo.getAppSecret())) {
-                        return AjaxResponse.error("SECRET不能为空");
-                    }
-                    break;
-                case 4:
-                    if (NullUtil.isNotNullOrEmpty(appletInfo.getRecommenderId())) {
-                        ManagerInfo manager = managerService.selectManagerInfoById(appletInfo.getId());
-                        if (null == manager) {
-                            return AjaxResponse.error("推荐人不存在");
-                        }
-                        if (!manager.getStatus()) {
-                            return AjaxResponse.error("推荐码无效");
-                        }
-                    }
-                    break;
-                default:
-                    return AjaxResponse.error("参数错误");
+            if (NullUtil.isNullOrEmpty(appletInfo.getAppletLogo())) {
+                return AjaxResponse.error("请上传小程序LOGO");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getAppletName())) {
+                return AjaxResponse.error("小程序名称不能为空");
+            }
+            if (appletInfo.getAppletName().trim().length() > 200) {
+                return AjaxResponse.error("小程序名称过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getAppletSimple())) {
+                return AjaxResponse.error("小程序简称不能为空");
+            }
+            if (appletInfo.getAppletSimple().trim().length() > 100) {
+                return AjaxResponse.error("小程序简称过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getLicenseSrc())) {
+                return AjaxResponse.error("请上传营业执照");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getLicenseCode())) {
+                return AjaxResponse.error("执照代码不能为空");
+            }
+            if (appletInfo.getLicenseCode().trim().length() > 30) {
+                return AjaxResponse.error("执照代码过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getBusinessScope())) {
+                return AjaxResponse.error("营业范围不能为空");
+            }
+            if (appletInfo.getBusinessScope().trim().length() > 200) {
+                return AjaxResponse.error("营业范围过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getProvince())) {
+                return AjaxResponse.error("请选择省份");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getCity())) {
+                return AjaxResponse.error("请选择城市");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getCounty())) {
+                return AjaxResponse.error("请选择区县");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getManagerAccount())) {
+                return AjaxResponse.error("管理账号不能为空");
+            }
+            if (appletInfo.getManagerAccount().trim().length() > 50) {
+                return AjaxResponse.error("管理账号过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getManagerPassword())) {
+                return AjaxResponse.error("管理密码不能为空");
+            }
+            if (appletInfo.getManagerPassword().trim().length() > 50) {
+                return AjaxResponse.error("管理密码过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getAppId())) {
+                return AjaxResponse.error("APPID不能为空");
+            }
+            if (appletInfo.getAppId().trim().length() > 30) {
+                return AjaxResponse.error("APPID过长");
+            }
+            if (NullUtil.isNullOrEmpty(appletInfo.getAppSecret())) {
+                return AjaxResponse.error("SECRET不能为空");
+            }
+            if (appletInfo.getAppSecret().trim().length() > 150) {
+                return AjaxResponse.error("SECRET过长");
+            }
+            if (NullUtil.isNotNullOrEmpty(appletInfo.getRecommenderId())) {
+                ManagerInfo manager = managerService.selectManagerInfoById(appletInfo.getId());
+                if (null == manager) {
+                    return AjaxResponse.error("推荐人不存在");
+                }
+                if (!manager.getStatus()) {
+                    return AjaxResponse.error("推荐码无效");
+                }
             }
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
