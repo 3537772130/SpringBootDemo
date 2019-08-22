@@ -60,14 +60,13 @@ public class ManagerService {
      * @param extensionCode
      * @return
      */
-    public ManagerInfo selectManagerInfoByExtensionCode(String extensionCode) {
+    public List<ManagerInfo> selectManagerInfoByExtensionCode(String extensionCode) {
         ManagerInfoExample example = new ManagerInfoExample();
-        example.createCriteria().andExtensionCodeEqualTo(extensionCode).andStatusEqualTo(true);
-        List<ManagerInfo> list = managerInfoMapper.selectByExample(example);
-        if (NullUtil.isNotNullOrEmpty(list)) {
-            return list.get(0);
-        }
-        return null;
+        List<Integer> roleIdList = new ArrayList<>();
+        roleIdList.add(3);
+        roleIdList.add(4);
+        example.createCriteria().andRoleIdIn(roleIdList).andExtensionCodeLike(extensionCode + "%").andStatusEqualTo(true);
+        return managerInfoMapper.selectByExample(example);
     }
 
     /**

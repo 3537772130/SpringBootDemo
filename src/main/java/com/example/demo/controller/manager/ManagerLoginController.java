@@ -20,22 +20,11 @@ import javax.servlet.http.HttpServletRequest;
  * @create: 2019-07-17 11:03
  **/
 @RestController
-@RequestMapping(value = "/api/manager/")
+@RequestMapping(value = "/api/manage/")
 public class ManagerLoginController {
     private static final Logger log = LoggerFactory.getLogger(ManagerLoginController.class);
     @Autowired
     private ManagerService managerService;
-
-    /**
-     * 登录拦截，返回错误码
-     *
-     * @return
-     */
-    @RequestMapping(value = "error")
-    @CancelAuthentication
-    public Object error() {
-        return AjaxResponse.msg("0", "当前访问人数过多，请稍后再试");
-    }
 
     /**
      * 登录校验

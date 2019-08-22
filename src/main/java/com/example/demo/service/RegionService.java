@@ -175,4 +175,17 @@ public class RegionService implements ApplicationRunner {
         List<RegionInfo> list = regionInfoMapper.selectByExample(example);
         return list;
     }
+
+    /**
+     * 根据父级名称，查询下级地域集合
+     *
+     * @param parentName 父级地域名称
+     * @return
+     */
+    public List<RegionInfo> selectRegionInfo(String parentName) {
+        RegionInfoExample example = new RegionInfoExample();
+        example.createCriteria().andAreaNameEqualTo(parentName);
+        RegionInfo info = regionInfoMapper.selectByExample(example).get(0);
+        return selectRegionList(info.getId(), null);
+    }
 }

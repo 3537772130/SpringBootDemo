@@ -3,8 +3,10 @@ package com.example.demo.controller.manager;
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ManagerRole;
+import com.example.demo.entity.RegionInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
+import com.example.demo.service.RegionService;
 import com.example.demo.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @program: SpringBootDemo
@@ -26,6 +31,8 @@ public class ManagerInfoController {
     private static final Logger log = LoggerFactory.getLogger(ManagerInfoController.class);
     @Autowired
     private ManagerService managerService;
+    @Autowired
+    private RegionService regionService;
 
     /**
      * 退出登录
@@ -73,7 +80,13 @@ public class ManagerInfoController {
         if (null != managerInfo) {
             managerInfo.setPassword(null);
             managerInfo.setEncrypted(null);
-            return AjaxResponse.success(managerInfo);
+            List<RegionInfo> cityList = regionService.selectRegionInfo(managerInfo.getProvince());
+            List<RegionInfo> countyList = regionService.selectRegionInfo(managerInfo.getCity());
+            Map map = new HashMap<>();
+            map.put("manager", managerInfo);
+            map.put("cityList", cityList);
+            map.put("countyList", countyList);
+            return AjaxResponse.success(map);
         }
         return AjaxResponse.error("未匹配到相关信息");
     }
@@ -91,10 +104,10 @@ public class ManagerInfoController {
         // 当ID不为空时，是为修改，反之为新增
         if (NullUtil.isNullOrEmpty(managerInfo.getId())) {
             if (NullUtil.isNullOrEmpty(managerInfo.getUserName())){
-                return AjaxResponse.error("请设置账户");
+                return AjaxResponse.error("请输入账号");
             }
             if (NullUtil.isNullOrEmpty(managerInfo.getPassword())) {
-                return AjaxResponse.error("请设置密码");
+                return AjaxResponse.error("请输入密码");
             }
             // 进行修改权限校验
             ManagerInfo record = managerService.selectManagerInfoById(managerInfo.getId());
@@ -113,7 +126,7 @@ public class ManagerInfoController {
             managerInfo.setPassword(null);
         }
         if (NullUtil.isNullOrEmpty(managerInfo.getNickName())) {
-            return AjaxResponse.error("请设置昵称");
+            return AjaxResponse.error("请输入昵称");
         }
         if (managerInfo.getNickName().getBytes().length > 30) {
             return AjaxResponse.error("昵称长度过长");
@@ -130,9 +143,9 @@ public class ManagerInfoController {
         }
         try {
             managerService.updateManagerInfo(managerInfo);
-            return AjaxResponse.success(NullUtil.isNullOrEmpty(managerInfo.getId()) ? "添加成功" : "更新成功");
+            return AjaxResponse.success("提交成功");
         } catch (Exception e) {
-            return AjaxResponse.error(NullUtil.isNullOrEmpty(managerInfo.getId()) ? "添加失败" : "更新失败");
+            return AjaxResponse.error("提交失败");
         }
     }
 
@@ -168,9 +181,9 @@ public class ManagerInfoController {
      */
     @RequestMapping(value = "getManagerRole")
     public Object getManagerRole(Integer id) {
-        ManagerRole ManagerRole = managerService.selectManagerRoleById(id);
-        if (null != ManagerRole) {
-            return AjaxResponse.success(ManagerRole);
+        ManagerRole managerRole = managerService.selectManagerRoleById(id);
+        if (null != managerRole) {
+            return AjaxResponse.success(managerRole);
         }
         return AjaxResponse.error("未匹配到相关信息");
     }
@@ -206,5 +219,4 @@ public class ManagerInfoController {
             return AjaxResponse.error("提交失败");
         }
     }
-
 }

@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @program: SpringBootDemo
@@ -172,5 +176,28 @@ public class UserAppletController {
             log.error("提交小程序信息出错{}", e);
             return AjaxResponse.error("提交失败");
         }
+    }
+
+    /**
+     * 获取推荐人信息集
+     *
+     * @param extensionCode
+     * @return
+     */
+    @RequestMapping(value = "getRecommenderMap")
+    public Object getRecommenderMap(String extensionCode) {
+        List<ManagerInfo> list = managerService.selectManagerInfoByExtensionCode(extensionCode);
+        if (NullUtil.isNotNullOrEmpty(list)) {
+            List<Map> mapList = new ArrayList<>();
+            for (ManagerInfo info : list) {
+                Map map = new HashMap();
+                map.put("id", info.getId());
+                map.put("code", info.getExtensionCode());
+                map.put("name", info.getNickName());
+                mapList.add(map);
+            }
+            return AjaxResponse.success(mapList);
+        }
+        return AjaxResponse.error("未找到相关信息");
     }
 }
