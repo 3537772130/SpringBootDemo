@@ -82,10 +82,12 @@ public class ManagerInfoController {
             managerInfo.setEncrypted(null);
             List<RegionInfo> cityList = regionService.selectRegionInfo(managerInfo.getProvince());
             List<RegionInfo> countyList = regionService.selectRegionInfo(managerInfo.getCity());
+            List<Map> parentList = managerService.selectManagerInfoByRoleId(managerInfo.getRoleId());
             Map map = new HashMap<>();
             map.put("manager", managerInfo);
             map.put("cityList", cityList);
             map.put("countyList", countyList);
+            map.put("parentList", parentList);
             return AjaxResponse.success(map);
         }
         return AjaxResponse.error("未匹配到相关信息");

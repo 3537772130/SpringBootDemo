@@ -86,6 +86,28 @@ public class ManagerService {
     }
 
     /**
+     * @param roleId
+     * @return
+     */
+    public List<Map> selectManagerInfoByRoleId(Integer roleId) {
+        ManagerInfoExample example = new ManagerInfoExample();
+        example.createCriteria().andRoleIdEqualTo(roleId).andStatusEqualTo(true);
+        List<ManagerInfo> list = managerInfoMapper.selectByExample(example);
+        if (NullUtil.isNotNullOrEmpty(list)) {
+            List<Map> mapList = new ArrayList<>();
+            for (ManagerInfo info : list) {
+                Map map = new HashMap();
+                map.put("id", info.getId());
+                map.put("userName", info.getUserName());
+                map.put("nickName", info.getNickName());
+                mapList.add(map);
+            }
+            return mapList;
+        }
+        return null;
+    }
+
+    /**
      * 分页查询管理员信息集合
      * @param info
      * @param page
