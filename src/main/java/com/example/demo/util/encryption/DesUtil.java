@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.util.encryption;
 
 import jodd.datetime.JDateTime;
 

@@ -8,6 +8,7 @@ import com.example.demo.entity.ViewAppletInfo;
 import com.example.demo.service.AppletService;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
+import com.example.demo.util.encryption.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,24 +145,28 @@ public class UserAppletController {
             if (appletInfo.getManagerAccount().trim().length() > 50) {
                 return AjaxResponse.error("管理账号过长");
             }
+            appletInfo.setManagerAccount(EncryptionUtil.encryptAppletRSA(appletInfo.getManagerAccount().trim()));
             if (NullUtil.isNullOrEmpty(appletInfo.getManagerPassword())) {
                 return AjaxResponse.error("管理密码不能为空");
             }
             if (appletInfo.getManagerPassword().trim().length() > 50) {
                 return AjaxResponse.error("管理密码过长");
             }
+            appletInfo.setManagerPassword(EncryptionUtil.encryptAppletRSA(appletInfo.getManagerPassword().trim()));
             if (NullUtil.isNullOrEmpty(appletInfo.getAppId())) {
                 return AjaxResponse.error("APPID不能为空");
             }
             if (appletInfo.getAppId().trim().length() > 30) {
                 return AjaxResponse.error("APPID过长");
             }
+            appletInfo.setAppId(EncryptionUtil.encryptAppletRSA(appletInfo.getAppId().trim()));
             if (NullUtil.isNullOrEmpty(appletInfo.getAppSecret())) {
                 return AjaxResponse.error("SECRET不能为空");
             }
             if (appletInfo.getAppSecret().trim().length() > 150) {
                 return AjaxResponse.error("SECRET过长");
             }
+            appletInfo.setAppSecret(EncryptionUtil.encryptAppletRSA(appletInfo.getAppSecret()));
             if (NullUtil.isNotNullOrEmpty(appletInfo.getRecommenderId())) {
                 ManagerInfo manager = managerService.selectManagerInfoById(appletInfo.getId());
                 if (null == manager) {
@@ -171,6 +176,8 @@ public class UserAppletController {
                     return AjaxResponse.error("推荐码无效");
                 }
             }
+
+            appletService.updateAppletInfo(appletInfo);
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("提交小程序信息出错{}", e);
