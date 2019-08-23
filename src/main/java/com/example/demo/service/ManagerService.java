@@ -143,7 +143,7 @@ public class ManagerService {
             c.andCountyEqualTo(info.getCounty());
         }
         if (NullUtil.isNotNullOrEmpty(info.getParentUserName())){
-            c.andParentUserNameEqualTo(info.getParentUserName());
+            c.andParentUserNameLike(info.getParentUserName() + "%");
         }
         if (NullUtil.isNotNullOrEmpty(info.getParentNickName())){
             c.andParentNickNameLike("%" + info.getParentNickName() + "%");
@@ -194,6 +194,7 @@ public class ManagerService {
     public List<Map> selectRoleToMap() {
         ManagerRoleExample example = new ManagerRoleExample();
         example.setOrderByClause("id asc");
+        example.createCriteria().andStatusEqualTo(true);
         List<ManagerRole> list = managerRoleMapper.selectByExample(example);
         if (NullUtil.isNotNullOrEmpty(list)) {
             List<Map> mapList = new ArrayList<>();

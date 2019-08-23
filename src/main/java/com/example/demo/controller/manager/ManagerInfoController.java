@@ -3,13 +3,13 @@ package com.example.demo.controller.manager;
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ManagerRole;
-import com.example.demo.entity.RegionInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
 import com.example.demo.service.RegionService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.DesUtil;
 import com.example.demo.util.encryption.MD5Util;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,21 +78,22 @@ public class ManagerInfoController {
      */
     @RequestMapping(value = "getManagerInfo")
     public Object getManagerInfo(Integer id) {
-        ManagerInfo managerInfo = managerService.selectManagerInfoById(id);
-        if (null != managerInfo) {
-            managerInfo.setPassword(null);
-            managerInfo.setEncrypted(null);
-            List<RegionInfo> cityList = regionService.selectRegionInfo(managerInfo.getProvince());
-            List<RegionInfo> countyList = regionService.selectRegionInfo(managerInfo.getCity());
-            List<Map> parentList = managerService.selectManagerInfoByRoleId(managerInfo.getRoleId());
-            Map map = new HashMap<>();
-            map.put("manager", managerInfo);
-            map.put("cityList", cityList);
-            map.put("countyList", countyList);
-            map.put("parentList", parentList);
-            return AjaxResponse.success(map);
+        Map map = new HashMap<>();
+        List<Map> parentList = managerService.selectManagerInfoByRoleId(3);
+        List<Map> roleList = managerService.selectRoleToMap();
+        map.put("parentList", parentList);
+        map.put("roleList", roleList);
+        map.put("regions", new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
+        if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
+            ManagerInfo managerInfo = managerService.selectManagerInfoById(id);
+            if (null != managerInfo) {
+                managerInfo.setPassword(null);
+                managerInfo.setEncrypted(null);
+                map.put("manager", managerInfo);
+                return AjaxResponse.success(map);
+            }
         }
-        return AjaxResponse.error("未匹配到相关信息");
+        return AjaxResponse.msg("-1", map);
     }
 
     /**
