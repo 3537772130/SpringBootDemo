@@ -4,7 +4,11 @@ import com.example.demo.config.annotation.CancelAuthentication;
 import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
-import com.example.demo.util.*;
+import com.example.demo.util.AjaxResponse;
+import com.example.demo.util.Constants;
+import com.example.demo.util.NullUtil;
+import com.example.demo.util.SerializeUtil;
+import com.example.demo.util.encryption.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @program: SpringBootDemo
- * @description: web登录控制层
+ * @description: 管理员登录控制层
  * @author: Mr.ZhouHuaHu
  * @create: 2019-07-17 11:03
  **/
@@ -49,8 +53,7 @@ public class ManagerLoginController {
                 log.error("用户名不存在：{}", userName);
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            String cipher = DesUtil.encrypt(password, managerInfo.getEncrypted());
-            cipher = MD5Util.MD5(cipher);
+            String cipher = EncryptionUtil.encryptPasswordMD5(password, managerInfo.getEncrypted());
             if (!cipher.equals(managerInfo.getPassword())) {
                 log.error("用户：{}，输入的密码错误：{}", userName, password);
                 return AjaxResponse.error("用户名或密码不匹配");

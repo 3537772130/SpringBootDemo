@@ -5,6 +5,8 @@ import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
+import com.example.demo.util.encryption.DesUtil;
+import com.example.demo.util.encryption.MD5Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

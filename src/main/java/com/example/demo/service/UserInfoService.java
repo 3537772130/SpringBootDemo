@@ -8,6 +8,7 @@ import com.example.demo.mapper.CommonMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserLoginLogMapper;
 import com.example.demo.util.*;
+import com.example.demo.util.encryption.EncryptionUtil;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -116,13 +117,11 @@ public class UserInfoService {
      */
     public Object updateUserInfoByPassword(Integer id, String oldPass, String newPass, HttpServletRequest request) {
         UserInfo userInfo = selectUserInfoById(id);
-        String cipher = DesUtil.encrypt(oldPass, userInfo.getEncrypted());
-        cipher = MD5Util.MD5(cipher);
+        String cipher = EncryptionUtil.encryptPasswordMD5(oldPass, userInfo.getEncrypted());
         if (!cipher.equals(userInfo.getPassword())) {
             return AjaxResponse.error("原密码输入错误");
         }
-        cipher = DesUtil.encrypt(newPass, userInfo.getEncrypted());
-        cipher = MD5Util.MD5(cipher);
+        cipher = EncryptionUtil.encryptPasswordMD5(newPass, userInfo.getEncrypted());
         userInfo.setPassword(cipher);
         addOrUpdateUserInfo(userInfo.getUserInfoToPassword(userInfo));
         request.getSession().removeAttribute(Constants.VUE_USER_INFO);
@@ -153,8 +152,7 @@ public class UserInfoService {
         userInfo.setId(null);
         userInfo.setNickName(userInfo.getNickName().trim());
         userInfo.setEncrypted(RandomUtil.getRandomStr32());
-        String cipher = DesUtil.encrypt(userInfo.getPassword(), userInfo.getEncrypted());
-        cipher = MD5Util.MD5(cipher);
+        String cipher = EncryptionUtil.encryptPasswordMD5(userInfo.getPassword(), userInfo.getEncrypted());
         userInfo.setPassword(cipher);
         userInfo.setCreateDate(new Date());
         userInfoMapper.insertSelective(userInfo);

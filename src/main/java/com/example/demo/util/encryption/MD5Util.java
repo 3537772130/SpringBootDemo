@@ -1,4 +1,6 @@
-package com.example.demo.util;
+package com.example.demo.util.encryption;
+
+import com.example.demo.util.RandomUtil;
 
 import java.security.MessageDigest;
 

@@ -4,6 +4,7 @@ import com.example.demo.config.annotation.CancelAuthentication;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
+import com.example.demo.util.encryption.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @program: SpringBootDemo
@@ -68,8 +70,7 @@ public class UserLoginController {
             if (!userInfo.getStatus()) {
                 return AjaxResponse.error("账户已禁用");
             }
-            String cipher = DesUtil.encrypt(info.getPassword(), userInfo.getEncrypted());
-            cipher = MD5Util.MD5(cipher);
+            String cipher = EncryptionUtil.encryptPasswordMD5(info.getPassword(), userInfo.getEncrypted());
             if (!cipher.equals(userInfo.getPassword())) {
                 log.error("用户：{}，输入的密码错误：{}", info.getMobile(), info.getPassword());
                 return AjaxResponse.error("用户名或密码不匹配");
@@ -142,6 +143,12 @@ public class UserLoginController {
             if (info.getPassword().length() < 6 || info.getPassword().length() > 20) {
                 return AjaxResponse.error("登录密码长度不符");
             }
+            info.setId(null);
+            info.setNickName(info.getNickName().trim());
+            info.setEncrypted(RandomUtil.getRandomStr32());
+            info.setCreateDate(new Date());
+            String cipher = EncryptionUtil.encryptPasswordMD5(info.getPassword(), info.getEncrypted());
+            info.setPassword(cipher);
             userInfoService.saveUserInfo(info);
             return AjaxResponse.success("注册成功");
         } catch (Exception e) {

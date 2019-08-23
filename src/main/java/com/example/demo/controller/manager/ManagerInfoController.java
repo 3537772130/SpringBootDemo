@@ -8,6 +8,8 @@ import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
 import com.example.demo.service.RegionService;
 import com.example.demo.util.*;
+import com.example.demo.util.encryption.DesUtil;
+import com.example.demo.util.encryption.MD5Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import java.util.Map;
 
 /**
  * @program: SpringBootDemo
- * @description: test 控制类
+ * @description: 管理员信息控制层
  * @author: Mr.ZhouHuaHu
  * @create: 2019-06-14 14:50
  **/
