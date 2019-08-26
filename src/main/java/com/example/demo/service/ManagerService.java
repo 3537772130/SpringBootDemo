@@ -32,15 +32,17 @@ public class ManagerService {
 
     /**
      * 查询管理员信息
+     *
      * @param id
      * @return
      */
-    public ManagerInfo selectManagerInfoById(Integer id){
+    public ManagerInfo selectManagerInfoById(Integer id) {
         return managerInfoMapper.selectByPrimaryKey(id);
     }
 
     /**
      * 查询管理员信息
+     *
      * @param userName
      * @return
      */
@@ -57,16 +59,27 @@ public class ManagerService {
     /**
      * 查询管理员信息（业务主管、业务员）
      *
-     * @param extensionCode
      * @return
      */
-    public List<ManagerInfo> selectManagerInfoByExtensionCode(String extensionCode) {
+    public List<Map> selectRecommenderIdByMap() {
         ManagerInfoExample example = new ManagerInfoExample();
         List<Integer> roleIdList = new ArrayList<>();
         roleIdList.add(3);
         roleIdList.add(4);
-        example.createCriteria().andRoleIdIn(roleIdList).andExtensionCodeLike(extensionCode + "%").andStatusEqualTo(true);
-        return managerInfoMapper.selectByExample(example);
+        example.createCriteria().andRoleIdIn(roleIdList).andStatusEqualTo(true);
+        List<ManagerInfo> list = managerInfoMapper.selectByExample(example);
+        List<Map> list1 = new ArrayList<>();
+        for (ManagerInfo info :
+                list) {
+            Map map = new HashMap();
+            map.put("id", info.getId());
+            map.put("code", info.getExtensionCode());
+            String name = info.getNickName();
+            name = name.length() < 3 ? name.substring(0, 1) + " *" : name.substring(0, 1) + " * " + name.substring(name.length() - 1, name.length());
+            map.put("name", name);
+            list1.add(map);
+        }
+        return list1;
     }
 
     /**
@@ -79,7 +92,7 @@ public class ManagerService {
         ViewManagerInfoExample example = new ViewManagerInfoExample();
         example.createCriteria().andIdEqualTo(id);
         List<ViewManagerInfo> list = viewManagerInfoMapper.selectByExample(example);
-        if (NullUtil.isNotNullOrEmpty(list)){
+        if (NullUtil.isNotNullOrEmpty(list)) {
             return list.get(0);
         }
         return null;
@@ -109,6 +122,7 @@ public class ManagerService {
 
     /**
      * 分页查询管理员信息集合
+     *
      * @param info
      * @param page
      * @return
@@ -118,19 +132,19 @@ public class ManagerService {
         example.setPage(page);
         example.setOrderByClause("id desc");
         ViewManagerInfoExample.Criteria c = example.createCriteria();
-        if (NullUtil.isNotNullOrEmpty(info.getUserName())){
+        if (NullUtil.isNotNullOrEmpty(info.getUserName())) {
             c.andUserNameEqualTo(info.getUserName());
         }
-        if (NullUtil.isNotNullOrEmpty(info.getRoleId())){
+        if (NullUtil.isNotNullOrEmpty(info.getRoleId())) {
             c.andRoleIdEqualTo(info.getRoleId());
         }
-        if (NullUtil.isNotNullOrEmpty(info.getMobile())){
+        if (NullUtil.isNotNullOrEmpty(info.getMobile())) {
             c.andMobileLike(info.getMobile() + "%");
         }
-        if (NullUtil.isNotNullOrEmpty(info.getQqAccount())){
+        if (NullUtil.isNotNullOrEmpty(info.getQqAccount())) {
             c.andQqAccountLike(info.getQqAccount() + "%");
         }
-        if (NullUtil.isNotNullOrEmpty(info.getWeChatAccount())){
+        if (NullUtil.isNotNullOrEmpty(info.getWeChatAccount())) {
             c.andWeChatAccountLike(info.getWeChatAccount() + "%");
         }
         if (NullUtil.isNotNullOrEmpty(info.getProvince())) {
@@ -142,18 +156,18 @@ public class ManagerService {
         if (NullUtil.isNotNullOrEmpty(info.getCounty())) {
             c.andCountyEqualTo(info.getCounty());
         }
-        if (NullUtil.isNotNullOrEmpty(info.getParentUserName())){
+        if (NullUtil.isNotNullOrEmpty(info.getParentUserName())) {
             c.andParentUserNameLike(info.getParentUserName() + "%");
         }
-        if (NullUtil.isNotNullOrEmpty(info.getParentNickName())){
+        if (NullUtil.isNotNullOrEmpty(info.getParentNickName())) {
             c.andParentNickNameLike("%" + info.getParentNickName() + "%");
         }
-        if (NullUtil.isNotNullOrEmpty(info.getStatus())){
+        if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
             c.andStatusEqualTo(info.getStatus());
         }
         c.andIdNotEqualTo(1);
         long count = viewManagerInfoMapper.countByExample(example);
-        if (count > 0){
+        if (count > 0) {
             page.setTotalCount(count);
             page.setDataSource(viewManagerInfoMapper.selectByExample(example));
         }
@@ -162,16 +176,17 @@ public class ManagerService {
 
     /**
      * 更新管理员信息
+     *
      * @param info
      */
-    public void updateManagerInfo(ManagerInfo info){
-        if (NullUtil.isNotNullOrEmpty(info.getId())){
+    public void updateManagerInfo(ManagerInfo info) {
+        if (NullUtil.isNotNullOrEmpty(info.getId())) {
             managerInfoMapper.updateByPrimaryKeySelective(info);
         } else {
             info.setCreateDate(new Date());
             if (info.getRoleId().intValue() == 3 || info.getRoleId().intValue() == 4) {
                 JDateTime time = new JDateTime(new Date());
-                info.setExtensionCode(time.toString("MMddHHmmss"));
+                info.setExtensionCode(time.toString("MMDDhhmmss"));
             }
             managerInfoMapper.insertSelective(info);
         }
@@ -179,6 +194,7 @@ public class ManagerService {
 
     /**
      * 查询管理员角色信息
+     *
      * @param id
      * @return
      */
@@ -211,6 +227,7 @@ public class ManagerService {
 
     /**
      * 分页查询管理员角色信息集合
+     *
      * @param info
      * @param page
      * @return
@@ -220,14 +237,14 @@ public class ManagerService {
         example.setPage(page);
         example.setOrderByClause("id desc");
         ManagerRoleExample.Criteria c = example.createCriteria();
-        if (NullUtil.isNotNullOrEmpty(info.getRoleName())){
+        if (NullUtil.isNotNullOrEmpty(info.getRoleName())) {
             c.andRoleNameLike("%" + info.getRoleName() + "%");
         }
-        if (NullUtil.isNotNullOrEmpty(info.getStatus())){
+        if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
             c.andStatusEqualTo(info.getStatus());
         }
         long count = managerRoleMapper.countByExample(example);
-        if (count > 0){
+        if (count > 0) {
             page.setTotalCount(count);
             page.setDataSource(managerRoleMapper.selectByExample(example));
         }
@@ -236,6 +253,7 @@ public class ManagerService {
 
     /**
      * 更新管理员角色信息
+     *
      * @param info
      */
     public void updateManagerRole(ManagerRole info) {

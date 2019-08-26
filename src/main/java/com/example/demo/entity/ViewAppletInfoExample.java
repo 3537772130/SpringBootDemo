@@ -2007,66 +2007,6 @@ public class ViewAppletInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andIfCompleteIsNull() {
-            addCriterion("if_complete is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteIsNotNull() {
-            addCriterion("if_complete is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteEqualTo(Boolean value) {
-            addCriterion("if_complete =", value, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteNotEqualTo(Boolean value) {
-            addCriterion("if_complete <>", value, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteGreaterThan(Boolean value) {
-            addCriterion("if_complete >", value, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("if_complete >=", value, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteLessThan(Boolean value) {
-            addCriterion("if_complete <", value, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteLessThanOrEqualTo(Boolean value) {
-            addCriterion("if_complete <=", value, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteIn(List<Boolean> values) {
-            addCriterion("if_complete in", values, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteNotIn(List<Boolean> values) {
-            addCriterion("if_complete not in", values, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteBetween(Boolean value1, Boolean value2) {
-            addCriterion("if_complete between", value1, value2, "ifComplete");
-            return (Criteria) this;
-        }
-
-        public Criteria andIfCompleteNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("if_complete not between", value1, value2, "ifComplete");
-            return (Criteria) this;
-        }
-
         public Criteria andUpdateTimeIsNull() {
             addCriterion("update_time is null");
             return (Criteria) this;
@@ -2137,52 +2077,52 @@ public class ViewAppletInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Boolean value) {
+        public Criteria andStatusEqualTo(Integer value) {
             addCriterion("status =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Boolean value) {
+        public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("status <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Boolean value) {
+        public Criteria andStatusGreaterThan(Integer value) {
             addCriterion("status >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("status >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Boolean value) {
+        public Criteria andStatusLessThan(Integer value) {
             addCriterion("status <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
             addCriterion("status <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Boolean> values) {
+        public Criteria andStatusIn(List<Integer> values) {
             addCriterion("status in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Boolean> values) {
+        public Criteria andStatusNotIn(List<Integer> values) {
             addCriterion("status not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
             addCriterion("status between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }

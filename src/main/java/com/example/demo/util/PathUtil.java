@@ -1,6 +1,9 @@
 package com.example.demo.util;
 
+import jodd.datetime.JDateTime;
+
 import java.io.File;
+import java.util.Date;
 
 /**
  * @program: SpringBootDemo
@@ -8,10 +11,10 @@ import java.io.File;
  * @author: Mr.ZhouHuaHu
  * @create: 2019-08-05 09:31
  **/
-public class GetWebProjectRealPathTool {
+public class PathUtil {
 
     //获取项目的根路径
-    private static String classPath = GetWebProjectRealPathTool.class.getResource("/").getPath();
+    private static String classPath = PathUtil.class.getResource("/").getPath();
 
     //对项目的根路径进行解析，拿到项目路径
     public static String getRootPath(String sourcePath) {
@@ -41,14 +44,14 @@ public class GetWebProjectRealPathTool {
             rootPath = classPath.substring(0, classPath.length()) + filePath;
             rootPath = rootPath.replace("\\", "/");
         }
-        File file = new File(rootPath);
-        if (!file.exists()) {
-            file.mkdir();
-        }
         return rootPath;
     }
 
     public static void main(String[] arge) {
-        System.out.println(getClassPath("\\resources\\static\\images\\head-portrait\\"));
+//        System.out.println(getClassPath("\\resources\\static\\images\\head-portrait\\"));
+        JDateTime time = new JDateTime(new Date());
+        System.out.println(time.toString("MMDDhhmmss"));
+
+        FileUtil.copyFile("static\\images\\applet-logo\\draft\\", "U1-APPLET-LOGO.jpg", "static\\images\\applet-logo\\", "92431224MA4LW7EW87.jpg");
     }
 }

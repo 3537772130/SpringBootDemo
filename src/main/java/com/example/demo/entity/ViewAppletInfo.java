@@ -63,12 +63,10 @@ public class ViewAppletInfo implements Serializable {
 
     private Boolean ifSelling;
 
-    private Boolean ifComplete;
-
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date updateTime;
     private String licenseSrc;
-    private Boolean status;
+    private Integer status;
 
     public Integer getId() {
         return id;
@@ -294,14 +292,6 @@ public class ViewAppletInfo implements Serializable {
         this.ifSelling = ifSelling;
     }
 
-    public Boolean getIfComplete() {
-        return ifComplete;
-    }
-
-    public void setIfComplete(Boolean ifComplete) {
-        this.ifComplete = ifComplete;
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -310,11 +300,11 @@ public class ViewAppletInfo implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }

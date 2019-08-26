@@ -124,7 +124,7 @@ public class ImageUtil {
         ImageIO.write(image, "png", out);
         // 保存文件
 //        String filePath = "static\\images\\logo\\logo.png";
-//        String rootPath = GetWebProjectRealPathTool.getClassPath(filePath);
+//        String rootPath = PathUtil.getClassPath(filePath);
 //        ImageIO.write(image, "PNG", new File(rootPath));
     }
 

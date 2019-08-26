@@ -30,9 +30,7 @@ public class Constants {
 
     // 小程序上传
     // logo路径
-    public static final String APPLET_LOGO = "applet_logo_";
-    // 营业执照照片路径
-    public static final String LICENSE_SRC = "license_src_";
+    public static final String APPLET_UPLOAD_ID = "APPLET_UPLOAD_ID";
 
     // 文件格式
     public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";//上传图片文件类型

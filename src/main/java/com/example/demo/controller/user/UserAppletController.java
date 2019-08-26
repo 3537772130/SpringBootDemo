@@ -1,24 +1,24 @@
 package com.example.demo.controller.user;
 
 import com.example.demo.config.annotation.SessionScope;
-import com.example.demo.entity.AppletInfo;
-import com.example.demo.entity.ManagerInfo;
-import com.example.demo.entity.UserInfo;
-import com.example.demo.entity.ViewAppletInfo;
+import com.example.demo.entity.*;
 import com.example.demo.service.AppletService;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,16 +61,82 @@ public class UserAppletController {
      */
     @RequestMapping(value = "selectAppletInfo")
     public Object selectAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer id) {
-        ViewAppletInfo appletInfo = null;
-        if (NullUtil.isNotNullOrEmpty(id)) {
-            appletInfo = appletService.selectAppletInfo(id, user.getId());
-        } else {
-            appletInfo = appletService.selectAppletInfo(user.getId());
+        FileUtil.deleteClassFile("static\\images\\applet-logo\\draft\\", "U" + user.getId() + "-APPLET-LOGO.jpg");
+        FileUtil.deleteClassFile("static\\images\\applet-license\\draft\\", "U" + user.getId() + "-APPLET-LICENSE.jpg");
+        Map map = new HashMap<>();
+        map.put("regions", new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
+        map.put("recommenders", managerService.selectRecommenderIdByMap());
+        if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
+            ViewAppletInfo appletInfo = appletService.selectAppletInfo(id, user.getId());
+            if (null == appletInfo) {
+                return AjaxResponse.error("未找到相关信息");
+            }
+            appletInfo.setUserId(null);
+            appletInfo.setAddressSimple(null);
+            appletInfo.setAddressDetails(null);
+            appletInfo.setLat(null);
+            appletInfo.setLon(null);
+            appletInfo.setIfSelling(null);
+            appletInfo.setStatus(null);
+            map.put("applet", appletInfo);
+            return AjaxResponse.success(map);
         }
-        if (null == appletInfo) {
-            return AjaxResponse.error("未找到相关信息");
+        return AjaxResponse.msg("-1", map);
+    }
+
+
+    /**
+     * 上传小程序头像到草稿
+     *
+     * @param userInfo
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadAppletLogo")
+    public Object uploadAppletLogo(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("appletLogo") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String fileName = "U" + userInfo.getId() + "-APPLET-LOGO.jpg";
+            String filePath = "static\\images\\applet-logo\\draft\\";
+            String rootPath = PathUtil.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String src = filePath + fileName + "?token=" + RandomUtil.getRandomStr32();
+            return AjaxResponse.success(src.replace("static", "api"));
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.success("上传失败");
         }
-        return AjaxResponse.success(appletInfo);
+    }
+
+    /**
+     * 上传小程序执照许可到草稿
+     *
+     * @param userInfo
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadAppletLicense")
+    public Object uploadAppletLicense(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("appletLicense") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String fileName = "U" + userInfo.getId() + "-APPLET-LICENSE.jpg";
+            String filePath = "static\\images\\applet-license\\draft\\";
+            String rootPath = PathUtil.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String src = filePath + fileName + "?token=" + RandomUtil.getRandomStr32();
+            return AjaxResponse.success(src.replace("static", "api"));
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.success("上传失败");
+        }
     }
 
     /**
@@ -78,11 +144,10 @@ public class UserAppletController {
      *
      * @param user
      * @param appletInfo
-     * @param request
      * @return
      */
-    @RequestMapping(value = "updateAppletInfo")
-    public Object updateAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo, HttpServletRequest request) {
+    @RequestMapping(value = "saveAppletInfo")
+    public Object saveAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo) {
         try {
             if (null == appletInfo) {
                 return AjaxResponse.error("提交出错");
@@ -91,8 +156,6 @@ public class UserAppletController {
                 ViewAppletInfo info = appletService.selectAppletInfo(appletInfo.getId(), user.getId());
                 if (null == info) {
                     return AjaxResponse.success("您没有权限修改");
-                } else if (info.getIfComplete()) {
-                    appletInfo.setRecommenderId(null);
                 }
                 appletInfo.setUserId(null);
                 appletInfo.setAppletCode(null);
@@ -127,7 +190,7 @@ public class UserAppletController {
             if (NullUtil.isNullOrEmpty(appletInfo.getBusinessScope())) {
                 return AjaxResponse.error("营业范围不能为空");
             }
-            if (appletInfo.getBusinessScope().trim().length() > 200) {
+            if (appletInfo.getBusinessScope().trim().length() > 500) {
                 return AjaxResponse.error("营业范围过长");
             }
             if (NullUtil.isNullOrEmpty(appletInfo.getProvince())) {
@@ -168,7 +231,7 @@ public class UserAppletController {
             }
             appletInfo.setAppSecret(EncryptionUtil.encryptAppletRSA(appletInfo.getAppSecret()));
             if (NullUtil.isNotNullOrEmpty(appletInfo.getRecommenderId())) {
-                ManagerInfo manager = managerService.selectManagerInfoById(appletInfo.getId());
+                ManagerInfo manager = managerService.selectManagerInfoById(appletInfo.getRecommenderId());
                 if (null == manager) {
                     return AjaxResponse.error("推荐人不存在");
                 }
@@ -176,8 +239,14 @@ public class UserAppletController {
                     return AjaxResponse.error("推荐码无效");
                 }
             }
-
-            appletService.updateAppletInfo(appletInfo);
+            // 保存小程序信息
+            appletService.saveAppletInfo(appletInfo);
+            String appletLogo = FileUtil.copyFile("static\\images\\applet-logo\\draft\\", "U" + user.getId() + "-APPLET-LOGO.jpg",
+                    "static\\images\\applet-logo\\", appletInfo.getAppletCode() + ".jpg");
+            String licenseSrc = FileUtil.copyFile("static\\images\\applet-license\\draft\\", "U" + user.getId() + "-APPLET-LICENSE.jpg",
+                    "static\\images\\applet-license\\", appletInfo.getAppletCode() + ".jpg");
+            // 更新小程序图片
+            appletService.updateAppletInfo(appletInfo.getId(), appletLogo, licenseSrc);
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("提交小程序信息出错{}", e);
@@ -185,26 +254,4 @@ public class UserAppletController {
         }
     }
 
-    /**
-     * 获取推荐人信息集
-     *
-     * @param extensionCode
-     * @return
-     */
-    @RequestMapping(value = "getRecommenderMap")
-    public Object getRecommenderMap(String extensionCode) {
-        List<ManagerInfo> list = managerService.selectManagerInfoByExtensionCode(extensionCode);
-        if (NullUtil.isNotNullOrEmpty(list)) {
-            List<Map> mapList = new ArrayList<>();
-            for (ManagerInfo info : list) {
-                Map map = new HashMap();
-                map.put("id", info.getId());
-                map.put("code", info.getExtensionCode());
-                map.put("name", info.getNickName());
-                mapList.add(map);
-            }
-            return AjaxResponse.success(mapList);
-        }
-        return AjaxResponse.error("未找到相关信息");
-    }
 }

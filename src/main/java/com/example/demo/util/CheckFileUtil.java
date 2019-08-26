@@ -60,4 +60,5 @@ public class CheckFileUtil {
         }
         return new CheckResult();
     }
+
 }

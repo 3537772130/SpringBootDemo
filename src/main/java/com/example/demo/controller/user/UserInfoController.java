@@ -138,13 +138,13 @@ public class UserInfoController {
             String oldFileName = userInfo.getAvatarUrl().replace("api\\", "static\\");
             String fileName = "USER-" + userInfo.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
             String filePath = "static\\images\\head-portrait\\";
-            String rootPath = GetWebProjectRealPathTool.getClassPath(filePath);
+            String rootPath = PathUtil.getClassPath(filePath);
             multipartFile.transferTo(new File(rootPath + fileName));
             String avatarUrl = filePath + fileName;
             avatarUrl = userInfoService.updateUserInfoByAvatarUrl(userInfo.getId(), avatarUrl);
             userInfo.setAvatarUrl("api\\" + avatarUrl);
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
-            File file = new File(GetWebProjectRealPathTool.getClassPath(oldFileName));
+            File file = new File(PathUtil.getClassPath(oldFileName));
             if (file.exists()) {
                 file.delete();
             }
