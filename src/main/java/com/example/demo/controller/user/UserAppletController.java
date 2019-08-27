@@ -241,12 +241,6 @@ public class UserAppletController {
             }
             // 保存小程序信息
             appletService.saveAppletInfo(appletInfo);
-            String appletLogo = FileUtil.copyFile("static\\images\\applet-logo\\draft\\", "U" + user.getId() + "-APPLET-LOGO.jpg",
-                    "static\\images\\applet-logo\\", appletInfo.getAppletCode() + ".jpg");
-            String licenseSrc = FileUtil.copyFile("static\\images\\applet-license\\draft\\", "U" + user.getId() + "-APPLET-LICENSE.jpg",
-                    "static\\images\\applet-license\\", appletInfo.getAppletCode() + ".jpg");
-            // 更新小程序图片
-            appletService.updateAppletInfo(appletInfo.getId(), appletLogo, licenseSrc);
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("提交小程序信息出错{}", e);

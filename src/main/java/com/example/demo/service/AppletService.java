@@ -1,16 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.AppletInfo;
-import com.example.demo.entity.AppletInfoExample;
-import com.example.demo.entity.ViewAppletInfo;
-import com.example.demo.entity.ViewAppletInfoExample;
-import com.example.demo.mapper.AppletInfoMapper;
-import com.example.demo.mapper.ViewAppletInfoMapper;
+import com.example.demo.entity.*;
+import com.example.demo.mapper.*;
+import com.example.demo.util.FileUtil;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
 import com.example.demo.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +25,12 @@ public class AppletService {
     private AppletInfoMapper appletInfoMapper;
     @Autowired
     private ViewAppletInfoMapper viewAppletInfoMapper;
+    @Autowired
+    private AppletAuditMapper appletAuditMapper;
+    @Autowired
+    private ViewAppletAuditMapper viewAppletAuditMapper;
+    @Autowired
+    private ViewAppletAuditListMapper viewAppletAuditListMapper;
 
     /**
      * 查询小程序信息
@@ -42,12 +46,26 @@ public class AppletService {
      * 查询小程序信息
      *
      * @param id
+     * @return
+     */
+    public ViewAppletInfo selectAppletInfo(Integer id) {
+        return selectAppletInfo(id, null);
+    }
+
+    /**
+     * 查询小程序信息
+     *
+     * @param id
      * @param userId
      * @return
      */
     public ViewAppletInfo selectAppletInfo(Integer id, Integer userId) {
         ViewAppletInfoExample example = new ViewAppletInfoExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId);
+        ViewAppletInfoExample.Criteria c = example.createCriteria();
+        c.andIdEqualTo(id);
+        if (NullUtil.isNotNullOrEmpty(userId)) {
+            c.andUserIdEqualTo(userId);
+        }
         List<ViewAppletInfo> list = viewAppletInfoMapper.selectByExample(example);
         return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
     }
@@ -125,7 +143,7 @@ public class AppletService {
             }
         }
         if (NullUtil.isNotNullOrEmpty(info.getRecommenderAccount())) {
-            c.andRecommenderAccountLike(info.getRecommenderAccount() + "%");
+            c.andRecommenderAccountLike(info.getRecommenderAccount());
         }
         if (NullUtil.isNotNullOrEmpty(info.getIfRetail())) {
             c.andIfRetailEqualTo(info.getIfRetail());
@@ -133,9 +151,7 @@ public class AppletService {
         if (NullUtil.isNotNullOrEmpty(info.getIfSelling())) {
             c.andIfSellingEqualTo(info.getIfSelling());
         }
-        if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
-            c.andStatusEqualTo(info.getStatus());
-        }
+        c.andStatusEqualTo(1);
         long count = viewAppletInfoMapper.countByExample(example);
         if (count > 0) {
             page.setTotalCount(count);
@@ -149,6 +165,7 @@ public class AppletService {
      *
      * @param info
      */
+    @Transactional(rollbackFor = Exception.class)
     public void saveAppletInfo(AppletInfo info) {
         info.setUpdateTime(new Date());
         info.setAppletLogo(null);
@@ -157,20 +174,24 @@ public class AppletService {
         info.setIfSelling(false);
         info.setStatus(0);
         appletInfoMapper.insertSelective(info);
+        // 更新图片
+        updateAppletPic(info);
     }
 
     /**
      * 更新小程序图片
      *
-     * @param id
-     * @param appletLogo
-     * @param licenseSrc
+     * @param info
      */
-    public void updateAppletInfo(Integer id, String appletLogo, String licenseSrc) {
-        AppletInfo info = new AppletInfo();
-        info.setId(id);
-        info.setAppletLogo(appletLogo);
-        info.setLicenseSrc(licenseSrc);
+    public void updateAppletPic(AppletInfo info) {
+        String appletLogo = FileUtil.copyFile("static\\images\\applet-logo\\draft\\", "U" + info.getUserId() + "-APPLET-LOGO.jpg",
+                "static\\images\\applet-logo\\", info.getAppletCode() + ".jpg");
+        String licenseSrc = FileUtil.copyFile("static\\images\\applet-license\\draft\\", "U" + info.getUserId() + "-APPLET-LICENSE.jpg",
+                "static\\images\\applet-license\\", info.getAppletCode() + ".jpg");
+        AppletInfo appletInfo = new AppletInfo();
+        appletInfo.setId(info.getId());
+        appletInfo.setAppletLogo(appletLogo);
+        appletInfo.setLicenseSrc(licenseSrc);
         updateAppletInfo(info);
     }
 
@@ -181,5 +202,91 @@ public class AppletService {
      */
     public void updateAppletInfo(AppletInfo info) {
         appletInfoMapper.updateByPrimaryKeySelective(info);
+    }
+
+
+    /**
+     * 查询小程序审核记录
+     *
+     * @param appletId
+     * @return
+     */
+    public List<ViewAppletAudit> selectAppletAuditList(Integer appletId) {
+        ViewAppletAuditExample example = new ViewAppletAuditExample();
+        example.setOrderByClause("id desc");
+        example.createCriteria().andAppletIdEqualTo(appletId);
+        return viewAppletAuditMapper.selectByExample(example);
+    }
+
+    /**
+     * 查询小程序审核列表
+     *
+     * @param record
+     * @param page
+     * @return
+     */
+    public Page selectAppletAuditToPage(ViewAppletAuditList record, Page page) {
+        ViewAppletAuditListExample example = new ViewAppletAuditListExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        ViewAppletAuditListExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(record.getAppletCode())) {
+            c.andAppletCodeLike("%" + record.getAppletCode() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getAppletName())) {
+            c.andAppletNameLike("%" + record.getAppletName() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getMobile())) {
+            c.andMobileLike(record.getMobile() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getProvince())) {
+            c.andProvinceEqualTo(record.getProvince());
+            if (NullUtil.isNotNullOrEmpty(record.getCity())) {
+                c.andCityEqualTo(record.getCity());
+                if (NullUtil.isNotNullOrEmpty(record.getCounty())) {
+                    c.andCountyEqualTo(record.getCounty());
+                }
+            }
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getRecommenderAccount())) {
+            c.andRecommenderAccountLike(record.getRecommenderAccount() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getIfRetail())) {
+            c.andIfRetailEqualTo(record.getIfRetail());
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getIfSelling())) {
+            c.andIfSellingEqualTo(record.getIfSelling());
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getStatus())) {
+            c.andStatusEqualTo(record.getStatus());
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getAuditorUserName())) {
+            c.andAuditorUserNameLike(record.getAuditorUserName());
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getAuditResult())) {
+            c.andAuditResultEqualTo(record.getAuditResult());
+        }
+        if (NullUtil.isNotNullOrEmpty(record.getStatus())) {
+            c.andStatusEqualTo(record.getStatus());
+        }
+        long count = viewAppletAuditListMapper.countByExample(example);
+        if (count > 0) {
+            page.setTotalCount(count);
+            page.setDataSource(viewAppletAuditListMapper.selectByExample(example));
+        }
+        return page;
+    }
+
+    /**
+     * 查询小程序审核信息
+     *
+     * @param id
+     * @return
+     */
+    public ViewAppletAuditList selectAppletAuditDetails(Integer id) {
+        ViewAppletAuditListExample example = new ViewAppletAuditListExample();
+        example.createCriteria().andIdEqualTo(id);
+        List<ViewAppletAuditList> list = viewAppletAuditListMapper.selectByExample(example);
+        return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
     }
 }
