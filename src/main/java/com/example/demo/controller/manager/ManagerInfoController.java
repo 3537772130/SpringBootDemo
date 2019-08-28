@@ -54,14 +54,29 @@ public class ManagerInfoController {
     }
 
     /**
+     * 加载管理员查询信息集合
+     *
+     * @return
+     */
+    @RequestMapping(value = "loadManagerList")
+    public Object loadManagerList() {
+        Map map = new HashMap<>();
+        List<Map> parentList = managerService.selectManagerInfoByRoleId(3);
+        List<Map> roleList = managerService.selectRoleToMap();
+        map.put("parentList", parentList);
+        map.put("roleList", roleList);
+        return AjaxResponse.success(map);
+    }
+
+    /**
      * 分页查询管理员信息集合
      * @param info
      * @param managerInfo
      * @param request
      * @return
      */
-    @RequestMapping(value = "selectManagerInfoToPage")
-    public Object selectManagerInfoToPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
+    @RequestMapping(value = "queryManagerInfoToPage")
+    public Object queryManagerInfoToPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
                                        ViewManagerInfo managerInfo, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         if (NullUtil.isNotNullOrEmpty(info.getParentId()) && info.getParentId() == 3) {
@@ -155,24 +170,14 @@ public class ManagerInfoController {
     }
 
     /**
-     * 查询角色集合
-     *
-     * @return
-     */
-    @RequestMapping(value = "selectManagerRoleList")
-    public Object selectManagerRoleList() {
-        return AjaxResponse.success(managerService.selectRoleToMap());
-    }
-
-    /**
      * 分页查询角色信息列表
      *
      * @param info
      * @param request
      * @return
      */
-    @RequestMapping(value = "selectManagerRoleToPage")
-    public Object selectManagerRoleToPage(ManagerRole info, HttpServletRequest request) {
+    @RequestMapping(value = "queryManagerRoleToPage")
+    public Object queryManagerRoleToPage(ManagerRole info, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         page = managerService.selectRoleToPage(info, page);
         return AjaxResponse.success(page);

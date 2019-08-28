@@ -1,13 +1,9 @@
 package com.example.demo.controller.manager;
 
-import com.example.demo.entity.ViewAppletAudit;
-import com.example.demo.entity.ViewAppletAuditList;
-import com.example.demo.entity.ViewAppletInfo;
+import com.example.demo.config.annotation.SessionScope;
+import com.example.demo.entity.*;
 import com.example.demo.service.AppletService;
-import com.example.demo.util.AjaxResponse;
-import com.example.demo.util.NullUtil;
-import com.example.demo.util.Page;
-import com.example.demo.util.PageUtil;
+import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,14 +60,29 @@ public class ManageAppletController {
     }
 
     /**
-     * 分页查询小程序审核列表
+     * 分页查询小程序审核列表(初审)
      *
      * @param record
      * @param request
      * @return
      */
-    @RequestMapping(value = "queryAppletAuditToPage")
-    public Object queryAppletAuditToPage(ViewAppletAuditList record, HttpServletRequest request) {
+    @RequestMapping(value = "queryAppletAuditToFirstTrial")
+    public Object queryAppletAuditToFirstTrial(ViewAppletAuditList record, HttpServletRequest request) {
+        record.setAuditResult(0);
+        Page page = PageUtil.initPage(request);
+        page = appletService.selectAppletAuditToPage(record, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
+     * 分页查询小程序审核列表(终审)
+     *
+     * @param record
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "queryAppletAuditToLastTrial")
+    public Object queryAppletAuditToLastTrial(ViewAppletAuditList record, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         page = appletService.selectAppletAuditToPage(record, page);
         return AjaxResponse.success(page);
@@ -111,4 +122,45 @@ public class ManageAppletController {
         return AjaxResponse.success(record);
     }
 
+    /**
+     * 添加小程序审核信息
+     *
+     * @param manager
+     * @param appletAudit
+     * @return
+     */
+    @RequestMapping(value = "saveAppletAuditInfo")
+    public Object saveAppletAuditInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo manager, AppletAudit appletAudit) {
+        try {
+            if (null == appletAudit) {
+                return AjaxResponse.error("获取参数出错");
+            }
+            if (NullUtil.isNullOrEmpty(appletAudit.getAppletId())) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (NullUtil.isNullOrEmpty(appletAudit.getResult())) {
+                return AjaxResponse.error("请选择审核结果");
+            }
+            if (NullUtil.isNullOrEmpty(appletAudit.getRemark())) {
+                return AjaxResponse.error("请填写备注说明");
+            }
+            ViewAppletAudit audit = appletService.selectAppletNewAudit(appletAudit.getAppletId());
+            if (null == audit) {
+                return AjaxResponse.error("参数错误，未获取到相关信息");
+            }
+            if (audit.getAuditResult().intValue() == -1 || audit.getAuditResult().intValue() == 2) {
+                return AjaxResponse.error("小程序状态不符");
+            }
+            appletAudit.setAppletCode(audit.getAppletCode());
+            appletAudit.setAuditorId(manager.getId());
+            if (appletAudit.getResult().intValue() == 1 && audit.getAuditResult().intValue() == 1) {
+                appletAudit.setResult(2);
+            }
+            appletService.addAppletAudit(appletAudit);
+            return AjaxResponse.success("提交成功");
+        } catch (Exception e) {
+            log.error("提交小程序审核信息出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
+    }
 }

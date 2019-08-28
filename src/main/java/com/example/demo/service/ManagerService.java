@@ -156,11 +156,8 @@ public class ManagerService {
         if (NullUtil.isNotNullOrEmpty(info.getCounty())) {
             c.andCountyEqualTo(info.getCounty());
         }
-        if (NullUtil.isNotNullOrEmpty(info.getParentUserName())) {
-            c.andParentUserNameLike(info.getParentUserName() + "%");
-        }
-        if (NullUtil.isNotNullOrEmpty(info.getParentNickName())) {
-            c.andParentNickNameLike("%" + info.getParentNickName() + "%");
+        if (NullUtil.isNotNullOrEmpty(info.getParentId())) {
+            c.andParentIdEqualTo(info.getParentId());
         }
         if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
             c.andStatusEqualTo(info.getStatus());

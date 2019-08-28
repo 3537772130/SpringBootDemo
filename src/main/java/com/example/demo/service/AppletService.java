@@ -201,7 +201,15 @@ public class AppletService {
      * @param info
      */
     public void updateAppletInfo(AppletInfo info) {
+        info.setStatus(0);
         appletInfoMapper.updateByPrimaryKeySelective(info);
+
+        AppletAudit audit = new AppletAudit();
+        audit.setAppletId(info.getId());
+        audit.setAppletCode(info.getAppletCode());
+        audit.setResult(0);
+        audit.setRemark("用户提交信息");
+        appletAuditMapper.insertSelective(audit);
     }
 
 
@@ -216,6 +224,22 @@ public class AppletService {
         example.setOrderByClause("id desc");
         example.createCriteria().andAppletIdEqualTo(appletId);
         return viewAppletAuditMapper.selectByExample(example);
+    }
+
+    /**
+     * 查询小程序最新审核记录
+     *
+     * @param appletId
+     * @return
+     */
+    public ViewAppletAudit selectAppletNewAudit(Integer appletId) {
+        Page page = new Page(0, 1);
+        ViewAppletAuditExample example = new ViewAppletAuditExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        example.createCriteria().andAppletIdEqualTo(appletId);
+        List<ViewAppletAudit> list = viewAppletAuditMapper.selectByExample(example);
+        return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
     }
 
     /**
@@ -288,5 +312,23 @@ public class AppletService {
         example.createCriteria().andIdEqualTo(id);
         List<ViewAppletAuditList> list = viewAppletAuditListMapper.selectByExample(example);
         return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
+    }
+
+    /**
+     * 添加小程序审核信息
+     *
+     * @param appletAudit
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void addAppletAudit(AppletAudit appletAudit) {
+        appletAudit.setAuditTime(new Date());
+        appletAuditMapper.insertSelective(appletAudit);
+
+        if (appletAudit.getResult().intValue() != 1) {
+            AppletInfo applet = new AppletInfo();
+            applet.setId(appletAudit.getAppletId());
+            applet.setStatus(appletAudit.getResult().intValue() == 2 ? 1 : -1);
+            appletInfoMapper.updateByPrimaryKeySelective(applet);
+        }
     }
 }
