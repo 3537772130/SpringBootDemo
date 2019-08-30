@@ -54,6 +54,7 @@ public class ViewAppletInfo implements Serializable {
     private String appletLogo;
 
     private Integer recommenderId;
+    private String licenseSrc;
 
     private String recommenderAccount;
 
@@ -65,8 +66,9 @@ public class ViewAppletInfo implements Serializable {
 
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date updateTime;
-    private String licenseSrc;
+
     private Integer status;
+    private String extensionCode;
 
     public Integer getId() {
         return id;
@@ -258,6 +260,14 @@ public class ViewAppletInfo implements Serializable {
 
     public void setRecommenderId(Integer recommenderId) {
         this.recommenderId = recommenderId;
+    }
+
+    public String getExtensionCode() {
+        return extensionCode;
+    }
+
+    public void setExtensionCode(String extensionCode) {
+        this.extensionCode = extensionCode == null ? null : extensionCode.trim();
     }
 
     public String getRecommenderAccount() {

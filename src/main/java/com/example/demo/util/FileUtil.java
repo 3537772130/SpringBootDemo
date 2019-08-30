@@ -72,15 +72,21 @@ public class FileUtil {
      */
     public static String copyFile(String oldPath, String oldFileName, String newPath, String newFileName) {
         try {
+            // 获取复制的文件
             String oldRootPath = PathUtil.getClassPath(oldPath);
             File file1 = new File(oldRootPath + oldFileName);
             if (file1.exists()) {
+                // 获取目标文件，如果存在，则删除
                 String newRootPath = PathUtil.getClassPath(newPath);
                 File file2 = new File(newRootPath + newFileName);
+                if (file2.exists()) {
+                    file2.delete();
+                }
+                // 复制文件至目标目录，并删除原文件
                 Files.copy(file1.toPath(), file2.toPath());
+                file1.delete();
+                return newPath.replace("static\\", "") + newFileName;
             }
-            file1.delete();
-            return newPath.replace("static\\", "") + newFileName;
         } catch (Exception e) {
             log.error("复制文件出错{}", e);
         }

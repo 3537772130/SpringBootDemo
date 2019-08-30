@@ -37,6 +37,22 @@ public class UserAppletController {
     private ManagerService managerService;
 
     /**
+     * 查询用户小程序审核列表
+     *
+     * @param user
+     * @param record
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "queryAppletAuditToPage")
+    public Object queryAppletAuditToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, ViewAppletAuditList record, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        record.setUserId(user.getId());
+        page = appletService.selectAppletAuditToPage(record, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
      * 查询小程序列表
      *
      * @param user
@@ -44,8 +60,8 @@ public class UserAppletController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "selectAppletToPage")
-    public Object selectAppletToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo, HttpServletRequest request) {
+    @RequestMapping(value = "queryAppletToPage")
+    public Object queryAppletToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         appletInfo.setUserId(user.getId());
         page = appletService.selectAppletInfoToPage(appletInfo, page);
@@ -59,29 +75,65 @@ public class UserAppletController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "selectAppletInfo")
-    public Object selectAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer id) {
+    @RequestMapping(value = "queryAppletInfo")
+    public Object queryAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer id) {
         FileUtil.deleteClassFile("static\\images\\applet-logo\\draft\\", "U" + user.getId() + "-APPLET-LOGO.jpg");
         FileUtil.deleteClassFile("static\\images\\applet-license\\draft\\", "U" + user.getId() + "-APPLET-LICENSE.jpg");
         Map map = new HashMap<>();
         map.put("regions", new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
         map.put("recommenders", managerService.selectRecommenderIdByMap());
         if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
-            ViewAppletInfo appletInfo = appletService.selectAppletInfo(id, user.getId());
-            if (null == appletInfo) {
-                return AjaxResponse.error("未找到相关信息");
+            try {
+                ViewAppletInfo appletInfo = appletService.selectAppletInfo(id, user.getId());
+                if (null != appletInfo) {
+                    appletInfo.setUserId(null);
+                    appletInfo.setAddressSimple(null);
+                    appletInfo.setAddressDetails(null);
+                    appletInfo.setLat(null);
+                    appletInfo.setLon(null);
+                    appletInfo.setIfSelling(null);
+                    appletInfo.setStatus(null);
+                    appletInfo.setManagerAccount(EncryptionUtil.decryptAppletRSA(appletInfo.getManagerAccount()));
+                    appletInfo.setManagerPassword(EncryptionUtil.decryptAppletRSA(appletInfo.getManagerPassword()));
+                    appletInfo.setAppId(EncryptionUtil.decryptAppletRSA(appletInfo.getAppId()));
+                    appletInfo.setAppSecret(EncryptionUtil.decryptAppletRSA(appletInfo.getAppSecret()));
+                    appletInfo.setAppletLogo("api\\" + appletInfo.getAppletLogo());
+                    appletInfo.setLicenseSrc("api\\" + appletInfo.getLicenseSrc());
+                    map.put("applet", appletInfo);
+                    return AjaxResponse.success(map);
+                }
+            } catch (Exception e) {
+                log.error("用户获取小程序信息出错{}", e);
             }
-            appletInfo.setUserId(null);
-            appletInfo.setAddressSimple(null);
-            appletInfo.setAddressDetails(null);
-            appletInfo.setLat(null);
-            appletInfo.setLon(null);
-            appletInfo.setIfSelling(null);
-            appletInfo.setStatus(null);
-            map.put("applet", appletInfo);
-            return AjaxResponse.success(map);
         }
         return AjaxResponse.msg("-1", map);
+    }
+
+    /**
+     * 查询小程序详情
+     *
+     * @param user
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "queryAppletDetails")
+    public Object queryAppletDetails(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer id) {
+        try {
+            ViewAppletInfo appletInfo = appletService.selectAppletInfo(id, user.getId());
+            if (null != appletInfo) {
+                appletInfo.setUserId(null);
+                appletInfo.setManagerAccount(EncryptionUtil.decryptAppletRSA(appletInfo.getManagerAccount()));
+                appletInfo.setManagerPassword(EncryptionUtil.decryptAppletRSA(appletInfo.getManagerPassword()));
+                appletInfo.setAppId(EncryptionUtil.decryptAppletRSA(appletInfo.getAppId()));
+                appletInfo.setAppSecret(EncryptionUtil.decryptAppletRSA(appletInfo.getAppSecret()));
+                appletInfo.setAppletLogo("api" + appletInfo.getAppletLogo());
+                appletInfo.setLicenseSrc("api" + appletInfo.getLicenseSrc());
+                return AjaxResponse.success(appletInfo);
+            }
+        } catch (Exception e) {
+            log.error("查询小程序详情出错{}", e);
+        }
+        return AjaxResponse.error("未找到相关记录");
     }
 
 
@@ -157,8 +209,8 @@ public class UserAppletController {
                 if (null == info) {
                     return AjaxResponse.success("您没有权限修改");
                 }
-                appletInfo.setUserId(null);
-                appletInfo.setAppletCode(null);
+                appletInfo.setUserId(user.getId());
+                appletInfo.setAppletCode(info.getAppletCode());
                 appletInfo.setStatus(null);
             } else {
                 appletInfo.setUserId(user.getId());

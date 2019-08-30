@@ -104,6 +104,9 @@ public class AppletService {
         if (NullUtil.isNotNullOrEmpty(info.getIfSelling())) {
             c.andIfSellingEqualTo(info.getIfSelling());
         }
+        if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
+            c.andStatusEqualTo(info.getStatus());
+        }
         long count = appletInfoMapper.countByExample(example);
         if (count > 0) {
             page.setTotalCount(count);
@@ -167,15 +170,21 @@ public class AppletService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveAppletInfo(AppletInfo info) {
-        info.setUpdateTime(new Date());
+        boolean bool = false;
         info.setAppletLogo(null);
         info.setLicenseSrc(null);
-        info.setAppletCode("AC" + RandomUtil.getTimeStamp());
-        info.setIfSelling(false);
-        info.setStatus(0);
-        appletInfoMapper.insertSelective(info);
+        info.setUpdateTime(new Date());
+        if (NullUtil.isNullOrEmpty(info.getId())) {
+            info.setStatus(0);
+            info.setAppletCode("AC" + RandomUtil.getTimeStamp());
+            info.setIfSelling(false);
+            appletInfoMapper.insertSelective(info);
+            bool = true;
+        } else {
+            appletInfoMapper.updateByPrimaryKeySelective(info);
+        }
         // 更新图片
-        updateAppletPic(info);
+        updateAppletPic(info, bool);
     }
 
     /**
@@ -183,35 +192,27 @@ public class AppletService {
      *
      * @param info
      */
-    public void updateAppletPic(AppletInfo info) {
+    public void updateAppletPic(AppletInfo info, boolean bool) {
         String appletLogo = FileUtil.copyFile("static\\images\\applet-logo\\draft\\", "U" + info.getUserId() + "-APPLET-LOGO.jpg",
                 "static\\images\\applet-logo\\", info.getAppletCode() + ".jpg");
         String licenseSrc = FileUtil.copyFile("static\\images\\applet-license\\draft\\", "U" + info.getUserId() + "-APPLET-LICENSE.jpg",
                 "static\\images\\applet-license\\", info.getAppletCode() + ".jpg");
-        AppletInfo appletInfo = new AppletInfo();
-        appletInfo.setId(info.getId());
-        appletInfo.setAppletLogo(appletLogo);
-        appletInfo.setLicenseSrc(licenseSrc);
-        updateAppletInfo(info);
-    }
-
-    /**
-     * 更新小程序信息
-     *
-     * @param info
-     */
-    public void updateAppletInfo(AppletInfo info) {
-        info.setStatus(0);
-        appletInfoMapper.updateByPrimaryKeySelective(info);
-
+        if (bool) {
+            AppletInfo appletInfo = new AppletInfo();
+            appletInfo.setId(info.getId());
+            appletInfo.setAppletLogo(appletLogo);
+            appletInfo.setLicenseSrc(licenseSrc);
+            appletInfoMapper.updateByPrimaryKeySelective(info);
+        }
+        // 添加审核记录
         AppletAudit audit = new AppletAudit();
         audit.setAppletId(info.getId());
         audit.setAppletCode(info.getAppletCode());
         audit.setResult(0);
-        audit.setRemark("用户提交信息");
+        audit.setRemark("提交信息");
+        audit.setAuditTime(new Date());
         appletAuditMapper.insertSelective(audit);
     }
-
 
     /**
      * 查询小程序审核记录
@@ -254,6 +255,9 @@ public class AppletService {
         example.setPage(page);
         example.setOrderByClause("id desc");
         ViewAppletAuditListExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(record.getUserId())) {
+            c.andUserIdEqualTo(record.getUserId());
+        }
         if (NullUtil.isNotNullOrEmpty(record.getAppletCode())) {
             c.andAppletCodeLike("%" + record.getAppletCode() + "%");
         }
