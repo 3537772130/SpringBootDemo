@@ -1,9 +1,9 @@
 package com.example.demo.controller.manager;
 
 import com.example.demo.config.annotation.CancelAuthentication;
-import com.example.demo.entity.ManagerInfo;
-import com.example.demo.entity.ViewManagerInfo;
+import com.example.demo.entity.*;
 import com.example.demo.service.ManagerService;
+import com.example.demo.service.MenuService;
 import com.example.demo.util.AjaxResponse;
 import com.example.demo.util.Constants;
 import com.example.demo.util.NullUtil;
@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @program: SpringBootDemo
@@ -29,6 +33,8 @@ public class ManagerLoginController {
     private static final Logger log = LoggerFactory.getLogger(ManagerLoginController.class);
     @Autowired
     private ManagerService managerService;
+    @Autowired
+    private MenuService menuService;
 
     /**
      * 登录校验
@@ -63,11 +69,61 @@ public class ManagerLoginController {
             }
             ManagerInfo manager = managerService.selectManagerInfoById(managerInfo.getId());
             request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
+            // 格式化菜单
+            List<Map> menuList = formatMenu(manager.getRoleId());
+            request.getSession().setAttribute(Constants.WEB_MANAGER_MENU_LIST, menuList);
             return AjaxResponse.success(managerInfo.getManagerInfo(managerInfo));
         } catch (Exception e) {
             log.error("登录出错：{}", e);
             return AjaxResponse.error("登录失败");
         }
+    }
+
+    /**
+     * 格式化菜单
+     *
+     * @param roleId
+     * @return
+     */
+    public List<Map> formatMenu(Integer roleId) {
+        List<Map> mapList1 = new ArrayList<>();
+        List<ViewRoleMenuFirst> firstList = menuService.selectMenuListByFirst(roleId);
+        List<ViewRoleMenuSecond> secondList = menuService.selectMenuListBySecond(roleId);
+        List<ViewRoleMenuThird> thirdList = menuService.selectMenuListByThird(roleId);
+        for (ViewRoleMenuSecond record1 : secondList) {
+            Map map1 = new HashMap();
+            map1.put("index", "M-" + record1.getId());
+            map1.put("title", record1.getMenuName());
+            map1.put("icon", record1.getMenuIcon());
+            map1.put("parentId", record1.getParentId());
+            List<Map> mapList2 = new ArrayList<>();
+            for (ViewRoleMenuThird record2 : thirdList) {
+                if (record2.getParentId().intValue() == record1.getMenuId().intValue()) {
+                    Map map2 = new HashMap();
+                    map2.put("index", "M-" + record2.getId());
+                    map2.put("title", record2.getMenuName());
+                    map2.put("logo", record2.getMenuLogo());
+                    mapList2.add(map2);
+                }
+            }
+            map1.put("items", mapList2);
+            mapList1.add(map1);
+        }
+        List<Map> mapList2 = new ArrayList<>();
+        for (ViewRoleMenuFirst record : firstList) {
+            Map map1 = new HashMap();
+            map1.put("index", "M-" + record.getId());
+            map1.put("title", record.getMenuName());
+            List<Map> mapList3 = new ArrayList<>();
+            for (Map map2 : mapList1) {
+                if (map2.get("parentId").toString().equals(record.getMenuId().toString())) {
+                    mapList3.add(map2);
+                }
+            }
+            map1.put("items", mapList3);
+            mapList2.add(map1);
+        }
+        return mapList2;
     }
 
     /**
@@ -83,7 +139,8 @@ public class ManagerLoginController {
         if (null == manager) {
             return AjaxResponse.error("请先登录");
         }
-        return AjaxResponse.success();
+        List<Map> mapList = (List) request.getSession().getAttribute(Constants.WEB_MANAGER_MENU_LIST);
+        return AjaxResponse.success(mapList);
     }
 
     /**

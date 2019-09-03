@@ -3,11 +3,11 @@
 <mapper namespace="com.example.demo.mapper.MenuInfoMapper">
     <resultMap id="BaseResultMap" type="com.example.demo.entity.MenuInfo">
         <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon"/>
         <result column="menu_name" jdbcType="VARCHAR" property="menuName"/>
-        <result column="menu_simple" jdbcType="VARCHAR" property="menuSimple"/>
         <result column="menu_level" jdbcType="INTEGER" property="menuLevel"/>
         <result column="menu_path" jdbcType="VARCHAR" property="menuPath"/>
-        <result column="menu_src" jdbcType="VARCHAR" property="menuSrc"/>
+        <result column="menu_logo" jdbcType="VARCHAR" property="menuLogo"/>
         <result column="menu_index" jdbcType="INTEGER" property="menuIndex"/>
         <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -74,7 +74,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, menu_name, menu_simple, menu_level, menu_path, menu_src, menu_index, parent_id,
+    id, menu_icon, menu_name, menu_level, menu_path, menu_logo, menu_index, parent_id,
     update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.MenuInfoExample" resultMap="BaseResultMap">
@@ -109,12 +109,12 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.MenuInfo">
-    insert into menu_info (id, menu_name, menu_simple,
-      menu_level, menu_path, menu_src,
+    insert into menu_info (id, menu_icon, menu_name,
+      menu_level, menu_path, menu_logo,
       menu_index, parent_id, update_time,
       status)
-    values (#{id,jdbcType=INTEGER}, #{menuName,jdbcType=VARCHAR}, #{menuSimple,jdbcType=VARCHAR},
-      #{menuLevel,jdbcType=INTEGER}, #{menuPath,jdbcType=VARCHAR}, #{menuSrc,jdbcType=VARCHAR},
+    values (#{id,jdbcType=INTEGER}, #{menuIcon,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR},
+      #{menuLevel,jdbcType=INTEGER}, #{menuPath,jdbcType=VARCHAR}, #{menuLogo,jdbcType=VARCHAR},
       #{menuIndex,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP},
       #{status,jdbcType=BIT})
   </insert>
@@ -125,11 +125,11 @@
             <if test="id != null">
                 id,
             </if>
+            <if test="menuIcon != null">
+                menu_icon,
+            </if>
             <if test="menuName != null">
                 menu_name,
-            </if>
-            <if test="menuSimple != null">
-                menu_simple,
             </if>
             <if test="menuLevel != null">
                 menu_level,
@@ -137,8 +137,8 @@
             <if test="menuPath != null">
                 menu_path,
             </if>
-            <if test="menuSrc != null">
-                menu_src,
+            <if test="menuLogo != null">
+                menu_logo,
             </if>
             <if test="menuIndex != null">
                 menu_index,
@@ -157,11 +157,11 @@
             <if test="id != null">
                 #{id,jdbcType=INTEGER},
             </if>
+            <if test="menuIcon != null">
+                #{menuIcon,jdbcType=VARCHAR},
+            </if>
             <if test="menuName != null">
                 #{menuName,jdbcType=VARCHAR},
-            </if>
-            <if test="menuSimple != null">
-                #{menuSimple,jdbcType=VARCHAR},
             </if>
             <if test="menuLevel != null">
                 #{menuLevel,jdbcType=INTEGER},
@@ -169,8 +169,8 @@
             <if test="menuPath != null">
                 #{menuPath,jdbcType=VARCHAR},
             </if>
-            <if test="menuSrc != null">
-                #{menuSrc,jdbcType=VARCHAR},
+            <if test="menuLogo != null">
+                #{menuLogo,jdbcType=VARCHAR},
             </if>
             <if test="menuIndex != null">
                 #{menuIndex,jdbcType=INTEGER},
@@ -198,11 +198,11 @@
             <if test="record.id != null">
                 id = #{record.id,jdbcType=INTEGER},
             </if>
+            <if test="record.menuIcon != null">
+                menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
+            </if>
             <if test="record.menuName != null">
                 menu_name = #{record.menuName,jdbcType=VARCHAR},
-            </if>
-            <if test="record.menuSimple != null">
-                menu_simple = #{record.menuSimple,jdbcType=VARCHAR},
             </if>
             <if test="record.menuLevel != null">
                 menu_level = #{record.menuLevel,jdbcType=INTEGER},
@@ -210,8 +210,8 @@
             <if test="record.menuPath != null">
                 menu_path = #{record.menuPath,jdbcType=VARCHAR},
             </if>
-            <if test="record.menuSrc != null">
-                menu_src = #{record.menuSrc,jdbcType=VARCHAR},
+            <if test="record.menuLogo != null">
+                menu_logo = #{record.menuLogo,jdbcType=VARCHAR},
             </if>
             <if test="record.menuIndex != null">
                 menu_index = #{record.menuIndex,jdbcType=INTEGER},
@@ -233,11 +233,11 @@
     <update id="updateByExample" parameterType="map">
         update menu_info
         set id = #{record.id,jdbcType=INTEGER},
+        menu_icon = #{record.menuIcon,jdbcType=VARCHAR},
         menu_name = #{record.menuName,jdbcType=VARCHAR},
-        menu_simple = #{record.menuSimple,jdbcType=VARCHAR},
         menu_level = #{record.menuLevel,jdbcType=INTEGER},
         menu_path = #{record.menuPath,jdbcType=VARCHAR},
-        menu_src = #{record.menuSrc,jdbcType=VARCHAR},
+        menu_logo = #{record.menuLogo,jdbcType=VARCHAR},
         menu_index = #{record.menuIndex,jdbcType=INTEGER},
         parent_id = #{record.parentId,jdbcType=INTEGER},
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -249,11 +249,11 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.MenuInfo">
         update menu_info
         <set>
+            <if test="menuIcon != null">
+                menu_icon = #{menuIcon,jdbcType=VARCHAR},
+            </if>
             <if test="menuName != null">
                 menu_name = #{menuName,jdbcType=VARCHAR},
-            </if>
-            <if test="menuSimple != null">
-                menu_simple = #{menuSimple,jdbcType=VARCHAR},
             </if>
             <if test="menuLevel != null">
                 menu_level = #{menuLevel,jdbcType=INTEGER},
@@ -261,8 +261,8 @@
             <if test="menuPath != null">
                 menu_path = #{menuPath,jdbcType=VARCHAR},
             </if>
-            <if test="menuSrc != null">
-                menu_src = #{menuSrc,jdbcType=VARCHAR},
+            <if test="menuLogo != null">
+                menu_logo = #{menuLogo,jdbcType=VARCHAR},
             </if>
             <if test="menuIndex != null">
                 menu_index = #{menuIndex,jdbcType=INTEGER},
@@ -281,11 +281,11 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.MenuInfo">
     update menu_info
-    set menu_name = #{menuName,jdbcType=VARCHAR},
-      menu_simple = #{menuSimple,jdbcType=VARCHAR},
+    set menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      menu_name = #{menuName,jdbcType=VARCHAR},
       menu_level = #{menuLevel,jdbcType=INTEGER},
       menu_path = #{menuPath,jdbcType=VARCHAR},
-      menu_src = #{menuSrc,jdbcType=VARCHAR},
+      menu_logo = #{menuLogo,jdbcType=VARCHAR},
       menu_index = #{menuIndex,jdbcType=INTEGER},
       parent_id = #{parentId,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},

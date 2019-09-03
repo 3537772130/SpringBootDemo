@@ -7,18 +7,26 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class MenuInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
+    private static final long serialVersionUID = 1L;
+
     private String menuName;
-    private String menuSimple;
+
     private Integer menuLevel;
+
     private String menuPath;
-    private String menuSrc;
+    private String menuIcon;
+
     private Integer menuIndex;
+
     private Integer parentId;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date updateTime;
+
     private Boolean status;
+    private String menuLogo;
 
     public Integer getId() {
         return id;
@@ -28,20 +36,20 @@ public class MenuInfo implements Serializable {
         this.id = id;
     }
 
+    public String getMenuIcon() {
+        return menuIcon;
+    }
+
+    public void setMenuIcon(String menuIcon) {
+        this.menuIcon = menuIcon == null ? null : menuIcon.trim();
+    }
+
     public String getMenuName() {
         return menuName;
     }
 
     public void setMenuName(String menuName) {
         this.menuName = menuName == null ? null : menuName.trim();
-    }
-
-    public String getMenuSimple() {
-        return menuSimple;
-    }
-
-    public void setMenuSimple(String menuSimple) {
-        this.menuSimple = menuSimple == null ? null : menuSimple.trim();
     }
 
     public Integer getMenuLevel() {
@@ -60,12 +68,12 @@ public class MenuInfo implements Serializable {
         this.menuPath = menuPath == null ? null : menuPath.trim();
     }
 
-    public String getMenuSrc() {
-        return menuSrc;
+    public String getMenuLogo() {
+        return menuLogo;
     }
 
-    public void setMenuSrc(String menuSrc) {
-        this.menuSrc = menuSrc == null ? null : menuSrc.trim();
+    public void setMenuLogo(String menuLogo) {
+        this.menuLogo = menuLogo == null ? null : menuLogo.trim();
     }
 
     public Integer getMenuIndex() {
