@@ -6,6 +6,8 @@ import com.example.demo.service.AppletService;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
+import com.example.demo.util.file.FileUtil;
+import com.example.demo.util.file.PathUtil;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -282,15 +284,6 @@ public class UserAppletController {
                 return AjaxResponse.error("SECRET过长");
             }
             appletInfo.setAppSecret(EncryptionUtil.encryptAppletRSA(appletInfo.getAppSecret()));
-            if (NullUtil.isNotNullOrEmpty(appletInfo.getRecommenderId())) {
-                ManagerInfo manager = managerService.selectManagerInfoById(appletInfo.getRecommenderId());
-                if (null == manager) {
-                    return AjaxResponse.error("推荐人不存在");
-                }
-                if (!manager.getStatus()) {
-                    return AjaxResponse.error("推荐码无效");
-                }
-            }
             // 保存小程序信息
             appletService.saveAppletInfo(appletInfo);
             return AjaxResponse.success("提交成功");

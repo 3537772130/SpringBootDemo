@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.util.http;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;

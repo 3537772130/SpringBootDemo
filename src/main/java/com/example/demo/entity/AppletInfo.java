@@ -11,6 +11,8 @@ public class AppletInfo implements Serializable {
 
     private Integer userId;
 
+    private static final long serialVersionUID = 1L;
+
     private String appletCode;
 
     private String appletName;
@@ -20,8 +22,7 @@ public class AppletInfo implements Serializable {
     private String licenseCode;
 
     private String businessScope;
-
-    private static final long serialVersionUID = 1L;
+    private String appletLogo;
 
     private String telephone;
 
@@ -47,18 +48,15 @@ public class AppletInfo implements Serializable {
 
     private Double lat;
 
-    private String appletLogo;
-
     private Boolean ifRetail;
 
     private Boolean ifSelling;
 
-    private Integer recommenderId;
-
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date updateTime;
-    private String licenseSrc;
+
     private Integer status;
+    private String licenseSrc;
 
     public Integer getId() {
         return id;
@@ -74,6 +72,14 @@ public class AppletInfo implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getAppletLogo() {
+        return appletLogo;
+    }
+
+    public void setAppletLogo(String appletLogo) {
+        this.appletLogo = appletLogo == null ? null : appletLogo.trim();
     }
 
     public String getAppletCode() {
@@ -220,14 +226,6 @@ public class AppletInfo implements Serializable {
         this.lat = lat;
     }
 
-    public String getAppletLogo() {
-        return appletLogo;
-    }
-
-    public void setAppletLogo(String appletLogo) {
-        this.appletLogo = appletLogo == null ? null : appletLogo.trim();
-    }
-
     public Boolean getIfRetail() {
         return ifRetail;
     }
@@ -242,14 +240,6 @@ public class AppletInfo implements Serializable {
 
     public void setIfSelling(Boolean ifSelling) {
         this.ifSelling = ifSelling;
-    }
-
-    public Integer getRecommenderId() {
-        return recommenderId;
-    }
-
-    public void setRecommenderId(Integer recommenderId) {
-        this.recommenderId = recommenderId;
     }
 
     public Date getUpdateTime() {

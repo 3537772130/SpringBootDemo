@@ -19,20 +19,20 @@ public class ViewAppletAuditListExample {
         oredCriteria = new ArrayList<Criteria>();
     }
 
-    public String getOrderByClause() {
-        return orderByClause;
-    }
-
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -68,12 +68,12 @@ public class ViewAppletAuditListExample {
         distinct = false;
     }
 
-    public Page getPage() {
-        return page;
-    }
-
     public void setPage(Page page) {
         this.page = page;
+    }
+
+    public Page getPage() {
+        return page;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -1687,206 +1687,6 @@ public class ViewAppletAuditListExample {
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderIdIsNull() {
-            addCriterion("recommender_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdIsNotNull() {
-            addCriterion("recommender_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdEqualTo(Integer value) {
-            addCriterion("recommender_id =", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdNotEqualTo(Integer value) {
-            addCriterion("recommender_id <>", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdGreaterThan(Integer value) {
-            addCriterion("recommender_id >", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("recommender_id >=", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdLessThan(Integer value) {
-            addCriterion("recommender_id <", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdLessThanOrEqualTo(Integer value) {
-            addCriterion("recommender_id <=", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdIn(List<Integer> values) {
-            addCriterion("recommender_id in", values, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdNotIn(List<Integer> values) {
-            addCriterion("recommender_id not in", values, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdBetween(Integer value1, Integer value2) {
-            addCriterion("recommender_id between", value1, value2, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("recommender_id not between", value1, value2, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountIsNull() {
-            addCriterion("recommender_account is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountIsNotNull() {
-            addCriterion("recommender_account is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountEqualTo(String value) {
-            addCriterion("recommender_account =", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountNotEqualTo(String value) {
-            addCriterion("recommender_account <>", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountGreaterThan(String value) {
-            addCriterion("recommender_account >", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountGreaterThanOrEqualTo(String value) {
-            addCriterion("recommender_account >=", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountLessThan(String value) {
-            addCriterion("recommender_account <", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountLessThanOrEqualTo(String value) {
-            addCriterion("recommender_account <=", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountLike(String value) {
-            addCriterion("recommender_account like", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountNotLike(String value) {
-            addCriterion("recommender_account not like", value, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountIn(List<String> values) {
-            addCriterion("recommender_account in", values, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountNotIn(List<String> values) {
-            addCriterion("recommender_account not in", values, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountBetween(String value1, String value2) {
-            addCriterion("recommender_account between", value1, value2, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderAccountNotBetween(String value1, String value2) {
-            addCriterion("recommender_account not between", value1, value2, "recommenderAccount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameIsNull() {
-            addCriterion("recommender_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameIsNotNull() {
-            addCriterion("recommender_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameEqualTo(String value) {
-            addCriterion("recommender_name =", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameNotEqualTo(String value) {
-            addCriterion("recommender_name <>", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameGreaterThan(String value) {
-            addCriterion("recommender_name >", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameGreaterThanOrEqualTo(String value) {
-            addCriterion("recommender_name >=", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameLessThan(String value) {
-            addCriterion("recommender_name <", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameLessThanOrEqualTo(String value) {
-            addCriterion("recommender_name <=", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameLike(String value) {
-            addCriterion("recommender_name like", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameNotLike(String value) {
-            addCriterion("recommender_name not like", value, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameIn(List<String> values) {
-            addCriterion("recommender_name in", values, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameNotIn(List<String> values) {
-            addCriterion("recommender_name not in", values, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameBetween(String value1, String value2) {
-            addCriterion("recommender_name between", value1, value2, "recommenderName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderNameNotBetween(String value1, String value2) {
-            addCriterion("recommender_name not between", value1, value2, "recommenderName");
-            return (Criteria) this;
-        }
-
         public Criteria andIfRetailIsNull() {
             addCriterion("if_retail is null");
             return (Criteria) this;
@@ -2542,6 +2342,38 @@ public class ViewAppletAuditListExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -2576,38 +2408,6 @@ public class ViewAppletAuditListExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

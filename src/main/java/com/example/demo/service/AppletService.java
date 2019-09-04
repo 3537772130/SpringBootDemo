@@ -2,10 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
-import com.example.demo.util.FileUtil;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
 import com.example.demo.util.RandomUtil;
+import com.example.demo.util.file.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,9 +145,6 @@ public class AppletService {
                 }
             }
         }
-        if (NullUtil.isNotNullOrEmpty(info.getRecommenderAccount())) {
-            c.andRecommenderAccountLike(info.getRecommenderAccount());
-        }
         if (NullUtil.isNotNullOrEmpty(info.getIfRetail())) {
             c.andIfRetailEqualTo(info.getIfRetail());
         }
@@ -275,9 +272,6 @@ public class AppletService {
                     c.andCountyEqualTo(record.getCounty());
                 }
             }
-        }
-        if (NullUtil.isNotNullOrEmpty(record.getRecommenderAccount())) {
-            c.andRecommenderAccountLike(record.getRecommenderAccount() + "%");
         }
         if (NullUtil.isNotNullOrEmpty(record.getIfRetail())) {
             c.andIfRetailEqualTo(record.getIfRetail());

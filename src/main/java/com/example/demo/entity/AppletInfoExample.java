@@ -237,6 +237,76 @@ public class AppletInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andAppletLogoIsNull() {
+            addCriterion("applet_logo is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoIsNotNull() {
+            addCriterion("applet_logo is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoEqualTo(String value) {
+            addCriterion("applet_logo =", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoNotEqualTo(String value) {
+            addCriterion("applet_logo <>", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoGreaterThan(String value) {
+            addCriterion("applet_logo >", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoGreaterThanOrEqualTo(String value) {
+            addCriterion("applet_logo >=", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoLessThan(String value) {
+            addCriterion("applet_logo <", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoLessThanOrEqualTo(String value) {
+            addCriterion("applet_logo <=", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoLike(String value) {
+            addCriterion("applet_logo like", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoNotLike(String value) {
+            addCriterion("applet_logo not like", value, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoIn(List<String> values) {
+            addCriterion("applet_logo in", values, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoNotIn(List<String> values) {
+            addCriterion("applet_logo not in", values, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoBetween(String value1, String value2) {
+            addCriterion("applet_logo between", value1, value2, "appletLogo");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletLogoNotBetween(String value1, String value2) {
+            addCriterion("applet_logo not between", value1, value2, "appletLogo");
+            return (Criteria) this;
+        }
+
         public Criteria andAppletCodeIsNull() {
             addCriterion("applet_code is null");
             return (Criteria) this;
@@ -1477,76 +1547,6 @@ public class AppletInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andAppletLogoIsNull() {
-            addCriterion("applet_logo is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoIsNotNull() {
-            addCriterion("applet_logo is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoEqualTo(String value) {
-            addCriterion("applet_logo =", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoNotEqualTo(String value) {
-            addCriterion("applet_logo <>", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoGreaterThan(String value) {
-            addCriterion("applet_logo >", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoGreaterThanOrEqualTo(String value) {
-            addCriterion("applet_logo >=", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoLessThan(String value) {
-            addCriterion("applet_logo <", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoLessThanOrEqualTo(String value) {
-            addCriterion("applet_logo <=", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoLike(String value) {
-            addCriterion("applet_logo like", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoNotLike(String value) {
-            addCriterion("applet_logo not like", value, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoIn(List<String> values) {
-            addCriterion("applet_logo in", values, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoNotIn(List<String> values) {
-            addCriterion("applet_logo not in", values, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoBetween(String value1, String value2) {
-            addCriterion("applet_logo between", value1, value2, "appletLogo");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletLogoNotBetween(String value1, String value2) {
-            addCriterion("applet_logo not between", value1, value2, "appletLogo");
-            return (Criteria) this;
-        }
-
         public Criteria andIfRetailIsNull() {
             addCriterion("if_retail is null");
             return (Criteria) this;
@@ -1664,66 +1664,6 @@ public class AppletInfoExample {
 
         public Criteria andIfSellingNotBetween(Boolean value1, Boolean value2) {
             addCriterion("if_selling not between", value1, value2, "ifSelling");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdIsNull() {
-            addCriterion("recommender_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdIsNotNull() {
-            addCriterion("recommender_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdEqualTo(Integer value) {
-            addCriterion("recommender_id =", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdNotEqualTo(Integer value) {
-            addCriterion("recommender_id <>", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdGreaterThan(Integer value) {
-            addCriterion("recommender_id >", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("recommender_id >=", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdLessThan(Integer value) {
-            addCriterion("recommender_id <", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdLessThanOrEqualTo(Integer value) {
-            addCriterion("recommender_id <=", value, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdIn(List<Integer> values) {
-            addCriterion("recommender_id in", values, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdNotIn(List<Integer> values) {
-            addCriterion("recommender_id not in", values, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdBetween(Integer value1, Integer value2) {
-            addCriterion("recommender_id between", value1, value2, "recommenderId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecommenderIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("recommender_id not between", value1, value2, "recommenderId");
             return (Criteria) this;
         }
 

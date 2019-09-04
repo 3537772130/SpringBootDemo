@@ -1,8 +1,8 @@
-package com.example.demo.controller.manager;
+package com.example.demo.controller.other;
 
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.ManagerInfo;
-import com.example.demo.service.WebSocketServer;
+import com.example.demo.service.WebSocketService;
 import com.example.demo.util.AjaxResponse;
 import com.example.demo.util.Constants;
 import jodd.datetime.JDateTime;
@@ -25,7 +25,7 @@ import java.util.Date;
 public class SocketController {
     private static final Logger log = LoggerFactory.getLogger(SocketController.class);
     @Resource
-    private WebSocketServer webSocketServer;
+    private WebSocketService webSocketService;
 
     /**
      * 给指定用户推送消息
@@ -36,7 +36,7 @@ public class SocketController {
      */
     @RequestMapping(value = "/pushMessage", method = RequestMethod.GET)
     public void pushMessage(@RequestParam String sId, @RequestParam String message) {
-        webSocketServer.sendInfo(sId, message);
+        webSocketService.sendInfo(sId, message);
     }
 
     /**
@@ -47,7 +47,7 @@ public class SocketController {
      */
     @RequestMapping(value = "/pushMessageToAll", method = RequestMethod.GET)
     public void pushMessageToAll(@RequestParam String message) {
-        webSocketServer.sendInfo(null, message);
+        webSocketService.sendInfo(null, message);
     }
 
     /**
@@ -61,7 +61,7 @@ public class SocketController {
     public Object sendImitateSystemNews(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info) {
         try {
             JDateTime time = new JDateTime(new Date());
-            webSocketServer.sendInfo(info.getId().toString(), "模拟系统信息：" + time.toString());
+            webSocketService.sendInfo(info.getId().toString(), "模拟系统信息：" + time.toString());
             return AjaxResponse.success("发送成功");
         } catch (Exception e) {
             log.error("模拟系统推送信息出错{}", e);

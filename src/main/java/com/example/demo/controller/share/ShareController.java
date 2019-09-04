@@ -35,6 +35,16 @@ public class ShareController {
     }
 
     /**
+     * 权限拦截，返回错误码
+     *
+     * @return
+     */
+    @RequestMapping(value = "auth")
+    public Object auth() {
+        return AjaxResponse.msg("-2", "没有权限！");
+    }
+
+    /**
      * 查询地域信息集合
      *
      * @param id

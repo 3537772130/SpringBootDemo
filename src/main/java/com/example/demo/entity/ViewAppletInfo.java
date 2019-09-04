@@ -53,13 +53,6 @@ public class ViewAppletInfo implements Serializable {
 
     private String appletLogo;
 
-    private Integer recommenderId;
-    private String licenseSrc;
-
-    private String recommenderAccount;
-
-    private String recommenderName;
-
     private Boolean ifRetail;
 
     private Boolean ifSelling;
@@ -68,7 +61,7 @@ public class ViewAppletInfo implements Serializable {
     private Date updateTime;
 
     private Integer status;
-    private String extensionCode;
+    private String licenseSrc;
 
     public Integer getId() {
         return id;
@@ -252,38 +245,6 @@ public class ViewAppletInfo implements Serializable {
 
     public void setAppletLogo(String appletLogo) {
         this.appletLogo = appletLogo == null ? null : appletLogo.trim();
-    }
-
-    public Integer getRecommenderId() {
-        return recommenderId;
-    }
-
-    public void setRecommenderId(Integer recommenderId) {
-        this.recommenderId = recommenderId;
-    }
-
-    public String getExtensionCode() {
-        return extensionCode;
-    }
-
-    public void setExtensionCode(String extensionCode) {
-        this.extensionCode = extensionCode == null ? null : extensionCode.trim();
-    }
-
-    public String getRecommenderAccount() {
-        return recommenderAccount;
-    }
-
-    public void setRecommenderAccount(String recommenderAccount) {
-        this.recommenderAccount = recommenderAccount == null ? null : recommenderAccount.trim();
-    }
-
-    public String getRecommenderName() {
-        return recommenderName;
-    }
-
-    public void setRecommenderName(String recommenderName) {
-        this.recommenderName = recommenderName == null ? null : recommenderName.trim();
     }
 
     public Boolean getIfRetail() {

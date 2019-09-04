@@ -18,12 +18,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
  **/
 @ServerEndpoint("/websocket/{sId}")
 @Component
-public class WebSocketServer {
-    private static final Logger log = LoggerFactory.getLogger(WebSocketServer.class);
+public class WebSocketService {
+    private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+    private static CopyOnWriteArraySet<WebSocketService> webSocketSet = new CopyOnWriteArraySet<WebSocketService>();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -36,7 +36,7 @@ public class WebSocketServer {
      */
     public static void sendInfo(@PathParam("sId") String sId, String message) {
         log.info("推送消息到窗口" + sId + "，推送内容:" + message);
-        for (WebSocketServer item : webSocketSet) {
+        for (WebSocketService item : webSocketSet) {
             try {
                 //这里可以设定只推送给这个sId的，为null则全部推送
                 if (sId == null) {
@@ -56,11 +56,11 @@ public class WebSocketServer {
     }
 
     public static synchronized void addOnlineCount() {
-        WebSocketServer.onlineCount++;
+        WebSocketService.onlineCount++;
     }
 
     public static synchronized void subOnlineCount() {
-        WebSocketServer.onlineCount--;
+        WebSocketService.onlineCount--;
     }
 
     /**
@@ -99,7 +99,7 @@ public class WebSocketServer {
     public void onMessage(String message, Session session) {
         log.info("收到来自窗口" + sId + "的信息:" + message);
         //群发消息
-        for (WebSocketServer item : webSocketSet) {
+        for (WebSocketService item : webSocketSet) {
             try {
                 item.sendMessage(message);
             } catch (IOException e) {

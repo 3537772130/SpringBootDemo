@@ -2,9 +2,9 @@ package com.example.demo.controller.other;
 
 import com.example.demo.entity.ImageInfo;
 import com.example.demo.util.Constants;
-import com.example.demo.util.ImageUtil;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.VerifyCodeUtil;
+import com.example.demo.util.file.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

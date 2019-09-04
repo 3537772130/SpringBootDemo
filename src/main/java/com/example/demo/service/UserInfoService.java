@@ -9,6 +9,7 @@ import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserLoginLogMapper;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
+import com.example.demo.util.http.IpUtil;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;

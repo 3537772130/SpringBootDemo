@@ -25,10 +25,6 @@
         <result column="lon" jdbcType="DOUBLE" property="lon"/>
         <result column="lat" jdbcType="DOUBLE" property="lat"/>
         <result column="applet_logo" jdbcType="VARCHAR" property="appletLogo"/>
-        <result column="recommender_id" jdbcType="INTEGER" property="recommenderId"/>
-        <result column="extension_code" jdbcType="VARCHAR" property="extensionCode"/>
-        <result column="recommender_account" jdbcType="VARCHAR" property="recommenderAccount"/>
-        <result column="recommender_name" jdbcType="VARCHAR" property="recommenderName"/>
         <result column="if_retail" jdbcType="BIT" property="ifRetail"/>
         <result column="if_selling" jdbcType="BIT" property="ifSelling"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -68,8 +64,7 @@
     id, user_id, mobile, nick_name, applet_code, applet_name, applet_simple, license_code,
     business_scope, license_src, telephone, manager_account, manager_password, app_id,
     app_secret, province, city, county, address_simple, address_details, lon, lat, applet_logo,
-    recommender_id, extension_code, recommender_account, recommender_name, if_retail,
-    if_selling, update_time, status
+    if_retail, if_selling, update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ViewAppletInfoExample"
             resultMap="BaseResultMap">

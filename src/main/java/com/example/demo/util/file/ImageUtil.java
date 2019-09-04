@@ -1,6 +1,7 @@
-package com.example.demo.util;
+package com.example.demo.util.file;
 
 import com.example.demo.entity.ImageInfo;
+import com.example.demo.util.NullUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

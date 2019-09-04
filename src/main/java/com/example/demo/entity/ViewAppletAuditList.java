@@ -7,45 +7,75 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ViewAppletAuditList implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private Integer userId;
+
     private String mobile;
+
     private String nickName;
+
     private String appletCode;
+
     private String appletName;
+
     private String appletSimple;
+
     private String licenseCode;
+
     private String businessScope;
+
     private String licenseSrc;
+
     private String telephone;
+
     private String managerAccount;
+
     private String managerPassword;
+
     private String appId;
+
     private String appSecret;
+
     private String province;
+
     private String city;
+
     private String county;
+
     private String addressSimple;
+
     private String addressDetails;
+
     private Double lon;
+
     private Double lat;
+
     private String appletLogo;
-    private Integer recommenderId;
-    private String recommenderAccount;
-    private String recommenderName;
+
     private Boolean ifRetail;
+
     private Boolean ifSelling;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date updateTime;
+
     private Integer status;
+
     private Integer auditResult;
+
     private String auditRemark;
+
     private Integer auditorId;
+
     private String auditorUserName;
+
     private String auditorNickName;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date auditTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -229,30 +259,6 @@ public class ViewAppletAuditList implements Serializable {
 
     public void setAppletLogo(String appletLogo) {
         this.appletLogo = appletLogo == null ? null : appletLogo.trim();
-    }
-
-    public Integer getRecommenderId() {
-        return recommenderId;
-    }
-
-    public void setRecommenderId(Integer recommenderId) {
-        this.recommenderId = recommenderId;
-    }
-
-    public String getRecommenderAccount() {
-        return recommenderAccount;
-    }
-
-    public void setRecommenderAccount(String recommenderAccount) {
-        this.recommenderAccount = recommenderAccount == null ? null : recommenderAccount.trim();
-    }
-
-    public String getRecommenderName() {
-        return recommenderName;
-    }
-
-    public void setRecommenderName(String recommenderName) {
-        this.recommenderName = recommenderName == null ? null : recommenderName.trim();
     }
 
     public Boolean getIfRetail() {

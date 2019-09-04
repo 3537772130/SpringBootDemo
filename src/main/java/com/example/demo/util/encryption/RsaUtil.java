@@ -1,6 +1,6 @@
 package com.example.demo.util.encryption;
 
-import com.example.demo.util.PathUtil;
+import com.example.demo.util.file.PathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

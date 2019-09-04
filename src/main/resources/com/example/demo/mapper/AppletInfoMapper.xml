@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.example.demo.entity.AppletInfo">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="applet_logo" jdbcType="VARCHAR" property="appletLogo"/>
         <result column="applet_code" jdbcType="VARCHAR" property="appletCode"/>
         <result column="applet_name" jdbcType="VARCHAR" property="appletName"/>
         <result column="applet_simple" jdbcType="VARCHAR" property="appletSimple"/>
@@ -22,10 +23,8 @@
         <result column="address_details" jdbcType="VARCHAR" property="addressDetails"/>
         <result column="lon" jdbcType="DOUBLE" property="lon"/>
         <result column="lat" jdbcType="DOUBLE" property="lat"/>
-        <result column="applet_logo" jdbcType="VARCHAR" property="appletLogo"/>
         <result column="if_retail" jdbcType="BIT" property="ifRetail"/>
         <result column="if_selling" jdbcType="BIT" property="ifSelling"/>
-        <result column="recommender_id" jdbcType="INTEGER" property="recommenderId"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
     </resultMap>
@@ -90,10 +89,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_id, applet_code, applet_name, applet_simple, license_code, business_scope,
-    license_src, telephone, manager_account, manager_password, app_id, app_secret, province,
-    city, county, address_simple, address_details, lon, lat, applet_logo, if_retail,
-    if_selling, recommender_id, update_time, status
+    id, user_id, applet_logo, applet_code, applet_name, applet_simple, license_code,
+    business_scope, license_src, telephone, manager_account, manager_password, app_id,
+    app_secret, province, city, county, address_simple, address_details, lon, lat, if_retail,
+    if_selling, update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.AppletInfoExample" resultMap="BaseResultMap">
         select
@@ -127,24 +126,24 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.AppletInfo">
-    insert into applet_info (id, user_id, applet_code,
-      applet_name, applet_simple, license_code,
-      business_scope, license_src, telephone,
-      manager_account, manager_password, app_id,
-      app_secret, province, city,
-      county, address_simple, address_details,
-      lon, lat, applet_logo,
-      if_retail, if_selling, recommender_id,
-      update_time, status)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{appletCode,jdbcType=VARCHAR},
-      #{appletName,jdbcType=VARCHAR}, #{appletSimple,jdbcType=VARCHAR}, #{licenseCode,jdbcType=VARCHAR},
-      #{businessScope,jdbcType=VARCHAR}, #{licenseSrc,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR},
-      #{managerAccount,jdbcType=VARCHAR}, #{managerPassword,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR},
-      #{appSecret,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
-      #{county,jdbcType=VARCHAR}, #{addressSimple,jdbcType=VARCHAR}, #{addressDetails,jdbcType=VARCHAR},
-      #{lon,jdbcType=DOUBLE}, #{lat,jdbcType=DOUBLE}, #{appletLogo,jdbcType=VARCHAR},
-      #{ifRetail,jdbcType=BIT}, #{ifSelling,jdbcType=BIT}, #{recommenderId,jdbcType=INTEGER},
-      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+    insert into applet_info (id, user_id, applet_logo,
+      applet_code, applet_name, applet_simple,
+      license_code, business_scope, license_src,
+      telephone, manager_account, manager_password,
+      app_id, app_secret, province,
+      city, county, address_simple,
+      address_details, lon, lat,
+      if_retail, if_selling, update_time,
+      status)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{appletLogo,jdbcType=VARCHAR},
+      #{appletCode,jdbcType=VARCHAR}, #{appletName,jdbcType=VARCHAR}, #{appletSimple,jdbcType=VARCHAR},
+      #{licenseCode,jdbcType=VARCHAR}, #{businessScope,jdbcType=VARCHAR}, #{licenseSrc,jdbcType=VARCHAR},
+      #{telephone,jdbcType=VARCHAR}, #{managerAccount,jdbcType=VARCHAR}, #{managerPassword,jdbcType=VARCHAR},
+      #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{addressSimple,jdbcType=VARCHAR},
+      #{addressDetails,jdbcType=VARCHAR}, #{lon,jdbcType=DOUBLE}, #{lat,jdbcType=DOUBLE},
+      #{ifRetail,jdbcType=BIT}, #{ifSelling,jdbcType=BIT}, #{updateTime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.AppletInfo"
             useGeneratedKeys="true">
@@ -155,6 +154,9 @@
             </if>
             <if test="userId != null">
                 user_id,
+            </if>
+            <if test="appletLogo != null">
+                applet_logo,
             </if>
             <if test="appletCode != null">
                 applet_code,
@@ -210,17 +212,11 @@
             <if test="lat != null">
                 lat,
             </if>
-            <if test="appletLogo != null">
-                applet_logo,
-            </if>
             <if test="ifRetail != null">
                 if_retail,
             </if>
             <if test="ifSelling != null">
                 if_selling,
-            </if>
-            <if test="recommenderId != null">
-                recommender_id,
             </if>
             <if test="updateTime != null">
                 update_time,
@@ -235,6 +231,9 @@
             </if>
             <if test="userId != null">
                 #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="appletLogo != null">
+                #{appletLogo,jdbcType=VARCHAR},
             </if>
             <if test="appletCode != null">
                 #{appletCode,jdbcType=VARCHAR},
@@ -290,17 +289,11 @@
             <if test="lat != null">
                 #{lat,jdbcType=DOUBLE},
             </if>
-            <if test="appletLogo != null">
-                #{appletLogo,jdbcType=VARCHAR},
-            </if>
             <if test="ifRetail != null">
                 #{ifRetail,jdbcType=BIT},
             </if>
             <if test="ifSelling != null">
                 #{ifSelling,jdbcType=BIT},
-            </if>
-            <if test="recommenderId != null">
-                #{recommenderId,jdbcType=INTEGER},
             </if>
             <if test="updateTime != null">
                 #{updateTime,jdbcType=TIMESTAMP},
@@ -324,6 +317,9 @@
             </if>
             <if test="record.userId != null">
                 user_id = #{record.userId,jdbcType=INTEGER},
+            </if>
+            <if test="record.appletLogo != null">
+                applet_logo = #{record.appletLogo,jdbcType=VARCHAR},
             </if>
             <if test="record.appletCode != null">
                 applet_code = #{record.appletCode,jdbcType=VARCHAR},
@@ -379,17 +375,11 @@
             <if test="record.lat != null">
                 lat = #{record.lat,jdbcType=DOUBLE},
             </if>
-            <if test="record.appletLogo != null">
-                applet_logo = #{record.appletLogo,jdbcType=VARCHAR},
-            </if>
             <if test="record.ifRetail != null">
                 if_retail = #{record.ifRetail,jdbcType=BIT},
             </if>
             <if test="record.ifSelling != null">
                 if_selling = #{record.ifSelling,jdbcType=BIT},
-            </if>
-            <if test="record.recommenderId != null">
-                recommender_id = #{record.recommenderId,jdbcType=INTEGER},
             </if>
             <if test="record.updateTime != null">
                 update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -406,6 +396,7 @@
         update applet_info
         set id = #{record.id,jdbcType=INTEGER},
         user_id = #{record.userId,jdbcType=INTEGER},
+        applet_logo = #{record.appletLogo,jdbcType=VARCHAR},
         applet_code = #{record.appletCode,jdbcType=VARCHAR},
         applet_name = #{record.appletName,jdbcType=VARCHAR},
         applet_simple = #{record.appletSimple,jdbcType=VARCHAR},
@@ -424,10 +415,8 @@
         address_details = #{record.addressDetails,jdbcType=VARCHAR},
         lon = #{record.lon,jdbcType=DOUBLE},
         lat = #{record.lat,jdbcType=DOUBLE},
-        applet_logo = #{record.appletLogo,jdbcType=VARCHAR},
         if_retail = #{record.ifRetail,jdbcType=BIT},
         if_selling = #{record.ifSelling,jdbcType=BIT},
-        recommender_id = #{record.recommenderId,jdbcType=INTEGER},
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
         status = #{record.status,jdbcType=INTEGER}
         <if test="_parameter != null">
@@ -439,6 +428,9 @@
         <set>
             <if test="userId != null">
                 user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="appletLogo != null">
+                applet_logo = #{appletLogo,jdbcType=VARCHAR},
             </if>
             <if test="appletCode != null">
                 applet_code = #{appletCode,jdbcType=VARCHAR},
@@ -494,17 +486,11 @@
             <if test="lat != null">
                 lat = #{lat,jdbcType=DOUBLE},
             </if>
-            <if test="appletLogo != null">
-                applet_logo = #{appletLogo,jdbcType=VARCHAR},
-            </if>
             <if test="ifRetail != null">
                 if_retail = #{ifRetail,jdbcType=BIT},
             </if>
             <if test="ifSelling != null">
                 if_selling = #{ifSelling,jdbcType=BIT},
-            </if>
-            <if test="recommenderId != null">
-                recommender_id = #{recommenderId,jdbcType=INTEGER},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -518,6 +504,7 @@
     <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.AppletInfo">
     update applet_info
     set user_id = #{userId,jdbcType=INTEGER},
+      applet_logo = #{appletLogo,jdbcType=VARCHAR},
       applet_code = #{appletCode,jdbcType=VARCHAR},
       applet_name = #{appletName,jdbcType=VARCHAR},
       applet_simple = #{appletSimple,jdbcType=VARCHAR},
@@ -536,10 +523,8 @@
       address_details = #{addressDetails,jdbcType=VARCHAR},
       lon = #{lon,jdbcType=DOUBLE},
       lat = #{lat,jdbcType=DOUBLE},
-      applet_logo = #{appletLogo,jdbcType=VARCHAR},
       if_retail = #{ifRetail,jdbcType=BIT},
       if_selling = #{ifSelling,jdbcType=BIT},
-      recommender_id = #{recommenderId,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
