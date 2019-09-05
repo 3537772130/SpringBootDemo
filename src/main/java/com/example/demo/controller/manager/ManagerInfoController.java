@@ -75,8 +75,8 @@ public class ManagerInfoController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "queryManagerInfoToPage")
-    public Object queryManagerInfoToPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
+    @RequestMapping(value = "queryManagerToPage")
+    public Object queryManagerToPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
                                        ViewManagerInfo managerInfo, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         if (NullUtil.isNotNullOrEmpty(info.getParentId()) && info.getParentId() == 3) {

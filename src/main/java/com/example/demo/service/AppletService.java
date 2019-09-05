@@ -31,6 +31,8 @@ public class AppletService {
     private ViewAppletAuditMapper viewAppletAuditMapper;
     @Autowired
     private ViewAppletAuditListMapper viewAppletAuditListMapper;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     /**
      * 查询小程序信息
@@ -329,6 +331,14 @@ public class AppletService {
             applet.setId(appletAudit.getAppletId());
             applet.setStatus(appletAudit.getResult().intValue() == 2 ? 1 : -1);
             appletInfoMapper.updateByPrimaryKeySelective(applet);
+        }
+
+        if (appletAudit.getResult().intValue() == 2) {
+            AppletInfo info = appletInfoMapper.selectByPrimaryKey(appletAudit.getAppletId());
+            UserInfo user = new UserInfo();
+            user.setId(info.getUserId());
+            user.setIsDealer(true);
+            userInfoMapper.updateByPrimaryKeySelective(user);
         }
     }
 }

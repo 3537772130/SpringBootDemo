@@ -77,7 +77,7 @@ public class ManagerService {
      *
      * @return
      */
-    public List<Map> selectRecommenderIdByMap() {
+    public List<Map> selectExtensionByMap() {
         ManagerInfoExample example = new ManagerInfoExample();
         List<Integer> roleIdList = new ArrayList<>();
         roleIdList.add(3);
@@ -88,10 +88,9 @@ public class ManagerService {
         for (ManagerInfo info :
                 list) {
             Map map = new HashMap();
-            map.put("id", info.getId());
             map.put("code", info.getExtensionCode());
             String name = info.getNickName();
-            name = name.length() < 3 ? name.substring(0, 1) + " *" : name.substring(0, 1) + " * " + name.substring(name.length() - 1, name.length());
+//            name = name.length() < 3 ? name.substring(0, 1) + " *" : name.substring(0, 1) + " * " + name.substring(name.length() - 1, name.length());
             map.put("name", name);
             list1.add(map);
         }

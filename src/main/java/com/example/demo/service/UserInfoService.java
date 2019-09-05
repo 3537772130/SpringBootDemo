@@ -1,15 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.UserInfo;
-import com.example.demo.entity.UserInfoExample;
-import com.example.demo.entity.UserLoginLog;
-import com.example.demo.entity.UserLoginLogExample;
+import com.example.demo.entity.*;
 import com.example.demo.mapper.CommonMapper;
 import com.example.demo.mapper.UserInfoMapper;
 import com.example.demo.mapper.UserLoginLogMapper;
+import com.example.demo.mapper.ViewMerchantInfoMapper;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
 import com.example.demo.util.http.IpUtil;
+import jodd.datetime.JDateTime;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -33,6 +32,8 @@ public class UserInfoService {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private UserLoginLogMapper userLoginLogMapper;
+    @Autowired
+    private ViewMerchantInfoMapper viewMerchantInfoMapper;
     @Autowired
     private CommonMapper commonMapper;
 
@@ -72,10 +73,13 @@ public class UserInfoService {
      * 查询用户列表
      *
      * @param mobile
+     * @param nickname
+     * @param startDate
+     * @param endDate
      * @param page
      * @return
      */
-    public Page selectUserInfo(String mobile, Page page) {
+    public Page selectUserToPage(String mobile, String nickname, String startDate, String endDate, Boolean status, Page page) {
         UserInfoExample example = new UserInfoExample();
         example.setPage(page);
         example.setOrderByClause("id desc");
@@ -83,6 +87,21 @@ public class UserInfoService {
         if (NullUtil.isNotNullOrEmpty(mobile)) {
             c.andMobileLike(mobile + "%");
         }
+        if (NullUtil.isNotNullOrEmpty(nickname)) {
+            c.andNickNameLike("%" + nickname + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(startDate)) {
+            JDateTime date = new JDateTime(startDate);
+            c.andCreateDateGreaterThanOrEqualTo(date.convertToDate());
+        }
+        if (NullUtil.isNotNullOrEmpty(endDate)) {
+            JDateTime date = new JDateTime(endDate);
+            c.andCreateDateLessThanOrEqualTo(date.addDay(1).convertToDate());
+        }
+        if (NullUtil.isNotNullOrEmpty(status)) {
+            c.andStatusEqualTo(status);
+        }
+        c.andIsDealerEqualTo(false);
         long count = userInfoMapper.countByExample(example);
         if (count > 0) {
             page.setTotalCount(count);
@@ -90,6 +109,53 @@ public class UserInfoService {
         }
         return page;
     }
+
+    /**
+     * 查询商户列表
+     *
+     * @param mobile
+     * @param nickname
+     * @param extensionCode
+     * @param startDate
+     * @param endDate
+     * @param page
+     * @return
+     */
+    public Page selectMerchantToPage(String mobile, String nickname, String extensionCode, String startDate, String endDate, Boolean status, Page page) {
+        ViewMerchantInfoExample example = new ViewMerchantInfoExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        ViewMerchantInfoExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(mobile)) {
+            c.andMobileLike(mobile + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(nickname)) {
+            c.andNickNameLike("%" + nickname + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(extensionCode)) {
+            c.andExtensionCodeLike(extensionCode + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(startDate)) {
+            JDateTime date = new JDateTime(startDate);
+            c.andCreateDateGreaterThanOrEqualTo(date.convertToDate());
+        }
+        if (NullUtil.isNotNullOrEmpty(endDate)) {
+            JDateTime date = new JDateTime(endDate);
+            c.andCreateDateLessThanOrEqualTo(date.addDay(1).convertToDate());
+        }
+        if (NullUtil.isNotNullOrEmpty(status)) {
+            c.andStatusEqualTo(status);
+        }
+        c.andIsDealerEqualTo(true);
+        long count = viewMerchantInfoMapper.countByExample(example);
+        if (count > 0) {
+            page.setTotalCount(count);
+            page.setDataSource(viewMerchantInfoMapper.selectByExample(example));
+        }
+        return page;
+    }
+
+
 
     /**
      * 添加/修改用户信息
