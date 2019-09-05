@@ -83,7 +83,6 @@ public class UserAppletController {
         FileUtil.deleteClassFile("static\\images\\applet-license\\draft\\", "U" + user.getId() + "-APPLET-LICENSE.jpg");
         Map map = new HashMap<>();
         map.put("regions", new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
-        map.put("recommenders", managerService.selectRecommenderIdByMap());
         if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
             try {
                 ViewAppletInfo appletInfo = appletService.selectAppletInfo(id, user.getId());

@@ -77,8 +77,13 @@ public class UserInfoController {
             if (!RegularUtil.checkName(info.getNickName().trim())) {
                 return AjaxResponse.error("昵称不能含有特殊字符");
             }
+            if (NullUtil.isNotNullOrEmpty(info.getEmail())) {
+                if (!RegularUtil.checkEmail(info.getEmail())) {
+                    return AjaxResponse.error("邮箱格式错误");
+                }
+            }
             info.setId(user.getId());
-            info = userInfoService.addOrUpdateUserInfo(info.getUserInfo(info));
+            info = userInfoService.addOrUpdateUserInfo(info.getUserInfoToUpdate(info));
             if (NullUtil.isNotNullOrEmpty(info.getAvatarUrl())) {
                 info.setAvatarUrl("api\\" + info.getAvatarUrl());
             }
@@ -136,7 +141,12 @@ public class UserInfoController {
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            String oldFileName = userInfo.getAvatarUrl().replace("api\\", "static\\");
+            if (NullUtil.isNotNullOrEmpty(userInfo.getAvatarUrl())) {
+                File file = new File(PathUtil.getClassPath("static\\" + userInfo.getAvatarUrl()));
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
             String fileName = "USER-" + userInfo.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
             String filePath = "static\\images\\head-portrait\\";
             String rootPath = PathUtil.getClassPath(filePath);
@@ -145,10 +155,6 @@ public class UserInfoController {
             avatarUrl = userInfoService.updateUserInfoByAvatarUrl(userInfo.getId(), avatarUrl);
             userInfo.setAvatarUrl("api\\" + avatarUrl);
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
-            File file = new File(PathUtil.getClassPath(oldFileName));
-            if (file.exists()) {
-                file.delete();
-            }
             return AjaxResponse.success("上传成功");
         } catch (IOException e) {
             log.error("上传头像出错{}", e);

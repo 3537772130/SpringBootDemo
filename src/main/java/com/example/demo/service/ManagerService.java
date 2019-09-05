@@ -43,6 +43,22 @@ public class ManagerService {
     /**
      * 查询管理员信息
      *
+     * @param extensionCode
+     * @return
+     */
+    public ManagerInfo selectManagerInfo(String extensionCode) {
+        List<Integer> list = new ArrayList<>();
+        list.add(3);
+        list.add(4);
+        ManagerInfoExample example = new ManagerInfoExample();
+        example.createCriteria().andExtensionCodeEqualTo(extensionCode).andRoleIdIn(list).andStatusEqualTo(true);
+        List<ManagerInfo> list1 = managerInfoMapper.selectByExample(example);
+        return NullUtil.isNotNullOrEmpty(list1) ? list1.get(0) : null;
+    }
+
+    /**
+     * 查询管理员信息
+     *
      * @param userName
      * @return
      */

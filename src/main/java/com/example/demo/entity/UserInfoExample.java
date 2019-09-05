@@ -1027,6 +1027,76 @@ public class UserInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andExtensionCodeIsNull() {
+            addCriterion("extension_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeIsNotNull() {
+            addCriterion("extension_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeEqualTo(String value) {
+            addCriterion("extension_code =", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeNotEqualTo(String value) {
+            addCriterion("extension_code <>", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeGreaterThan(String value) {
+            addCriterion("extension_code >", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("extension_code >=", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeLessThan(String value) {
+            addCriterion("extension_code <", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeLessThanOrEqualTo(String value) {
+            addCriterion("extension_code <=", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeLike(String value) {
+            addCriterion("extension_code like", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeNotLike(String value) {
+            addCriterion("extension_code not like", value, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeIn(List<String> values) {
+            addCriterion("extension_code in", values, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeNotIn(List<String> values) {
+            addCriterion("extension_code not in", values, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeBetween(String value1, String value2) {
+            addCriterion("extension_code between", value1, value2, "extensionCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtensionCodeNotBetween(String value1, String value2) {
+            addCriterion("extension_code not between", value1, value2, "extensionCode");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateDateIsNull() {
             addCriterion("create_date is null");
             return (Criteria) this;

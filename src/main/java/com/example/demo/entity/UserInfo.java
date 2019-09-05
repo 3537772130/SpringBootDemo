@@ -35,6 +35,8 @@ public class UserInfo implements Serializable {
 
     private Integer goodsCount;
 
+    private String extensionCode;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
     private Date createDate;
 
@@ -154,6 +156,14 @@ public class UserInfo implements Serializable {
         this.goodsCount = goodsCount;
     }
 
+    public String getExtensionCode() {
+        return extensionCode;
+    }
+
+    public void setExtensionCode(String extensionCode) {
+        this.extensionCode = extensionCode == null ? null : extensionCode.trim();
+    }
+
     public Date getCreateDate() {
         return createDate;
     }
@@ -180,6 +190,7 @@ public class UserInfo implements Serializable {
         info.setMobile(null);
         info.setPassword(null);
         info.setEncrypted(null);
+        info.setExtensionCode(null);
         return info;
     }
 

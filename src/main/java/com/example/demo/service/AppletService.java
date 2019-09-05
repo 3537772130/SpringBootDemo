@@ -106,6 +106,8 @@ public class AppletService {
         }
         if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
             c.andStatusEqualTo(info.getStatus());
+        } else {
+            c.andStatusNotEqualTo(0);
         }
         long count = appletInfoMapper.countByExample(example);
         if (count > 0) {

@@ -16,6 +16,7 @@
       <result column="free_balance" jdbcType="DOUBLE" property="freeBalance"/>
       <result column="integral" jdbcType="INTEGER" property="integral"/>
       <result column="goods_count" jdbcType="INTEGER" property="goodsCount"/>
+      <result column="extension_code" jdbcType="VARCHAR" property="extensionCode"/>
       <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
       <result column="status" jdbcType="BIT" property="status"/>
   </resultMap>
@@ -79,7 +80,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, mobile, password, encrypted, nick_name, avatar_url, gender, birthday, email,
-    is_dealer, balance, free_balance, integral, goods_count, create_date, status
+    is_dealer, balance, free_balance, integral, goods_count, extension_code, create_date,
+    status
   </sql>
   <select id="selectByExample" parameterType="com.example.demo.entity.UserInfoExample" resultMap="BaseResultMap">
     select
@@ -117,14 +119,14 @@
       encrypted, nick_name, avatar_url,
       gender, birthday, email,
       is_dealer, balance, free_balance,
-      integral, goods_count, create_date,
-      status)
+      integral, goods_count, extension_code,
+      create_date, status)
     values (#{id,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{encrypted,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR},
       #{gender,jdbcType=BIT}, #{birthday,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
       #{isDealer,jdbcType=BIT}, #{balance,jdbcType=DOUBLE}, #{freeBalance,jdbcType=DOUBLE},
-      #{integral,jdbcType=INTEGER}, #{goodsCount,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
-      #{status,jdbcType=BIT})
+      #{integral,jdbcType=INTEGER}, #{goodsCount,jdbcType=INTEGER}, #{extensionCode,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.UserInfo" useGeneratedKeys="true">
     insert into user_info
@@ -170,6 +172,9 @@
       </if>
         <if test="goodsCount != null">
             goods_count,
+        </if>
+        <if test="extensionCode != null">
+            extension_code,
       </if>
         <if test="createDate != null">
             create_date,
@@ -220,6 +225,9 @@
       </if>
         <if test="goodsCount != null">
             #{goodsCount,jdbcType=INTEGER},
+        </if>
+        <if test="extensionCode != null">
+            #{extensionCode,jdbcType=VARCHAR},
       </if>
         <if test="createDate != null">
             #{createDate,jdbcType=TIMESTAMP},
@@ -279,6 +287,9 @@
       </if>
         <if test="record.goodsCount != null">
             goods_count = #{record.goodsCount,jdbcType=INTEGER},
+        </if>
+        <if test="record.extensionCode != null">
+            extension_code = #{record.extensionCode,jdbcType=VARCHAR},
       </if>
         <if test="record.createDate != null">
             create_date = #{record.createDate,jdbcType=TIMESTAMP},
@@ -307,6 +318,7 @@
       free_balance = #{record.freeBalance,jdbcType=DOUBLE},
       integral = #{record.integral,jdbcType=INTEGER},
       goods_count = #{record.goodsCount,jdbcType=INTEGER},
+      extension_code = #{record.extensionCode,jdbcType=VARCHAR},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       status = #{record.status,jdbcType=BIT}
     <if test="_parameter != null">
@@ -355,6 +367,9 @@
         <if test="goodsCount != null">
             goods_count = #{goodsCount,jdbcType=INTEGER},
         </if>
+        <if test="extensionCode != null">
+            extension_code = #{extensionCode,jdbcType=VARCHAR},
+        </if>
         <if test="createDate != null">
             create_date = #{createDate,jdbcType=TIMESTAMP},
         </if>
@@ -379,6 +394,7 @@
       free_balance = #{freeBalance,jdbcType=DOUBLE},
       integral = #{integral,jdbcType=INTEGER},
       goods_count = #{goodsCount,jdbcType=INTEGER},
+      extension_code = #{extensionCode,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}

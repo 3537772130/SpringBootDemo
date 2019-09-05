@@ -1,7 +1,9 @@
 package com.example.demo.controller.user;
 
 import com.example.demo.config.annotation.CancelAuthentication;
+import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.UserInfo;
+import com.example.demo.service.ManagerService;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 /**
  * @program: SpringBootDemo
@@ -26,7 +27,9 @@ import java.util.Date;
 public class UserLoginController {
     private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
     @Autowired
-    public UserInfoService userInfoService;
+    private UserInfoService userInfoService;
+    @Autowired
+    private ManagerService managerService;
 
 
     /**
@@ -143,12 +146,12 @@ public class UserLoginController {
             if (info.getPassword().length() < 6 || info.getPassword().length() > 20) {
                 return AjaxResponse.error("登录密码长度不符");
             }
-            info.setId(null);
-            info.setNickName(info.getNickName().trim());
-            info.setEncrypted(RandomUtil.getRandomStr32());
-            info.setCreateDate(new Date());
-            String cipher = EncryptionUtil.encryptPasswordMD5(info.getPassword(), info.getEncrypted());
-            info.setPassword(cipher);
+            if (NullUtil.isNotNullOrEmpty(info.getExtensionCode())) {
+                ManagerInfo manager = managerService.selectManagerInfo(info.getExtensionCode());
+                if (null == manager) {
+                    return AjaxResponse.error("无效推荐码");
+                }
+            }
             userInfoService.saveUserInfo(info);
             return AjaxResponse.success("注册成功");
         } catch (Exception e) {
