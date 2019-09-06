@@ -105,6 +105,18 @@ public class MenuService implements ApplicationRunner {
     }
 
     /**
+     * 查询菜单的子菜单
+     *
+     * @param parentId
+     * @return
+     */
+    public List<MenuInfo> selectMenuChildrenList(Integer parentId) {
+        MenuInfoExample example = new MenuInfoExample();
+        example.createCriteria().andParentIdEqualTo(parentId);
+        return menuInfoMapper.selectByExample(example);
+    }
+
+    /**
      * 查询菜单集合
      *
      * @param level
@@ -212,8 +224,40 @@ public class MenuService implements ApplicationRunner {
         if (NullUtil.isNotNullOrEmpty(menuInfo.getId())) {
             MenuInfo record = menuInfoMapper.selectByPrimaryKey(menuInfo.getId());
             menuInfoMapper.updateByPrimaryKeySelective(menuInfo);
+            // 当菜单状态发生改变
             if ((record.getStatus() == true && menuInfo.getStatus() == false) ||
                     (record.getStatus() == false && menuInfo.getStatus() == true)) {
+                // 非三级菜单，则更新菜单下所有子菜单状态
+                List<Integer> idList = new ArrayList<>();
+                if (record.getMenuLevel().intValue() != 3) { // 获取所有子级的ID
+                    List<MenuInfo> list = this.selectMenuChildrenList(record.getId());
+                    // 二级菜单，下属只有一级
+                    for (MenuInfo info : list) {
+                        idList.add(info.getId());
+                        // 一级菜单，下属有俩级
+                        if (record.getMenuLevel().intValue() == 1) {
+                            List<MenuInfo> list1 = this.selectMenuChildrenList(info.getId());
+                            for (MenuInfo info1 : list1) {
+                                idList.add(info1.getId());
+                            }
+                        }
+                    }
+                } else if (menuInfo.getStatus() == true) { // 获取所有父级的ID
+                    MenuInfo record1 = this.selectMenuInfo(record.getParentId());
+                    idList.add(record1.getId());
+                    MenuInfo record2 = this.selectMenuInfo(record1.getParentId());
+                    idList.add(record2.getId());
+                }
+                // 批量更新菜单状态
+                if (!(record.getMenuLevel().intValue() == 3 && menuInfo.getStatus() == false)) {
+                    MenuInfoExample example = new MenuInfoExample();
+                    example.createCriteria().andIdIn(idList);
+                    MenuInfo m = new MenuInfo();
+                    m.setStatus(menuInfo.getStatus());
+                    menuInfoMapper.updateByExampleSelective(m, example);
+                }
+
+                // 更新菜单权限打包的缓存
                 this.getReadyRole(null);
             }
         } else {
@@ -225,7 +269,7 @@ public class MenuService implements ApplicationRunner {
                 record.setUpdateTime(new Date());
                 record.setStatus(true);
                 managerRoleMenuMapper.insertSelective(record);
-
+                // 更新菜单权限打包的缓存
                 this.getReadyRole(record.getRoleId());
             }
         }
