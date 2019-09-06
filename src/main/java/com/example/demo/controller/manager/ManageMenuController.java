@@ -69,7 +69,7 @@ public class ManageMenuController {
             map1.put("index", record1.getMenuIndex());
             map1.put("level", record1.getMenuLevel());
             map1.put("updateTime", new JDateTime(record1.getUpdateTime()).toString(Constants.DATE_TIME_JDK));
-            map1.put("status", record1.getStatus() ? "正常" : "禁用");
+            map1.put("status", record1.getStatus());
             List<Map> mapList2 = new ArrayList<>();
             for (MenuInfo record2 : thirdList) {
                 if (record2.getParentId().intValue() == record1.getId().intValue()) {
@@ -82,7 +82,7 @@ public class ManageMenuController {
                     map2.put("index", record2.getMenuIndex());
                     map2.put("level", record2.getMenuLevel());
                     map2.put("updateTime", new JDateTime(record2.getUpdateTime()).toString(Constants.DATE_TIME_JDK));
-                    map2.put("status", record2.getStatus() ? "正常" : "禁用");
+                    map2.put("status", record2.getStatus());
                     mapList2.add(map2);
                 }
             }
@@ -99,7 +99,7 @@ public class ManageMenuController {
             map1.put("index", record.getMenuIndex());
             map1.put("level", record.getMenuLevel());
             map1.put("updateTime", new JDateTime(record.getUpdateTime()).toString(Constants.DATE_TIME_JDK));
-            map1.put("status", record.getStatus() ? "正常" : "禁用");
+            map1.put("status", record.getStatus());
             List<Map> mapList3 = new ArrayList<>();
             for (Map map2 : mapList1) {
                 if (map2.get("parentId").toString().equals(record.getId().toString())) {
