@@ -2,14 +2,19 @@ package com.example.demo.service;
 
 import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
+import com.example.demo.util.Constants;
 import com.example.demo.util.NullUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: SpringBootDemo
@@ -18,7 +23,9 @@ import java.util.List;
  * @create: 2019-09-02 10:15
  **/
 @Service
-public class MenuService {
+@Component
+public class MenuService implements ApplicationRunner {
+    private static final Logger log = LoggerFactory.getLogger(MenuService.class);
     @Autowired
     private MenuInfoMapper menuInfoMapper;
     @Autowired
@@ -29,6 +36,63 @@ public class MenuService {
     private ViewRoleMenuSecondMapper viewRoleMenuSecondMapper;
     @Autowired
     private ViewRoleMenuThirdMapper viewRoleMenuThirdMapper;
+    @Autowired
+    private ManagerService managerService;
+
+    /**
+     * 打包所有角色的权限信息
+     *
+     * @param args
+     */
+    @Override
+    public void run(ApplicationArguments args) {
+        this.getReadyRole(null);
+    }
+
+    /**
+     * 准备好角色信息
+     *
+     * @param roleId
+     */
+    @Async
+    public void getReadyRole(Integer roleId) {
+        log.info("----------开始准备角色权限信息，进行打包封装处理----------");
+        if (NullUtil.isNullOrEmpty(roleId)) {
+            List<ManagerRole> roleList = managerService.selectManagerRoleList();
+            for (ManagerRole role : roleList) {
+                Map map = this.getRoleAuthMap(role.getId());
+                Constants.MANAGER_ROLE_AUTH_MAP.put(role.getId(), map);
+            }
+        } else {
+            Map map = this.getRoleAuthMap(roleId);
+            Constants.MANAGER_ROLE_AUTH_MAP.put(roleId, map);
+        }
+
+        List<MenuInfo> list = this.selectMenuListByThird();
+        for (MenuInfo record : list) {
+            Constants.MANAGER_ROLE_AUTH_LOGO_MAP.put(record.getMenuLogo(), record.getMenuLogo());
+        }
+
+        log.info("--------------角色权限信息，打包封装处理完毕--------------");
+    }
+
+    /**
+     * 准备角色权限信息，封装成Map集合
+     *
+     * @param roleId
+     * @return
+     */
+    public Map getRoleAuthMap(Integer roleId) {
+        List<ViewRoleMenuThird> list = selectMenuListByThird(roleId);
+        if (NullUtil.isNullOrEmpty(list)) {
+            return null;
+        }
+        Map<String, String> map = new HashMap();
+        for (ViewRoleMenuThird record : list) {
+            map.put(record.getMenuLogo(), record.getMenuLogo());
+        }
+        return map;
+    }
 
     /**
      * 查询菜单信息
@@ -118,10 +182,12 @@ public class MenuService {
     public List<ViewRoleMenuThird> selectMenuListByThird(Integer roleId) {
         ViewRoleMenuThirdExample example = new ViewRoleMenuThirdExample();
         example.setOrderByClause("menu_index asc");
-        example.createCriteria().andRoleIdEqualTo(roleId);
+        ViewRoleMenuThirdExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(roleId)) {
+            c.andRoleIdEqualTo(roleId);
+        }
         return viewRoleMenuThirdMapper.selectByExample(example);
     }
-
 
     /**
      * 根据标识查询授权菜单
@@ -144,7 +210,12 @@ public class MenuService {
     public void updateMenuInfo(MenuInfo menuInfo) {
         menuInfo.setUpdateTime(new Date());
         if (NullUtil.isNotNullOrEmpty(menuInfo.getId())) {
+            MenuInfo record = menuInfoMapper.selectByPrimaryKey(menuInfo.getId());
             menuInfoMapper.updateByPrimaryKeySelective(menuInfo);
+            if ((record.getStatus() == true && menuInfo.getStatus() == false) ||
+                    (record.getStatus() == false && menuInfo.getStatus() == true)) {
+                this.getReadyRole(null);
+            }
         } else {
             menuInfoMapper.insertSelective(menuInfo);
             if (menuInfo.getMenuLevel().intValue() == 3) {
@@ -154,6 +225,8 @@ public class MenuService {
                 record.setUpdateTime(new Date());
                 record.setStatus(true);
                 managerRoleMenuMapper.insertSelective(record);
+
+                this.getReadyRole(record.getRoleId());
             }
         }
     }
@@ -221,5 +294,7 @@ public class MenuService {
         record.setStatus(false);
         managerRoleMenuMapper.updateByExampleSelective(record, example);
 
+        // 更新
+        this.getReadyRole(roleId);
     }
 }

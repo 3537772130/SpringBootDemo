@@ -42,6 +42,7 @@ public class RegionService implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
+        log.info("--------------开始初始化地域信息--------------");
         // 获取各级别地域信息集合
         List<RegionInfo> provinceList = selectProvinceList();
         List<RegionInfo> cityList = selectCityList();
@@ -124,7 +125,7 @@ public class RegionService implements ApplicationRunner {
                 Constants.REGION_MAP_TO_ID.add(map1);
                 Constants.REGION_MAP_TO_NAME.add(map2);
             }
-            log.info("初始化地域信息List<Map>完毕");
+            log.info("--------------初始化地域信息完毕--------------");
         } catch (Exception e) {
             log.error("初始化地域信息JSON出错{}", e);
         }

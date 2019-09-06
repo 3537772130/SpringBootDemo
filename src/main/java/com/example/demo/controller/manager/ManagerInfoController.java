@@ -5,7 +5,6 @@ import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ManagerRole;
 import com.example.demo.entity.ViewManagerInfo;
 import com.example.demo.service.ManagerService;
-import com.example.demo.service.RegionService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.DesUtil;
 import com.example.demo.util.encryption.MD5Util;
@@ -28,30 +27,11 @@ import java.util.Map;
  * @create: 2019-06-14 14:50
  **/
 @RestController
-@RequestMapping(value = "/api/manage/")
+@RequestMapping(value = "/api/manage/manager/")
 public class ManagerInfoController {
     private static final Logger log = LoggerFactory.getLogger(ManagerInfoController.class);
     @Autowired
     private ManagerService managerService;
-    @Autowired
-    private RegionService regionService;
-
-    /**
-     * 退出登录
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "exitLogin")
-    public Object exitLogin(HttpServletRequest request) {
-        try {
-            request.getSession().removeAttribute(Constants.WEB_MANAGER_INFO);
-            return AjaxResponse.success("退出成功");
-        } catch (Exception e) {
-            log.error("退出登录出错：{}", e);
-            return AjaxResponse.error("退出登录失败");
-        }
-    }
 
     /**
      * 加载管理员查询信息集合

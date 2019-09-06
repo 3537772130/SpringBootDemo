@@ -39,10 +39,17 @@ public class Constants {
     public static final String UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE = "application/x-zip-compressed,application/x-7z-compressed,application/x-gzip";//上传模板压缩文件类型
 
     // 地域信息集合
-    // v-k：ID-NAME
+    // v-k：ID => NAME
     public static final List<Map> REGION_MAP_TO_ID = new ArrayList<>();
-    // v-k：NAME-NAME
+    // v-k：NAME => NAME
     public static final List<Map> REGION_MAP_TO_NAME = new ArrayList<>();
+
+    // 管理员角色
+    // v-k: roleId => 权限集合
+    public static final Map<Integer, Map> MANAGER_ROLE_AUTH_MAP = new HashMap<>();
+    // 权限标识集合
+    public static final Map<String, String> MANAGER_ROLE_AUTH_LOGO_MAP = new HashMap<>();
+
 
     public static final Map<String, String> MONTH_MAP = new HashMap<String, String>() {
         {

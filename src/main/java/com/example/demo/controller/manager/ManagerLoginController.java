@@ -87,9 +87,9 @@ public class ManagerLoginController {
      */
     public List<Map> formatMenu(Integer roleId) {
         List<Map> mapList1 = new ArrayList<>();
-        List<ViewRoleMenuFirst> firstList = menuService.selectMenuListByFirst(roleId);
-        List<ViewRoleMenuSecond> secondList = menuService.selectMenuListBySecond(roleId);
         List<ViewRoleMenuThird> thirdList = menuService.selectMenuListByThird(roleId);
+        List<ViewRoleMenuSecond> secondList = menuService.selectMenuListBySecond(roleId);
+        List<ViewRoleMenuFirst> firstList = menuService.selectMenuListByFirst(roleId);
         for (ViewRoleMenuSecond record1 : secondList) {
             Map map1 = new HashMap();
             map1.put("index", "M-" + record1.getId());
@@ -141,6 +141,23 @@ public class ManagerLoginController {
         }
         List<Map> mapList = (List) request.getSession().getAttribute(Constants.WEB_MANAGER_MENU_LIST);
         return AjaxResponse.success(mapList);
+    }
+
+    /**
+     * 退出登录
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "exitLogin")
+    public Object exitLogin(HttpServletRequest request) {
+        try {
+            request.getSession().removeAttribute(Constants.WEB_MANAGER_INFO);
+            return AjaxResponse.success("退出成功");
+        } catch (Exception e) {
+            log.error("退出登录出错：{}", e);
+            return AjaxResponse.error("退出登录失败");
+        }
     }
 
     /**

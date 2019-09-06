@@ -54,9 +54,9 @@ public class ManageMenuController {
      * @throws Exception
      */
     public List<Map> getMenuList() throws Exception {
-        List<MenuInfo> firstList = menuService.selectMenuListByFirst();
-        List<MenuInfo> secondList = menuService.selectMenuListBySecond();
         List<MenuInfo> thirdList = menuService.selectMenuListByThird();
+        List<MenuInfo> secondList = menuService.selectMenuListBySecond();
+        List<MenuInfo> firstList = menuService.selectMenuListByFirst();
         // 格式化菜单
         List<Map> mapList1 = new ArrayList<>();
         for (MenuInfo record1 : secondList) {

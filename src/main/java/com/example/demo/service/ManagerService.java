@@ -238,6 +238,17 @@ public class ManagerService {
     }
 
     /**
+     * 查询所有角色信息
+     *
+     * @return
+     */
+    public List<ManagerRole> selectManagerRoleList() {
+        ManagerRoleExample example = new ManagerRoleExample();
+        example.createCriteria().andStatusEqualTo(true);
+        return managerRoleMapper.selectByExample(example);
+    }
+
+    /**
      * 分页查询管理员角色信息集合
      *
      * @param info
