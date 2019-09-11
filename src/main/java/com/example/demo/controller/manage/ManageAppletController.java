@@ -1,4 +1,4 @@
-package com.example.demo.controller.manager;
+package com.example.demo.controller.manage;
 
 import com.example.demo.config.annotation.SessionScope;
 import com.example.demo.entity.*;

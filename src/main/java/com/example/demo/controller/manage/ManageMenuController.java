@@ -1,4 +1,4 @@
-package com.example.demo.controller.manager;
+package com.example.demo.controller.manage;
 
 import com.example.demo.entity.MenuInfo;
 import com.example.demo.service.MenuService;

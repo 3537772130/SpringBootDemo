@@ -4,10 +4,14 @@ import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
+import com.example.demo.util.http.IpUtil;
 import jodd.datetime.JDateTime;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -188,21 +192,37 @@ public class ManagerService {
 
     /**
      * 更新管理员信息
-     *
-     * @param info
+     * @param newInfo
+     * @param operateId
+     * @param request
      */
-    public void updateManagerInfo(ManagerInfo info) {
-        if (NullUtil.isNotNullOrEmpty(info.getId())) {
-            managerInfoMapper.updateByPrimaryKeySelective(info);
+    @Transactional(rollbackFor = Exception.class)
+    public void updateManagerInfo(ManagerInfo newInfo, Integer operateId, HttpServletRequest request) {
+        if (NullUtil.isNotNullOrEmpty(newInfo.getId())) {
+            // 原管理员信息
+            ManagerInfo oldInfo = managerInfoMapper.selectByPrimaryKey(newInfo.getId());
+            // 修改后管理员信息
+            managerInfoMapper.updateByPrimaryKeySelective(newInfo);
+            // 添加修改日志
+            ManagerLog log = new ManagerLog();
+            log.setManagerId(newInfo.getId());
+            log.setAfterJson(JSONObject.fromObject(oldInfo).toString());
+            log.setBeforeJson(JSONObject.fromObject(oldInfo).toString());
+            log.setOperatorId(operateId);
+            log.setOperatorIp(IpUtil.getForIp(request));
+            log.setOperateTime(new Date());
+            managerLogMapper.insertSelective(log);
         } else {
-            info.setCreateDate(new Date());
-            if (info.getRoleId().intValue() == 3 || info.getRoleId().intValue() == 4) {
+            newInfo.setCreateDate(new Date());
+            if (NullUtil.isNotNullOrEmpty(newInfo.getRoleId()) &&
+                    (newInfo.getRoleId().intValue() == 3 || newInfo.getRoleId().intValue() == 4)) {
                 JDateTime time = new JDateTime(new Date());
-                info.setExtensionCode(time.toString("MMDDhhmmss"));
+                newInfo.setExtensionCode(time.toString("MMDDhhmmss"));
             }
-            managerInfoMapper.insertSelective(info);
+            managerInfoMapper.insertSelective(newInfo);
         }
     }
+
 
     /**
      * 查询管理员角色信息

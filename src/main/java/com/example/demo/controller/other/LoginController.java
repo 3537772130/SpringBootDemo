@@ -162,7 +162,7 @@ public class LoginController {
     @RequestMapping(value = "/pc/manage/loadAccountInfo")
     public String loadAccountInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, Model model) {
         model.addAttribute("manager", info);
-        return "/manager/account_info";
+        return "/manage/account_info";
     }
 
     /**
@@ -172,7 +172,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/pc/manage/loadManagerList")
     public String loadManagerList() {
-        return "/manager/manager_list";
+        return "/manage/manager_list";
     }
 
     /**
@@ -210,7 +210,7 @@ public class LoginController {
             return "error";
         }
         model.addAttribute("manager", managerInfo.getManagerInfo(managerInfo));
-        return "/manager/manager_info";
+        return "/manage/manager_info";
     }
 
     /**
@@ -221,7 +221,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/pc/manage/UpdateManagerInfo")
     @ResponseBody
-    public Object UpdateManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, ManagerInfo managerInfo) {
+    public Object UpdateManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, ManagerInfo managerInfo, HttpServletRequest request) {
         if (null == managerInfo) {
             return AjaxResponse.error("未获取到相关信息");
         }
@@ -258,7 +258,7 @@ public class LoginController {
             managerInfo.setRoleId(3);
         }
         try {
-            managerService.updateManagerInfo(managerInfo);
+            managerService.updateManagerInfo(managerInfo, info.getId(), request);
             return AjaxResponse.success(NullUtil.isNullOrEmpty(managerInfo.getId()) ? "添加成功" : "更新成功");
         } catch (Exception e) {
             return AjaxResponse.error(NullUtil.isNullOrEmpty(managerInfo.getId()) ? "添加失败" : "更新失败");

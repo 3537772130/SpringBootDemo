@@ -1,6 +1,7 @@
-package com.example.demo.controller.manager;
+package com.example.demo.controller.manage;
 
 import com.example.demo.config.annotation.SessionScope;
+import com.example.demo.entity.CheckResult;
 import com.example.demo.entity.ManagerInfo;
 import com.example.demo.entity.ManagerRole;
 import com.example.demo.entity.ViewManagerInfo;
@@ -8,14 +9,19 @@ import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.DesUtil;
 import com.example.demo.util.encryption.MD5Util;
+import com.example.demo.util.file.PathUtil;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +56,7 @@ public class ManagerInfoController {
 
     /**
      * 分页查询管理员信息集合
+     *
      * @param info
      * @param managerInfo
      * @param request
@@ -57,7 +64,7 @@ public class ManagerInfoController {
      */
     @RequestMapping(value = "queryManagerToPage")
     public Object queryManagerToPage(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info,
-                                       ViewManagerInfo managerInfo, HttpServletRequest request) {
+                                     ViewManagerInfo managerInfo, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         if (NullUtil.isNotNullOrEmpty(info.getParentId()) && info.getParentId() == 3) {
             managerInfo.setParentId(info.getId());
@@ -68,6 +75,7 @@ public class ManagerInfoController {
 
     /**
      * 获取管理员信息
+     *
      * @param id
      * @return
      */
@@ -93,17 +101,18 @@ public class ManagerInfoController {
 
     /**
      * 更新管理员信息
+     *
      * @param managerInfo
      * @return
      */
-    @RequestMapping(value = "UpdateManagerInfo")
-    public Object UpdateManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, ManagerInfo managerInfo) {
-        if (null == managerInfo){
+    @RequestMapping(value = "updateManagerInfo")
+    public Object updateManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, ManagerInfo managerInfo, HttpServletRequest request) {
+        if (null == managerInfo) {
             return AjaxResponse.error("未获取到相关信息");
         }
         // 当ID不为空时，是为修改，反之为新增
         if (NullUtil.isNullOrEmpty(managerInfo.getId())) {
-            if (NullUtil.isNullOrEmpty(managerInfo.getUserName())){
+            if (NullUtil.isNullOrEmpty(managerInfo.getUserName())) {
                 return AjaxResponse.error("请输入账号");
             }
             if (NullUtil.isNullOrEmpty(managerInfo.getPassword())) {
@@ -114,7 +123,7 @@ public class ManagerInfoController {
             if (info.getRoleId().intValue() != 1 && info.getId().intValue() != record.getParentId()) {
                 return AjaxResponse.error("超出了您的权限");
             }
-        } else if (NullUtil.isNotNullOrEmpty(managerInfo.getUserName())){
+        } else if (NullUtil.isNotNullOrEmpty(managerInfo.getUserName())) {
             return AjaxResponse.error("禁止修改账户");
         }
         if (NullUtil.isNotNullOrEmpty(managerInfo.getPassword())) {
@@ -137,17 +146,150 @@ public class ManagerInfoController {
         if (!RegularUtil.checkMobile(managerInfo.getMobile())) {
             return AjaxResponse.error("手机号码格式不正确");
         }
-        if (info.getRoleId() == 3){
+        if (info.getRoleId() == 3) {
             managerInfo.setParentId(info.getId());
             managerInfo.setRoleId(3);
         }
         try {
-            managerService.updateManagerInfo(managerInfo);
+            managerService.updateManagerInfo(managerInfo, info.getId(), request);
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             return AjaxResponse.error("提交失败");
         }
     }
+
+    /**
+     * 加载管理员信息
+     *
+     * @param info
+     * @return
+     */
+    @RequestMapping(value = "loadManagerInfo")
+    public Object loadManagerInfo(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info) {
+        ViewManagerInfo manager = managerService.selectViewManagerInfoById(info.getId());
+        return AjaxResponse.success(manager.getManagerInfo(manager));
+    }
+
+    /**
+     * 更新管理员基础信息
+     *
+     * @param manager
+     * @param nickName
+     * @param mobile
+     * @param email
+     * @param qqAccount
+     * @param weChantAccount
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "updateManagerBase")
+    public Object updateManagerBase(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo manager, String nickName, String mobile,
+                                    String email, String qqAccount, String weChatAccount, HttpServletRequest request) {
+        try {
+            if (NullUtil.isNullOrEmpty(nickName)) {
+                return AjaxResponse.error("昵称不能为空");
+            }
+            if (nickName.trim().length() == 0 || nickName.trim().length() > 50) {
+                return AjaxResponse.error("昵称为1-20个字符");
+            }
+            manager.setNickName(nickName.trim());
+            if (NullUtil.isNullOrEmpty(mobile)) {
+                return AjaxResponse.error("手机号码不能为空");
+            }
+            if (!RegularUtil.checkMobile(mobile)) {
+                return AjaxResponse.error("手机号码格式不正确");
+            }
+            manager.setMobile(mobile);
+            if (NullUtil.isNotNullOrEmpty(email)) {
+                if (!RegularUtil.checkEmail(email)) {
+                    return AjaxResponse.error("邮箱格式不正确");
+                }
+            }
+            manager.setEmail(email);
+            manager.setQqAccount(qqAccount);
+            manager.setWeChatAccount(weChatAccount);
+            managerService.updateManagerInfo(manager, manager.getId(), request);
+            request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
+            return AjaxResponse.success(manager.getManagerInfo(manager));
+        } catch (Exception e) {
+            log.error("修改管理员基础信息出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
+    }
+
+    /**
+     * 修改管理员登录密码
+     *
+     * @param info
+     * @param oldPass
+     * @param newPass
+     * @return
+     */
+    @RequestMapping(value = "updateManagerPassword")
+    public Object updateManagerPassword(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo info, String oldPass, String newPass, HttpServletRequest request) {
+        ManagerInfo manager = managerService.selectManagerInfoById(info.getId());
+        String cipher = DesUtil.encrypt(oldPass, manager.getEncrypted());
+        cipher = MD5Util.MD5(cipher);
+        if (!cipher.equals(manager.getPassword())) {
+            return AjaxResponse.success("原密码输入错误");
+        }
+        cipher = DesUtil.encrypt(newPass, manager.getEncrypted());
+        cipher = MD5Util.MD5(cipher);
+        ManagerInfo newInfo = new ManagerInfo();
+        newInfo.setId(info.getId());
+        newInfo.setPassword(cipher);
+        try {
+            managerService.updateManagerInfo(newInfo, info.getId(), request);
+            return AjaxResponse.success("修改成功");
+        } catch (Exception e) {
+            return AjaxResponse.error("修改失败");
+        }
+    }
+
+    /**
+     * 修改管理员头像
+     *
+     * @param manager
+     * @param multipartFile
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "uploadManagerAvatar")
+    public Object uploadManagerAvatar(@SessionScope(Constants.WEB_MANAGER_INFO) ManagerInfo manager, @RequestParam("avatar") MultipartFile multipartFile,
+                                      HttpServletRequest request) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String filePath = "static\\images\\head-portrait\\";
+            String fileName = null;
+            String avatarUrl = null;
+            if (NullUtil.isNotNullOrEmpty(manager.getAvatarUrl())) {
+                fileName = manager.getAvatarUrl()
+                        .replace("api\\", "")
+                        .replace("images\\", "")
+                        .replace("head-portrait\\", "");
+            } else {
+                fileName = "MANAGER-" + manager.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
+                avatarUrl = filePath + fileName;
+                ManagerInfo newInfo = new ManagerInfo();
+                newInfo.setId(manager.getId());
+                newInfo.setAvatarUrl(avatarUrl.replace("static\\", ""));
+                managerService.updateManagerInfo(newInfo, manager.getId(), request);
+                manager.setAvatarUrl("api\\" + newInfo.getAvatarUrl());
+                request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
+            }
+            String rootPath = PathUtil.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            return AjaxResponse.success("1");
+        } catch (IOException e) {
+            log.error("管理员上传头像出错{}", e);
+            return AjaxResponse.success("-1");
+        }
+    }
+
 
     /**
      * 分页查询角色信息列表
