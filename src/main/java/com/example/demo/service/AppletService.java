@@ -155,7 +155,11 @@ public class AppletService {
         if (NullUtil.isNotNullOrEmpty(info.getIfSelling())) {
             c.andIfSellingEqualTo(info.getIfSelling());
         }
-        c.andStatusEqualTo(1);
+        if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
+            c.andStatusEqualTo(info.getStatus());
+        } else {
+            c.andStatusNotEqualTo(0);
+        }
         long count = viewAppletInfoMapper.countByExample(example);
         if (count > 0) {
             page.setTotalCount(count);
@@ -182,10 +186,19 @@ public class AppletService {
             appletInfoMapper.insertSelective(info);
             bool = true;
         } else {
-            appletInfoMapper.updateByPrimaryKeySelective(info);
+            this.updateAppletInfo(info);
         }
         // 更新图片
         updateAppletPic(info, bool);
+    }
+
+    /**
+     * 更新小程序信息
+     *
+     * @param info
+     */
+    public int updateAppletInfo(AppletInfo info) {
+        return appletInfoMapper.updateByPrimaryKeySelective(info);
     }
 
     /**

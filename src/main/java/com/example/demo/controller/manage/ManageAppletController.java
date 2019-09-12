@@ -42,6 +42,49 @@ public class ManageAppletController {
     }
 
     /**
+     * 查询小程序管理列表
+     *
+     * @param info
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "queryAppletManageToPage")
+    public Object queryAppletManageToPage(ViewAppletInfo info, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        page = appletService.selectAppletInfoToPage(info, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
+     * 变更小程序管理状态
+     *
+     * @param id
+     * @param status
+     * @return
+     */
+    @RequestMapping(value = "updateAppletStatus")
+    public Object updateAppletStatus(Integer id, Integer status) {
+        try {
+            if (NullUtil.isNullOrEmpty(id) || NullUtil.isNullOrEmpty(status)) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (status.intValue() != 1) {
+                status = -1;
+            }
+            AppletInfo info = new AppletInfo();
+            info.setId(id);
+            info.setStatus(status);
+            int result = appletService.updateAppletInfo(info);
+            if (result > 0) {
+                return AjaxResponse.success("操作成功");
+            }
+        } catch (Exception e) {
+            log.error("修改小程序状态出错{}", e);
+        }
+        return AjaxResponse.error("操作失败");
+    }
+
+    /**
      * 加载小程序信息
      *
      * @param id
