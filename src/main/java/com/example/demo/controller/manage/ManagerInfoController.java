@@ -231,7 +231,7 @@ public class ManagerInfoController {
         String cipher = DesUtil.encrypt(oldPass, manager.getEncrypted());
         cipher = MD5Util.MD5(cipher);
         if (!cipher.equals(manager.getPassword())) {
-            return AjaxResponse.success("原密码输入错误");
+            return AjaxResponse.error("原密码输入错误");
         }
         cipher = DesUtil.encrypt(newPass, manager.getEncrypted());
         cipher = MD5Util.MD5(cipher);
