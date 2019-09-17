@@ -3,22 +3,17 @@ package com.example.demo.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class GoodsSpecs implements Serializable {
-    private Integer id;
-
-    private Integer goodsId;
-
+public class ViewGoodsSpecs implements Serializable {
     private static final long serialVersionUID = 1L;
+    private Integer id;
+    private Integer userId;
+    private Integer goodsId;
     private String specsSrc;
-
-    private BigDecimal sellPrice;
-
-    private BigDecimal discount;
-
-    private String discountDescribe;
-
-    private Boolean specsStatus;
     private String specsText;
+    private BigDecimal sellPrice;
+    private BigDecimal discount;
+    private String discountDescribe;
+    private Boolean specsStatus;
 
     public Integer getId() {
         return id;
@@ -26,6 +21,14 @@ public class GoodsSpecs implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getGoodsId() {

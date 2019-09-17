@@ -2,10 +2,12 @@ package com.example.demo.mapper;
 
 import com.example.demo.entity.GoodsInfo;
 import com.example.demo.entity.GoodsInfoExample;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface GoodsInfoMapper {
     long countByExample(GoodsInfoExample example);
 
