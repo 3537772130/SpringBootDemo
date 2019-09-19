@@ -6,7 +6,9 @@ import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -156,6 +158,34 @@ public class GoodsService {
     }
 
     /**
+     * 更新商品信息
+     *
+     * @param record
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateGoodsInfo(GoodsInfo record) {
+        record.setUpdateTime(new Date());
+        if (NullUtil.isNotNullOrEmpty(record.getId())) {
+            goodsInfoMapper.updateByPrimaryKeySelective(record);
+        } else {
+            goodsInfoMapper.insertSelective(record);
+            // 设置商品文件(每个商品只允许有5个图片文件，1个视频文件)
+            for (int i = 0; i < 5; i++) {
+                GoodsFile file = new GoodsFile();
+                file.setGoodsId(record.getId());
+                file.setFileType(1);
+                file.setFileStatus(false);
+                goodsFileMapper.insertSelective(file);
+            }
+            GoodsFile file = new GoodsFile();
+            file.setGoodsId(record.getId());
+            file.setFileType(2);
+            file.setFileStatus(false);
+            goodsFileMapper.insertSelective(file);
+        }
+    }
+
+    /**
      * 查询商品所有文件
      *
      * @param goodsId
@@ -163,9 +193,41 @@ public class GoodsService {
      */
     public List<ViewGoodsFile> selectFileList(Integer goodsId, Integer userId) {
         ViewGoodsFileExample example = new ViewGoodsFileExample();
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("id asc");
         example.createCriteria().andGoodsIdEqualTo(goodsId).andUserIdEqualTo(userId);
         return viewGoodsFileMapper.selectByExample(example);
+    }
+
+    /**
+     * 查询商品文件信息
+     *
+     * @param fileId
+     * @param goodsId
+     * @param userId
+     * @return
+     */
+    public ViewGoodsFile selectFileInfo(Integer fileId, Integer goodsId, Integer userId) {
+        ViewGoodsFileExample example = new ViewGoodsFileExample();
+        example.createCriteria().andIdEqualTo(fileId).andGoodsIdEqualTo(goodsId).andUserIdEqualTo(userId);
+        List<ViewGoodsFile> list = viewGoodsFileMapper.selectByExample(example);
+        return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
+    }
+
+    /**
+     * 修改视频文件信息
+     *
+     * @param id
+     * @param src
+     * @param status
+     */
+    public void updateGoodsFile(Integer id, String src, Boolean status) {
+        GoodsFile file = new GoodsFile();
+        file.setId(id);
+        if (NullUtil.isNotNullOrEmpty(file.getFileSrc())) {
+            file.setFileSrc(src.replace("static", ""));
+        }
+        file.setFileStatus(status);
+        goodsFileMapper.updateByPrimaryKeySelective(file);
     }
 
     /**

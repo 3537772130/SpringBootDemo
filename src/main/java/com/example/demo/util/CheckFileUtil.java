@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
 import com.example.demo.entity.CheckResult;
+import com.example.demo.util.file.FileUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -18,7 +19,7 @@ public class CheckFileUtil {
      * @param fileType
      * @return
      */
-    public static CheckResult checkPicFile(MultipartFile file, String fileType) {
+    public static CheckResult checkImageFile(MultipartFile file, String fileType) {
         if (file == null) {
             return new CheckResult("未解析到文件");
         }
@@ -59,6 +60,31 @@ public class CheckFileUtil {
             return new CheckResult("不支持的文件类型");
         }
         return new CheckResult();
+    }
+
+    /**
+     * 校验视频文件
+     *
+     * @param file
+     * @return
+     */
+    public static CheckResult checkVideoFile(MultipartFile file) {
+        if (file == null) {
+            return new CheckResult("未解析到文件");
+        }
+        String fileName = file.getOriginalFilename();
+        if (NullUtil.isNullOrEmpty(fileName) && file.getSize() == 0) {
+            return new CheckResult("视频内容为空");
+        }
+        if (file.getSize() > 10 * 1048576) {
+            return new CheckResult("文件大于10MB");
+        }
+        if (!FileUtil.isVedioFile(fileName)) {
+            return new CheckResult("不支持的文件类型");
+        }
+        String type = file.getContentType();
+        String specs = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+        return new CheckResult(true, specs);
     }
 
 }

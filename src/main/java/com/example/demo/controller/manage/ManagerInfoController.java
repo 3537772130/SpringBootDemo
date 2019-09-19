@@ -259,7 +259,7 @@ public class ManagerInfoController {
                                       HttpServletRequest request) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }

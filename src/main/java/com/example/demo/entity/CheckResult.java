@@ -22,6 +22,11 @@ public class CheckResult {
         this.msg = result;
     }
 
+    public CheckResult(boolean bool, String result) {
+        this.bool = bool;
+        this.msg = result;
+    }
+
     public Boolean getBool() {
         return bool;
     }

@@ -69,15 +69,14 @@ public class UserGoodsController {
     /**
      * 上传商品类型图标
      *
-     * @param userInfo
      * @param multipartFile
      * @return
      */
     @RequestMapping(value = "uploadGoodsTypeLogo")
-    public Object uploadGoodsTypeLogo(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("typeLogo") MultipartFile multipartFile) {
+    public Object uploadGoodsTypeLogo(@RequestParam("typeLogo") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
@@ -177,17 +176,88 @@ public class UserGoodsController {
         map.put("typeList", list);
         if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
             GoodsInfo goods = goodsService.selectGoodsInfo(id, user.getId());
+            goods.setCoverSrc("api\\" + goods.getCoverSrc());
             map.put("goods", goods);
             return AjaxResponse.success(map);
         }
         return AjaxResponse.msg("-1", map);
     }
 
-    public Object updateGoodsInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, GoodsInfo goods) {
-        if (null == goods) {
-
+    /**
+     * 上传商品封面图片
+     *
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadGoodsCover")
+    public Object uploadGoodsCover(@RequestParam("cover") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String fileName = "GC-" + RandomUtil.getRandomStr32() + ".jpg";
+            String filePath = "static\\images\\upload\\";
+            String rootPath = PathUtil.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String src = filePath + fileName;
+            return AjaxResponse.success(src.replace("static", "api"));
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.success("上传失败");
         }
-        return AjaxResponse.error("提交失败");
+    }
+
+    /**
+     * 更新商品信息
+     *
+     * @param user
+     * @param goods
+     * @return
+     */
+    @RequestMapping(value = "updateGoodsInfo")
+    public Object updateGoodsInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, GoodsInfo goods) {
+        try {
+            if (null == goods) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (NullUtil.isNullOrEmpty(goods.getGoodsName())) {
+                return AjaxResponse.error("商品名称不能为空");
+            }
+            if (goods.getGoodsName().trim().length() > 100) {
+                return AjaxResponse.error("商品名称输入过长");
+            } else {
+                goods.setGoodsName(goods.getGoodsName().trim());
+            }
+            if (NullUtil.isNullOrEmpty(goods.getTypeId())) {
+                return AjaxResponse.error("请选择商品类型");
+            }
+            GoodsType type = goodsService.selectGoodsType(goods.getTypeId(), user.getId());
+            if (null == type) {
+                return AjaxResponse.error("商品类型选择错误");
+            }
+            if (NullUtil.isNullOrEmpty(goods.getCoverSrc())) {
+                return AjaxResponse.error("请上传商品封面图片");
+            } else {
+                goods.setCoverSrc(goods.getCoverSrc().replace("api\\", ""));
+                String oldUrl = null;
+                if (NullUtil.isNotNullOrEmpty(goods.getId())) {
+                    GoodsInfo record = goodsService.selectGoodsInfo(goods.getId(), user.getId());
+                    oldUrl = record.getCoverSrc();
+                }
+                String newPath = FileUtil.copyGoodsCoverSrc(goods.getCoverSrc(), oldUrl);
+                goods.setCoverSrc(newPath);
+            }
+            goods.setUserId(user.getId());
+            goods.setMinPrice(null);
+            goods.setMaxPrice(null);
+            goodsService.updateGoodsInfo(goods);
+            return AjaxResponse.success("提交成功");
+        } catch (Exception e) {
+            log.error("更新商品信息出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
     }
 
     /**
@@ -204,6 +274,134 @@ public class UserGoodsController {
             return AjaxResponse.error("未找到相关记录");
         }
         return AjaxResponse.success(list);
+    }
+
+    /**
+     * 上传商品图片文件
+     *
+     * @param user
+     * @param goodsId
+     * @param fileId
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadGoodsFileImg")
+    public Object uploadGoodsFileImg(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId, Integer fileId,
+                                     @RequestParam("goodsFile") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            if (NullUtil.isNullOrEmpty(goodsId) || NullUtil.isNullOrEmpty(fileId)) {
+                return AjaxResponse.error("参数错误");
+            }
+            ViewGoodsFile record = goodsService.selectFileInfo(fileId, goodsId, user.getId());
+            if (null == record) {
+                return AjaxResponse.error("未找到相关记录");
+            }
+            String rootPath = "";
+            if (NullUtil.isNullOrEmpty(record.getFileSrc())) {
+                String filePath = "static\\images\\goods\\file\\" + goodsId + "\\";
+                rootPath = PathUtil.getClassPath(filePath);
+                File file = new File(rootPath);
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+                String fileName = "GI-" + RandomUtil.getRandomStr32() + ".jsp";
+                rootPath += fileName;
+                record.setFileSrc(filePath.replace("static", "") + fileName);
+            } else {
+                rootPath = PathUtil.getClassPath("static\\" + record.getFileSrc());
+            }
+            multipartFile.transferTo(new File(rootPath));
+            goodsService.updateGoodsFile(fileId, record.getFileSrc(), true);
+            Map map = new HashMap();
+            map.put("src", record.getFileSrc() + "?token=" + RandomUtil.getRandomStr32());
+            map.put("id", fileId);
+            return AjaxResponse.success(map);
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.success("上传失败");
+        }
+    }
+
+    /**
+     * 上传商品图片文件
+     *
+     * @param user
+     * @param goodsId
+     * @param fileId
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadGoodsFileVideo")
+    public Object uploadGoodsFileVideo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId, Integer fileId,
+                                       @RequestParam("goodsFile") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkVideoFile(multipartFile);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            if (NullUtil.isNullOrEmpty(goodsId) || NullUtil.isNullOrEmpty(fileId)) {
+                return AjaxResponse.error("参数错误");
+            }
+            ViewGoodsFile record = goodsService.selectFileInfo(fileId, goodsId, user.getId());
+            if (null == record) {
+                return AjaxResponse.error("未找到相关记录");
+            }
+            String rootPath = "";
+            if (NullUtil.isNullOrEmpty(record.getFileSrc())) {
+                String filePath = "static\\images\\goods\\file\\" + goodsId + "\\";
+                rootPath = PathUtil.getClassPath(filePath);
+                File file = new File(rootPath);
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+                String fileName = "GV-" + RandomUtil.getRandomStr32() + result.getMsg();
+                rootPath += fileName;
+                record.setFileSrc(filePath.replace("static", "") + fileName);
+            } else {
+                rootPath = PathUtil.getClassPath("static\\" + record.getFileSrc());
+            }
+            multipartFile.transferTo(new File(rootPath));
+            goodsService.updateGoodsFile(fileId, record.getFileSrc(), true);
+            Map map = new HashMap();
+            map.put("src", record.getFileSrc() + "?token=" + RandomUtil.getRandomStr32());
+            map.put("id", fileId);
+            return AjaxResponse.success(map);
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.success("上传失败");
+        }
+    }
+
+    /**
+     * 删除商品文件
+     *
+     * @param user
+     * @param goodsId
+     * @param fileId
+     * @return
+     */
+    @RequestMapping(value = "deleteGoodsFile")
+    public Object deleteGoodsFile(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId, Integer fileId) {
+        try {
+            if (NullUtil.isNullOrEmpty(goodsId) || NullUtil.isNullOrEmpty(fileId)) {
+                return AjaxResponse.error("参数错误");
+            }
+            ViewGoodsFile record = goodsService.selectFileInfo(fileId, goodsId, user.getId());
+            if (null == record) {
+                return AjaxResponse.error("未找到相关记录");
+            }
+            goodsService.updateGoodsFile(fileId, null, false);
+            return AjaxResponse.success();
+        } catch (Exception e) {
+            log.error("删除商品文件出错{}", e);
+            return AjaxResponse.error("删除失败");
+        }
     }
 
     /**

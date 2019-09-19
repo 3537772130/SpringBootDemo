@@ -149,7 +149,7 @@ public class UserAppletController {
     public Object uploadAppletLogo(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("appletLogo") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
@@ -176,7 +176,7 @@ public class UserAppletController {
     public Object uploadAppletLicense(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("appletLicense") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkPicFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
