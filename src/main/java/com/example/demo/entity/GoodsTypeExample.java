@@ -18,20 +18,20 @@ public class GoodsTypeExample {
         oredCriteria = new ArrayList<Criteria>();
     }
 
-    public String getOrderByClause() {
-        return orderByClause;
-    }
-
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -67,12 +67,12 @@ public class GoodsTypeExample {
         distinct = false;
     }
 
-    public Page getPage() {
-        return page;
-    }
-
     public void setPage(Page page) {
         this.page = page;
+    }
+
+    public Page getPage() {
+        return page;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -376,6 +376,66 @@ public class GoodsTypeExample {
             return (Criteria) this;
         }
 
+        public Criteria andTypeIndexIsNull() {
+            addCriterion("type_index is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexIsNotNull() {
+            addCriterion("type_index is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexEqualTo(Integer value) {
+            addCriterion("type_index =", value, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexNotEqualTo(Integer value) {
+            addCriterion("type_index <>", value, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexGreaterThan(Integer value) {
+            addCriterion("type_index >", value, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexGreaterThanOrEqualTo(Integer value) {
+            addCriterion("type_index >=", value, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexLessThan(Integer value) {
+            addCriterion("type_index <", value, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexLessThanOrEqualTo(Integer value) {
+            addCriterion("type_index <=", value, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexIn(List<Integer> values) {
+            addCriterion("type_index in", values, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexNotIn(List<Integer> values) {
+            addCriterion("type_index not in", values, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexBetween(Integer value1, Integer value2) {
+            addCriterion("type_index between", value1, value2, "typeIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIndexNotBetween(Integer value1, Integer value2) {
+            addCriterion("type_index not between", value1, value2, "typeIndex");
+            return (Criteria) this;
+        }
+
         public Criteria andTypeStatusIsNull() {
             addCriterion("type_status is null");
             return (Criteria) this;
@@ -461,6 +521,38 @@ public class GoodsTypeExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -495,38 +587,6 @@ public class GoodsTypeExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

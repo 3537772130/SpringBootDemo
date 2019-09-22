@@ -10,8 +10,9 @@
         <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
         <result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
         <result column="cover_src" jdbcType="VARCHAR" property="coverSrc"/>
-        <result column="min_price" jdbcType="DECIMAL" property="minPrice"/>
-        <result column="max_price" jdbcType="DECIMAL" property="maxPrice"/>
+        <result column="min_price" jdbcType="DOUBLE" property="minPrice"/>
+        <result column="max_price" jdbcType="DOUBLE" property="maxPrice"/>
+        <result column="goods_index" jdbcType="INTEGER" property="goodsIndex"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="goods_status" jdbcType="INTEGER" property="goodsStatus"/>
     </resultMap>
@@ -47,7 +48,7 @@
     </sql>
     <sql id="Base_Column_List">
     id, user_id, user_mobile, user_nick_name, type_id, type_name, goods_name, cover_src,
-    min_price, max_price, update_time, goods_status
+    min_price, max_price, goods_index, update_time, goods_status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ViewGoodsInfoExample" resultMap="BaseResultMap">
         select

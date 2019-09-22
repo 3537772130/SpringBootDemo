@@ -35,6 +35,21 @@ public class UserGoodsController {
     private GoodsService goodsService;
 
     /**
+     * 加载商品类型列表
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "loadTypePage")
+    public Object loadTypePage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user) {
+        int count = goodsService.selectGoodsTypeCount(user.getId());
+        if (count >= Constants.GOODS_TYPE_COUNT) {
+            return AjaxResponse.error("类型创建数量已达上限");
+        }
+        return AjaxResponse.success();
+    }
+
+    /**
      * 分页查询用户商品分类列表
      *
      * @param user
@@ -124,12 +139,56 @@ public class UserGoodsController {
                 String newPath = FileUtil.copyGoodsTypeLogo(goodsType.getTypeLogo(), oldUrl);
                 goodsType.setTypeLogo(newPath);
             }
+            if (NullUtil.isNullOrEmpty(goodsType.getId())) {
+                int count = goodsService.selectGoodsTypeCount(user.getId());
+                if (count >= Constants.GOODS_TYPE_COUNT) {
+                    return AjaxResponse.error("类型创建数量已达上限");
+                }
+                goodsType.setTypeIndex(count + 1);
+            }
             goodsType.setUserId(user.getId());
             goodsService.updateGoodsType(goodsType);
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("更新商品类型信息出错{}", e);
             return AjaxResponse.error("提交失败");
+        }
+    }
+
+    /**
+     * 更新商品类型排序
+     *
+     * @param user
+     * @param typeId
+     * @param sort
+     * @return
+     */
+    @RequestMapping(value = "updateGoodsTypeIndex")
+    public Object updateGoodsTypeIndex(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer typeId, String sort) {
+        try {
+            if (NullUtil.isNullOrEmpty(typeId) || NullUtil.isNullOrEmpty(sort)) {
+                return AjaxResponse.error("参数错误");
+            }
+            int count = goodsService.selectGoodsTypeCount(user.getId());
+            if (count > 1) {
+                GoodsType type = goodsService.selectGoodsType(typeId, user.getId());
+                if (null == type) {
+                    return AjaxResponse.error("未找到相关记录");
+                }
+                Integer num = null;
+                if (sort.equals("top") && type.getTypeIndex() - 1 > 0) {
+                    num = -1;
+                } else if (sort.equals("bot") && type.getTypeIndex() + 1 <= count) {
+                    num = 1;
+                } else {
+                    return AjaxResponse.success("参数错误");
+                }
+                goodsService.updateGoodsTypeIndex(type, num);
+            }
+            return AjaxResponse.success();
+        } catch (Exception e) {
+            log.error("更新商品类型排序出错{}", e);
+            return AjaxResponse.error("操作失败");
         }
     }
 
@@ -257,6 +316,76 @@ public class UserGoodsController {
         } catch (Exception e) {
             log.error("更新商品信息出错{}", e);
             return AjaxResponse.error("提交失败");
+        }
+    }
+
+    /**
+     * 更新商品排序
+     *
+     * @param user
+     * @param goodsId
+     * @param sort
+     * @return
+     */
+    @RequestMapping(value = "updateGoodsIndex")
+    public Object updateGoodsIndex(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId,
+                                   Integer typeId, String sort) {
+        try {
+            if (NullUtil.isNullOrEmpty(goodsId) || NullUtil.isNullOrEmpty(typeId) || NullUtil.isNullOrEmpty(sort)) {
+                return AjaxResponse.error("参数错误");
+            }
+            int count = goodsService.selectGoodsCount(typeId, user.getId());
+            if (count > 1) {
+                GoodsInfo goods = goodsService.selectGoodsInfo(goodsId, typeId, user.getId());
+                if (null == goods) {
+                    return AjaxResponse.error("未找到相关记录");
+                }
+                Integer num = null;
+                if (sort.equals("top") && goods.getGoodsIndex().intValue() - 1 > 0) {
+                    num = -1;
+                } else if (sort.equals("bot") && goods.getGoodsIndex().intValue() + 1 <= count) {
+                    num = 1;
+                } else {
+                    return AjaxResponse.success("参数错误");
+                }
+                goodsService.updateGoodsIndex(goods, num);
+            }
+            return AjaxResponse.success();
+        } catch (Exception e) {
+            log.error("更新商品排序出错{}", e);
+            return AjaxResponse.error("操作失败");
+        }
+    }
+
+    /**
+     * 更新商品状态
+     *
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    @RequestMapping(value = "updateGoodsStatus")
+    public Object updateGoodsStatus(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId) {
+        if (NullUtil.isNullOrEmpty(goodsId)) {
+            return AjaxResponse.error("参数错误");
+        }
+        GoodsInfo goods = goodsService.selectGoodsInfo(goodsId, user.getId());
+        try {
+            if (!goods.getStatus()) {
+                int fileCount = goodsService.selectFileCount(goodsId, user.getId());
+                if (fileCount <= 0) {
+                    return AjaxResponse.error("请提交文件(至少一张图片或短视频)");
+                }
+                int specsCount = goodsService.selectSpecsCount(goodsId, user.getId());
+                if (specsCount <= 0) {
+                    return AjaxResponse.error("请提交至少一条规格)");
+                }
+            }
+            goodsService.updateGoodsStatus(goods.getId(), goods.getStatus());
+            return AjaxResponse.success(goods.getStatus() ? "下架成功" : "发布成功");
+        } catch (Exception e) {
+            log.error("更新商品状态出错{}", e);
+            return AjaxResponse.error(goods.getStatus() ? "下架失败" : "发布失败");
         }
     }
 
@@ -397,6 +526,7 @@ public class UserGoodsController {
                 return AjaxResponse.error("未找到相关记录");
             }
             goodsService.updateGoodsFile(fileId, null, false);
+            goodsService.checkGoodsValue(goodsId, user.getId(), false);
             return AjaxResponse.success();
         } catch (Exception e) {
             log.error("删除商品文件出错{}", e);
@@ -405,19 +535,112 @@ public class UserGoodsController {
     }
 
     /**
-     * 查询商品规格集合
+     * 加载商品规格列表
      *
      * @param user
      * @param goodsId
      * @return
      */
-    @RequestMapping(value = "querySpecsList")
-    public Object querySpecsList(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId) {
-        List<ViewGoodsSpecs> list = goodsService.selectSpecsList(goodsId, user.getId());
-        if (NullUtil.isNullOrEmpty(list)) {
-            return AjaxResponse.error("未找到相关记录");
+    @RequestMapping(value = "loadSpecsPage")
+    public Object loadSpecsPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId) {
+        int count = goodsService.selectSpecsCount(goodsId, user.getId());
+        if (count >= Constants.GOODS_SPECS_COUNT) {
+            return AjaxResponse.msg("-1", goodsId);
         }
-        return AjaxResponse.success(list);
+        return AjaxResponse.success(goodsId);
     }
 
+    /**
+     * 查询商品规格集合
+     *
+     * @param user
+     * @param specs
+     * @return
+     */
+    @RequestMapping(value = "querySpecsPage")
+    public Object querySpecsPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, ViewGoodsSpecs specs, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        specs.setUserId(user.getId());
+        page = goodsService.selectSpecsList(specs, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
+     * 加载商品规格
+     *
+     * @param user
+     * @param goodsId
+     * @param specsId
+     * @return
+     */
+    @RequestMapping(value = "loadGoodsSpecs")
+    public Object loadGoodsSpecs(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId, Integer specsId) {
+        if (NullUtil.isNotNullOrEmpty(specsId) && specsId.intValue() != 0) {
+            ViewGoodsSpecs record = goodsService.selectSpecsInfo(specsId, goodsId, user.getId());
+            if (null != record) {
+                return AjaxResponse.success(record);
+            }
+        }
+        return AjaxResponse.error("未找到相关记录");
+    }
+
+    /**
+     * 更新商品规格
+     *
+     * @param user
+     * @param specs
+     * @return
+     */
+    @RequestMapping(value = "updateGoodsSpecs")
+    public Object updateGoodsSpecs(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, GoodsSpecs specs) {
+        try {
+            if (null == specs) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (NullUtil.isNullOrEmpty(specs.getGoodsId())) {
+                return AjaxResponse.error("参数丢失");
+            }
+            if (NullUtil.isNotNullOrEmpty(specs.getSpecsText()) && specs.getSpecsText().length() > 100) {
+                return AjaxResponse.error("商品规格长度过长");
+            }
+            if (NullUtil.isNullOrEmpty(specs.getSellPrice())) {
+                return AjaxResponse.error("出售价格不能为空");
+            }
+            if (specs.getSellPrice().doubleValue() > 99999.99d) {
+                return AjaxResponse.error("出售价格不能高于99999.99");
+            }
+            if (NullUtil.isNotNullOrEmpty(specs.getDiscount()) && specs.getDiscount().doubleValue() > 100) {
+                return AjaxResponse.error("商品折扣不能大于100");
+            }
+            if (NullUtil.isNotNullOrEmpty(specs.getDiscountDescribe()) && specs.getDiscountDescribe().length() > 500) {
+                return AjaxResponse.error("折扣描述长度过长");
+            }
+            if (NullUtil.isNullOrEmpty(specs.getId())) {
+                int count = goodsService.selectGoodsSpecsCount(specs.getGoodsId(), user.getId());
+                if (count >= Constants.GOODS_SPECS_COUNT) {
+                    return AjaxResponse.error("商品规格创建数量已达上限");
+                }
+            }
+            if (NullUtil.isNotNullOrEmpty(specs.getSpecsSrc())) {
+                specs.setSpecsSrc(specs.getSpecsSrc().replace("api\\", ""));
+                String oldUrl = null;
+                if (NullUtil.isNotNullOrEmpty(specs.getId())) {
+                    ViewGoodsSpecs record = goodsService.selectSpecsInfo(specs.getId(), specs.getGoodsId(), user.getId());
+                    oldUrl = record.getSpecsSrc();
+                }
+                String newPath = FileUtil.copyGoodsCoverSrc(specs.getSpecsSrc(), oldUrl);
+                specs.setSpecsSrc(newPath);
+            }
+            boolean bool = (NullUtil.isNullOrEmpty(specs.getId()) && !specs.getSpecsStatus()) ? false : true;
+            specs.setActualPrice(specs.getSellPrice() * specs.getDiscount() / 100);
+            goodsService.updateGoodsSpecs(specs, user.getId());
+            if (bool) {
+                goodsService.checkGoodsValue(specs.getGoodsId(), user.getId(), true);
+            }
+            return AjaxResponse.success("提交成功");
+        } catch (Exception e) {
+            log.error("跟新商品规格出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
+    }
 }

@@ -9,7 +9,6 @@ import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
 import com.example.demo.util.http.IpUtil;
 import jodd.datetime.JDateTime;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -237,19 +236,19 @@ public class UserInfoService {
         String ip = IpUtil.getForIp(request);
         record.setIpAddress(ip);
         record.setLoginTime(new Date());
-        String json_result = null;
-        json_result = IpUtil.getAddresses("ip=" + ip, "UTF-8");
-        if (NullUtil.isNotNullOrEmpty(json_result)) {
-            JSONObject json = JSONObject.fromObject(json_result);
-            System.out.println("json数据： " + json);
-            JSONObject obj = JSONObject.fromObject(json.get("data"));
-            record.setCountry(obj.get("country").toString());
-            record.setRegion(obj.get("region").toString());
-            record.setCity(obj.get("city").toString());
-            record.setCounty(obj.get("county").toString());
-            record.setArea(obj.get("area").toString());
-            record.setIsp(obj.get("isp").toString());
-        }
+//        String json_result = null;
+//        json_result = IpUtil.getAddresses("ip=" + ip, "UTF-8");
+//        if (NullUtil.isNotNullOrEmpty(json_result)) {
+//            JSONObject json = JSONObject.fromObject(json_result);
+//            System.out.println("json数据： " + json);
+//            JSONObject obj = JSONObject.fromObject(json.get("data"));
+//            record.setCountry(obj.get("country").toString());
+//            record.setRegion(obj.get("region").toString());
+//            record.setCity(obj.get("city").toString());
+//            record.setCounty(obj.get("county").toString());
+//            record.setArea(obj.get("area").toString());
+//            record.setIsp(obj.get("isp").toString());
+//        }
         userLoginLogMapper.insertSelective(record);
     }
 

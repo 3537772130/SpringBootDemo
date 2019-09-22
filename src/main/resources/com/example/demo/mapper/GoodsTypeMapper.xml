@@ -6,6 +6,7 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="type_logo" jdbcType="VARCHAR" property="typeLogo"/>
         <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+        <result column="type_index" jdbcType="INTEGER" property="typeIndex"/>
         <result column="type_status" jdbcType="BIT" property="typeStatus"/>
     </resultMap>
     <sql id="Example_Where_Clause">
@@ -69,7 +70,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_id, type_logo, type_name, type_status
+    id, user_id, type_logo, type_name, type_index, type_status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.GoodsTypeExample" resultMap="BaseResultMap">
         select
@@ -104,9 +105,11 @@
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.GoodsType">
     insert into goods_type (id, user_id, type_logo,
-      type_name, type_status)
+      type_name, type_index, type_status
+      )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{typeLogo,jdbcType=VARCHAR},
-      #{typeName,jdbcType=VARCHAR}, #{typeStatus,jdbcType=BIT})
+      #{typeName,jdbcType=VARCHAR}, #{typeIndex,jdbcType=INTEGER}, #{typeStatus,jdbcType=BIT}
+      )
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.GoodsType"
             useGeneratedKeys="true">
@@ -124,6 +127,9 @@
             <if test="typeName != null">
                 type_name,
             </if>
+            <if test="typeIndex != null">
+                type_index,
+            </if>
             <if test="typeStatus != null">
                 type_status,
             </if>
@@ -140,6 +146,9 @@
             </if>
             <if test="typeName != null">
                 #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeIndex != null">
+                #{typeIndex,jdbcType=INTEGER},
             </if>
             <if test="typeStatus != null">
                 #{typeStatus,jdbcType=BIT},
@@ -167,6 +176,9 @@
             <if test="record.typeName != null">
                 type_name = #{record.typeName,jdbcType=VARCHAR},
             </if>
+            <if test="record.typeIndex != null">
+                type_index = #{record.typeIndex,jdbcType=INTEGER},
+            </if>
             <if test="record.typeStatus != null">
                 type_status = #{record.typeStatus,jdbcType=BIT},
             </if>
@@ -181,6 +193,7 @@
         user_id = #{record.userId,jdbcType=INTEGER},
         type_logo = #{record.typeLogo,jdbcType=VARCHAR},
         type_name = #{record.typeName,jdbcType=VARCHAR},
+        type_index = #{record.typeIndex,jdbcType=INTEGER},
         type_status = #{record.typeStatus,jdbcType=BIT}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -198,6 +211,9 @@
             <if test="typeName != null">
                 type_name = #{typeName,jdbcType=VARCHAR},
             </if>
+            <if test="typeIndex != null">
+                type_index = #{typeIndex,jdbcType=INTEGER},
+            </if>
             <if test="typeStatus != null">
                 type_status = #{typeStatus,jdbcType=BIT},
             </if>
@@ -209,6 +225,7 @@
     set user_id = #{userId,jdbcType=INTEGER},
       type_logo = #{typeLogo,jdbcType=VARCHAR},
       type_name = #{typeName,jdbcType=VARCHAR},
+      type_index = #{typeIndex,jdbcType=INTEGER},
       type_status = #{typeStatus,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>

@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import com.example.demo.util.Page;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,20 +19,20 @@ public class ViewGoodsInfoExample {
         oredCriteria = new ArrayList<Criteria>();
     }
 
-    public String getOrderByClause() {
-        return orderByClause;
-    }
-
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    public boolean isDistinct() {
-        return distinct;
+    public String getOrderByClause() {
+        return orderByClause;
     }
 
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -69,12 +68,12 @@ public class ViewGoodsInfoExample {
         distinct = false;
     }
 
-    public Page getPage() {
-        return page;
-    }
-
     public void setPage(Page page) {
         this.page = page;
+    }
+
+    public Page getPage() {
+        return page;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -658,52 +657,52 @@ public class ViewGoodsInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceEqualTo(BigDecimal value) {
+        public Criteria andMinPriceEqualTo(Double value) {
             addCriterion("min_price =", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceNotEqualTo(BigDecimal value) {
+        public Criteria andMinPriceNotEqualTo(Double value) {
             addCriterion("min_price <>", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceGreaterThan(BigDecimal value) {
+        public Criteria andMinPriceGreaterThan(Double value) {
             addCriterion("min_price >", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andMinPriceGreaterThanOrEqualTo(Double value) {
             addCriterion("min_price >=", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceLessThan(BigDecimal value) {
+        public Criteria andMinPriceLessThan(Double value) {
             addCriterion("min_price <", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andMinPriceLessThanOrEqualTo(Double value) {
             addCriterion("min_price <=", value, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceIn(List<BigDecimal> values) {
+        public Criteria andMinPriceIn(List<Double> values) {
             addCriterion("min_price in", values, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceNotIn(List<BigDecimal> values) {
+        public Criteria andMinPriceNotIn(List<Double> values) {
             addCriterion("min_price not in", values, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andMinPriceBetween(Double value1, Double value2) {
             addCriterion("min_price between", value1, value2, "minPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMinPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andMinPriceNotBetween(Double value1, Double value2) {
             addCriterion("min_price not between", value1, value2, "minPrice");
             return (Criteria) this;
         }
@@ -718,53 +717,113 @@ public class ViewGoodsInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceEqualTo(BigDecimal value) {
+        public Criteria andMaxPriceEqualTo(Double value) {
             addCriterion("max_price =", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceNotEqualTo(BigDecimal value) {
+        public Criteria andMaxPriceNotEqualTo(Double value) {
             addCriterion("max_price <>", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceGreaterThan(BigDecimal value) {
+        public Criteria andMaxPriceGreaterThan(Double value) {
             addCriterion("max_price >", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceGreaterThanOrEqualTo(BigDecimal value) {
+        public Criteria andMaxPriceGreaterThanOrEqualTo(Double value) {
             addCriterion("max_price >=", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceLessThan(BigDecimal value) {
+        public Criteria andMaxPriceLessThan(Double value) {
             addCriterion("max_price <", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceLessThanOrEqualTo(BigDecimal value) {
+        public Criteria andMaxPriceLessThanOrEqualTo(Double value) {
             addCriterion("max_price <=", value, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceIn(List<BigDecimal> values) {
+        public Criteria andMaxPriceIn(List<Double> values) {
             addCriterion("max_price in", values, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceNotIn(List<BigDecimal> values) {
+        public Criteria andMaxPriceNotIn(List<Double> values) {
             addCriterion("max_price not in", values, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andMaxPriceBetween(Double value1, Double value2) {
             addCriterion("max_price between", value1, value2, "maxPrice");
             return (Criteria) this;
         }
 
-        public Criteria andMaxPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+        public Criteria andMaxPriceNotBetween(Double value1, Double value2) {
             addCriterion("max_price not between", value1, value2, "maxPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexIsNull() {
+            addCriterion("goods_index is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexIsNotNull() {
+            addCriterion("goods_index is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexEqualTo(Integer value) {
+            addCriterion("goods_index =", value, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexNotEqualTo(Integer value) {
+            addCriterion("goods_index <>", value, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexGreaterThan(Integer value) {
+            addCriterion("goods_index >", value, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexGreaterThanOrEqualTo(Integer value) {
+            addCriterion("goods_index >=", value, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexLessThan(Integer value) {
+            addCriterion("goods_index <", value, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexLessThanOrEqualTo(Integer value) {
+            addCriterion("goods_index <=", value, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexIn(List<Integer> values) {
+            addCriterion("goods_index in", values, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexNotIn(List<Integer> values) {
+            addCriterion("goods_index not in", values, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexBetween(Integer value1, Integer value2) {
+            addCriterion("goods_index between", value1, value2, "goodsIndex");
+            return (Criteria) this;
+        }
+
+        public Criteria andGoodsIndexNotBetween(Integer value1, Integer value2) {
+            addCriterion("goods_index not between", value1, value2, "goodsIndex");
             return (Criteria) this;
         }
 
@@ -913,6 +972,38 @@ public class ViewGoodsInfoExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -947,38 +1038,6 @@ public class ViewGoodsInfoExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

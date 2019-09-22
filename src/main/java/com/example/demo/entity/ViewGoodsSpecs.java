@@ -1,19 +1,27 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class ViewGoodsSpecs implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private Integer userId;
+
     private Integer goodsId;
+
     private String specsSrc;
+
     private String specsText;
-    private BigDecimal sellPrice;
-    private BigDecimal discount;
+
+    private static final long serialVersionUID = 1L;
+    private Double sellPrice;
+    private Double actualPrice;
+
     private String discountDescribe;
+    private Integer discount;
+
     private Boolean specsStatus;
+    private Integer specsIndex;
 
     public Integer getId() {
         return id;
@@ -55,19 +63,27 @@ public class ViewGoodsSpecs implements Serializable {
         this.specsText = specsText == null ? null : specsText.trim();
     }
 
-    public BigDecimal getSellPrice() {
+    public Double getSellPrice() {
         return sellPrice;
     }
 
-    public void setSellPrice(BigDecimal sellPrice) {
+    public void setSellPrice(Double sellPrice) {
         this.sellPrice = sellPrice;
     }
 
-    public BigDecimal getDiscount() {
+    public Double getActualPrice() {
+        return actualPrice;
+    }
+
+    public void setActualPrice(Double actualPrice) {
+        this.actualPrice = actualPrice;
+    }
+
+    public Integer getDiscount() {
         return discount;
     }
 
-    public void setDiscount(BigDecimal discount) {
+    public void setDiscount(Integer discount) {
         this.discount = discount;
     }
 
@@ -77,6 +93,14 @@ public class ViewGoodsSpecs implements Serializable {
 
     public void setDiscountDescribe(String discountDescribe) {
         this.discountDescribe = discountDescribe == null ? null : discountDescribe.trim();
+    }
+
+    public Integer getSpecsIndex() {
+        return specsIndex;
+    }
+
+    public void setSpecsIndex(Integer specsIndex) {
+        this.specsIndex = specsIndex;
     }
 
     public Boolean getSpecsStatus() {

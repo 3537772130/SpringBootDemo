@@ -7,9 +7,11 @@
         <result column="goods_id" jdbcType="INTEGER" property="goodsId"/>
         <result column="specs_src" jdbcType="VARCHAR" property="specsSrc"/>
         <result column="specs_text" jdbcType="VARCHAR" property="specsText"/>
-        <result column="sell_price" jdbcType="DECIMAL" property="sellPrice"/>
-        <result column="discount" jdbcType="DECIMAL" property="discount"/>
+        <result column="sell_price" jdbcType="DOUBLE" property="sellPrice"/>
+        <result column="actual_price" jdbcType="DOUBLE" property="actualPrice"/>
+        <result column="discount" jdbcType="INTEGER" property="discount"/>
         <result column="discount_describe" jdbcType="VARCHAR" property="discountDescribe"/>
+        <result column="specs_index" jdbcType="INTEGER" property="specsIndex"/>
         <result column="specs_status" jdbcType="BIT" property="specsStatus"/>
     </resultMap>
     <sql id="Example_Where_Clause">
@@ -43,8 +45,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_id, goods_id, specs_src, specs_text, sell_price, discount, discount_describe,
-    specs_status
+    id, user_id, goods_id, specs_src, specs_text, sell_price, actual_price, discount,
+    discount_describe, specs_index, specs_status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ViewGoodsSpecsExample"
             resultMap="BaseResultMap">

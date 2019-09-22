@@ -3,12 +3,18 @@ package com.example.demo.entity;
 import java.io.Serializable;
 
 public class GoodsType implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private Integer userId;
+
     private String typeLogo;
+
     private String typeName;
+
+    private static final long serialVersionUID = 1L;
+
     private Boolean typeStatus;
+    private Integer typeIndex;
 
     public Integer getId() {
         return id;
@@ -40,6 +46,14 @@ public class GoodsType implements Serializable {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName == null ? null : typeName.trim();
+    }
+
+    public Integer getTypeIndex() {
+        return typeIndex;
+    }
+
+    public void setTypeIndex(Integer typeIndex) {
+        this.typeIndex = typeIndex;
     }
 
     public Boolean getTypeStatus() {

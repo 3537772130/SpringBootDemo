@@ -35,8 +35,15 @@ public class Constants {
     // logo路径
     public static final String APPLET_UPLOAD_ID = "APPLET_UPLOAD_ID";
 
-    // 文件格式
-    public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";//上传图片文件类型
+    // 图片上传格式
+    public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";
+
+    // 商品类型数量
+    public static final int GOODS_TYPE_COUNT = 10;
+    // 商品规格数量
+    public static final int GOODS_SPECS_COUNT = 20;
+
+    // 系统压缩文件格式
     public static final String UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE = "application/x-zip-compressed,application/x-7z-compressed,application/x-gzip";//上传模板压缩文件类型
 
     // 地域信息集合

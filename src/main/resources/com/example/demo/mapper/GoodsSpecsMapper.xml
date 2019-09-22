@@ -6,9 +6,11 @@
         <result column="goods_id" jdbcType="INTEGER" property="goodsId"/>
         <result column="specs_src" jdbcType="VARCHAR" property="specsSrc"/>
         <result column="specs_text" jdbcType="VARCHAR" property="specsText"/>
-        <result column="sell_price" jdbcType="DECIMAL" property="sellPrice"/>
-        <result column="discount" jdbcType="DECIMAL" property="discount"/>
+        <result column="sell_price" jdbcType="DOUBLE" property="sellPrice"/>
+        <result column="actual_price" jdbcType="DOUBLE" property="actualPrice"/>
+        <result column="discount" jdbcType="INTEGER" property="discount"/>
         <result column="discount_describe" jdbcType="VARCHAR" property="discountDescribe"/>
+        <result column="specs_index" jdbcType="INTEGER" property="specsIndex"/>
         <result column="specs_status" jdbcType="BIT" property="specsStatus"/>
     </resultMap>
     <sql id="Example_Where_Clause">
@@ -72,7 +74,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, goods_id, specs_src, specs_text, sell_price, discount, discount_describe, specs_status
+    id, goods_id, specs_src, specs_text, sell_price, actual_price, discount, discount_describe,
+    specs_index, specs_status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.GoodsSpecsExample" resultMap="BaseResultMap">
         select
@@ -107,11 +110,13 @@
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.GoodsSpecs">
     insert into goods_specs (id, goods_id, specs_src,
-      specs_text, sell_price, discount,
-      discount_describe, specs_status)
+      specs_text, sell_price, actual_price,
+      discount, discount_describe, specs_index,
+      specs_status)
     values (#{id,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{specsSrc,jdbcType=VARCHAR},
-      #{specsText,jdbcType=VARCHAR}, #{sellPrice,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL},
-      #{discountDescribe,jdbcType=VARCHAR}, #{specsStatus,jdbcType=BIT})
+      #{specsText,jdbcType=VARCHAR}, #{sellPrice,jdbcType=DOUBLE}, #{actualPrice,jdbcType=DOUBLE},
+      #{discount,jdbcType=INTEGER}, #{discountDescribe,jdbcType=VARCHAR}, #{specsIndex,jdbcType=INTEGER},
+      #{specsStatus,jdbcType=BIT})
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.GoodsSpecs"
             useGeneratedKeys="true">
@@ -132,11 +137,17 @@
             <if test="sellPrice != null">
                 sell_price,
             </if>
+            <if test="actualPrice != null">
+                actual_price,
+            </if>
             <if test="discount != null">
                 discount,
             </if>
             <if test="discountDescribe != null">
                 discount_describe,
+            </if>
+            <if test="specsIndex != null">
+                specs_index,
             </if>
             <if test="specsStatus != null">
                 specs_status,
@@ -156,13 +167,19 @@
                 #{specsText,jdbcType=VARCHAR},
             </if>
             <if test="sellPrice != null">
-                #{sellPrice,jdbcType=DECIMAL},
+                #{sellPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="actualPrice != null">
+                #{actualPrice,jdbcType=DOUBLE},
             </if>
             <if test="discount != null">
-                #{discount,jdbcType=DECIMAL},
+                #{discount,jdbcType=INTEGER},
             </if>
             <if test="discountDescribe != null">
                 #{discountDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="specsIndex != null">
+                #{specsIndex,jdbcType=INTEGER},
             </if>
             <if test="specsStatus != null">
                 #{specsStatus,jdbcType=BIT},
@@ -191,13 +208,19 @@
                 specs_text = #{record.specsText,jdbcType=VARCHAR},
             </if>
             <if test="record.sellPrice != null">
-                sell_price = #{record.sellPrice,jdbcType=DECIMAL},
+                sell_price = #{record.sellPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="record.actualPrice != null">
+                actual_price = #{record.actualPrice,jdbcType=DOUBLE},
             </if>
             <if test="record.discount != null">
-                discount = #{record.discount,jdbcType=DECIMAL},
+                discount = #{record.discount,jdbcType=INTEGER},
             </if>
             <if test="record.discountDescribe != null">
                 discount_describe = #{record.discountDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="record.specsIndex != null">
+                specs_index = #{record.specsIndex,jdbcType=INTEGER},
             </if>
             <if test="record.specsStatus != null">
                 specs_status = #{record.specsStatus,jdbcType=BIT},
@@ -213,9 +236,11 @@
         goods_id = #{record.goodsId,jdbcType=INTEGER},
         specs_src = #{record.specsSrc,jdbcType=VARCHAR},
         specs_text = #{record.specsText,jdbcType=VARCHAR},
-        sell_price = #{record.sellPrice,jdbcType=DECIMAL},
-        discount = #{record.discount,jdbcType=DECIMAL},
+        sell_price = #{record.sellPrice,jdbcType=DOUBLE},
+        actual_price = #{record.actualPrice,jdbcType=DOUBLE},
+        discount = #{record.discount,jdbcType=INTEGER},
         discount_describe = #{record.discountDescribe,jdbcType=VARCHAR},
+        specs_index = #{record.specsIndex,jdbcType=INTEGER},
         specs_status = #{record.specsStatus,jdbcType=BIT}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -234,13 +259,19 @@
                 specs_text = #{specsText,jdbcType=VARCHAR},
             </if>
             <if test="sellPrice != null">
-                sell_price = #{sellPrice,jdbcType=DECIMAL},
+                sell_price = #{sellPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="actualPrice != null">
+                actual_price = #{actualPrice,jdbcType=DOUBLE},
             </if>
             <if test="discount != null">
-                discount = #{discount,jdbcType=DECIMAL},
+                discount = #{discount,jdbcType=INTEGER},
             </if>
             <if test="discountDescribe != null">
                 discount_describe = #{discountDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="specsIndex != null">
+                specs_index = #{specsIndex,jdbcType=INTEGER},
             </if>
             <if test="specsStatus != null">
                 specs_status = #{specsStatus,jdbcType=BIT},
@@ -253,9 +284,11 @@
     set goods_id = #{goodsId,jdbcType=INTEGER},
       specs_src = #{specsSrc,jdbcType=VARCHAR},
       specs_text = #{specsText,jdbcType=VARCHAR},
-      sell_price = #{sellPrice,jdbcType=DECIMAL},
-      discount = #{discount,jdbcType=DECIMAL},
+      sell_price = #{sellPrice,jdbcType=DOUBLE},
+      actual_price = #{actualPrice,jdbcType=DOUBLE},
+      discount = #{discount,jdbcType=INTEGER},
       discount_describe = #{discountDescribe,jdbcType=VARCHAR},
+      specs_index = #{specsIndex,jdbcType=INTEGER},
       specs_status = #{specsStatus,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
