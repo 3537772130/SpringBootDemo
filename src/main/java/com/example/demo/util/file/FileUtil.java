@@ -1,7 +1,6 @@
 package com.example.demo.util.file;
 
 import com.example.demo.util.NullUtil;
-import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class FileUtil {
      */
     public static boolean isVedioFile(String fileName) {
         String mimeType = getMimeType(fileName);
-        if (!TextUtils.isEmpty(fileName) && mimeType.contains(PREFIX_VIDEO)) {
+        if (NullUtil.isNotNullOrEmpty(fileName) && mimeType.contains(PREFIX_VIDEO)) {
             return true;
         }
         return false;
