@@ -63,7 +63,7 @@ public class UserAppletController {
      * @return
      */
     @RequestMapping(value = "queryAppletToPage")
-    public Object queryAppletToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, AppletInfo appletInfo, HttpServletRequest request) {
+    public Object queryAppletToPage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, ViewAppletInfo appletInfo, HttpServletRequest request) {
         Page page = PageUtil.initPage(request);
         appletInfo.setUserId(user.getId());
         page = appletService.selectAppletInfoToPage(appletInfo, page);

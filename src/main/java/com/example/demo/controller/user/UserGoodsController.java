@@ -35,6 +35,33 @@ public class UserGoodsController {
     private GoodsService goodsService;
 
     /**
+     * 上传商品图片文件
+     *
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadGoodsImage")
+    public Object uploadGoodsImage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user,
+                                   @RequestParam("image") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String fileName = "G" + user.getId() + "-" + RandomUtil.getRandomStr32() + ".jpg";
+            String filePath = "static\\images\\upload\\";
+            String rootPath = PathUtil.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String src = filePath + fileName;
+            return AjaxResponse.success(src.replace("static", "api"));
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.error("上传失败");
+        }
+    }
+
+    /**
      * 加载商品类型列表
      *
      * @param user
@@ -82,33 +109,6 @@ public class UserGoodsController {
     }
 
     /**
-     * 上传商品类型图标
-     *
-     * @param multipartFile
-     * @return
-     */
-    @RequestMapping(value = "uploadGoodsTypeLogo")
-    public Object uploadGoodsTypeLogo(@RequestParam("typeLogo") MultipartFile multipartFile) {
-        try {
-            //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
-            if (!result.getBool()) {
-                return AjaxResponse.error(result.getMsg());
-            }
-            String fileName = "GT-" + RandomUtil.getRandomStr32() + ".jpg";
-            String filePath = "static\\images\\upload\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName;
-            return AjaxResponse.success(src.replace("static", "api"));
-        } catch (IOException e) {
-            log.error("上传头像出错{}", e);
-            return AjaxResponse.success("上传失败");
-        }
-    }
-
-
-    /**
      * 更新商品类型信息
      *
      * @param user
@@ -129,16 +129,6 @@ public class UserGoodsController {
             } else {
                 goodsType.setTypeName(goodsType.getTypeName().trim());
             }
-            if (NullUtil.isNotNullOrEmpty(goodsType.getTypeLogo())) {
-                goodsType.setTypeLogo(goodsType.getTypeLogo().replace("api\\", ""));
-                String oldUrl = null;
-                if (NullUtil.isNotNullOrEmpty(goodsType.getId())) {
-                    GoodsType record = goodsService.selectGoodsType(goodsType.getId(), user.getId());
-                    oldUrl = record.getTypeLogo();
-                }
-                String newPath = FileUtil.copyGoodsTypeLogo(goodsType.getTypeLogo(), oldUrl);
-                goodsType.setTypeLogo(newPath);
-            }
             if (NullUtil.isNullOrEmpty(goodsType.getId())) {
                 int count = goodsService.selectGoodsTypeCount(user.getId());
                 if (count >= Constants.GOODS_TYPE_COUNT) {
@@ -147,6 +137,17 @@ public class UserGoodsController {
                 goodsType.setTypeIndex(count + 1);
             }
             goodsType.setUserId(user.getId());
+            if (NullUtil.isNotNullOrEmpty(goodsType.getId())) {
+                GoodsType record = goodsService.selectGoodsType(goodsType.getId(), user.getId());
+                if (null == record) {
+                    return AjaxResponse.error("信息不符");
+                }
+                if (NullUtil.isNotNullOrEmpty(goodsType.getTypeLogo())) {
+                    goodsType.setTypeLogo(goodsType.getTypeLogo().replace("api\\", ""));
+                    String newPath = FileUtil.copyGoodsTypeLogo(goodsType.getUserId(), goodsType.getTypeLogo(), record.getTypeLogo());
+                    goodsType.setTypeLogo(newPath);
+                }
+            }
             goodsService.updateGoodsType(goodsType);
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
@@ -243,32 +244,6 @@ public class UserGoodsController {
     }
 
     /**
-     * 上传商品封面图片
-     *
-     * @param multipartFile
-     * @return
-     */
-    @RequestMapping(value = "uploadGoodsCover")
-    public Object uploadGoodsCover(@RequestParam("cover") MultipartFile multipartFile) {
-        try {
-            //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
-            if (!result.getBool()) {
-                return AjaxResponse.error(result.getMsg());
-            }
-            String fileName = "GC-" + RandomUtil.getRandomStr32() + ".jpg";
-            String filePath = "static\\images\\upload\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName;
-            return AjaxResponse.success(src.replace("static", "api"));
-        } catch (IOException e) {
-            log.error("上传头像出错{}", e);
-            return AjaxResponse.success("上传失败");
-        }
-    }
-
-    /**
      * 更新商品信息
      *
      * @param user
@@ -292,31 +267,47 @@ public class UserGoodsController {
             if (NullUtil.isNullOrEmpty(goods.getTypeId())) {
                 return AjaxResponse.error("请选择商品类型");
             }
+            if (NullUtil.isNullOrEmpty(goods.getCoverSrc())) {
+                return AjaxResponse.error("请上传商品封面图片");
+            }
             GoodsType type = goodsService.selectGoodsType(goods.getTypeId(), user.getId());
             if (null == type) {
                 return AjaxResponse.error("商品类型选择错误");
             }
-            if (NullUtil.isNullOrEmpty(goods.getCoverSrc())) {
-                return AjaxResponse.error("请上传商品封面图片");
-            } else {
-                goods.setCoverSrc(goods.getCoverSrc().replace("api\\", ""));
-                String oldUrl = null;
-                if (NullUtil.isNotNullOrEmpty(goods.getId())) {
-                    GoodsInfo record = goodsService.selectGoodsInfo(goods.getId(), user.getId());
-                    oldUrl = record.getCoverSrc();
+            boolean bool = false;
+            if (NullUtil.isNotNullOrEmpty(goods.getId())) {
+                // 修改商品信息时，更新封面图地址
+                GoodsInfo oldInfo = goodsService.selectGoodsInfo(goods.getId(), user.getId());
+                if (null == oldInfo) {
+                    return AjaxResponse.error("信息不符");
                 }
-                String newPath = FileUtil.copyGoodsCoverSrc(goods.getCoverSrc(), oldUrl);
-                goods.setCoverSrc(newPath);
+                goods = this.setGoodsCoverSrc(oldInfo.getCoverSrc(), goods);
+            } else {
+                bool = true;
             }
             goods.setUserId(user.getId());
             goods.setMinPrice(null);
             goods.setMaxPrice(null);
             goodsService.updateGoodsInfo(goods);
+
+            if (bool) {
+                // 新增商品信息时，更新封面图地址
+                goods = this.setGoodsCoverSrc(goods.getCoverSrc(), goods);
+                goodsService.updateGoodsInfo(goods);
+            }
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("更新商品信息出错{}", e);
             return AjaxResponse.error("提交失败");
         }
+    }
+
+    public GoodsInfo setGoodsCoverSrc(String oldCoverSrc, GoodsInfo newInfo) {
+        // 更新封面图地址
+        newInfo.setCoverSrc(newInfo.getCoverSrc().replace("api\\", ""));
+        String newPath = FileUtil.copyGoodsCoverSrc(newInfo.getId(), newInfo.getCoverSrc(), oldCoverSrc);
+        newInfo.setCoverSrc(newPath);
+        return newInfo;
     }
 
     /**
@@ -372,13 +363,17 @@ public class UserGoodsController {
         GoodsInfo goods = goodsService.selectGoodsInfo(goodsId, user.getId());
         try {
             if (!goods.getStatus()) {
+                GoodsType type = goodsService.selectGoodsType(goods.getTypeId(), user.getId());
+                if (!type.getTypeStatus()) {
+                    return AjaxResponse.error("发布失败：该商品的类型已禁用");
+                }
                 int fileCount = goodsService.selectFileCount(goodsId, user.getId());
                 if (fileCount <= 0) {
-                    return AjaxResponse.error("请提交文件(至少一张图片或短视频)");
+                    return AjaxResponse.error("发布失败：请提交文件(至少一张图片或短视频)");
                 }
                 int specsCount = goodsService.selectSpecsCount(goodsId, user.getId());
                 if (specsCount <= 0) {
-                    return AjaxResponse.error("请提交至少一条规格)");
+                    return AjaxResponse.error("发布失败：请设置至少一条正常规格)");
                 }
             }
             goodsService.updateGoodsStatus(goods.getId(), goods.getStatus());
@@ -578,6 +573,7 @@ public class UserGoodsController {
         if (NullUtil.isNotNullOrEmpty(specsId) && specsId.intValue() != 0) {
             ViewGoodsSpecs record = goodsService.selectSpecsInfo(specsId, goodsId, user.getId());
             if (null != record) {
+                record.setSpecsSrc("api\\" + record.getSpecsSrc());
                 return AjaxResponse.success(record);
             }
         }
@@ -628,7 +624,7 @@ public class UserGoodsController {
                     ViewGoodsSpecs record = goodsService.selectSpecsInfo(specs.getId(), specs.getGoodsId(), user.getId());
                     oldUrl = record.getSpecsSrc();
                 }
-                String newPath = FileUtil.copyGoodsCoverSrc(specs.getSpecsSrc(), oldUrl);
+                String newPath = FileUtil.copyGoodsSpecsSrc(specs.getGoodsId(), specs.getSpecsSrc(), oldUrl);
                 specs.setSpecsSrc(newPath);
             }
             boolean bool = (NullUtil.isNullOrEmpty(specs.getId()) && !specs.getSpecsStatus()) ? false : true;
@@ -641,6 +637,45 @@ public class UserGoodsController {
         } catch (Exception e) {
             log.error("跟新商品规格出错{}", e);
             return AjaxResponse.error("提交失败");
+        }
+    }
+
+    /**
+     * 更新商品规格排序
+     *
+     * @param user
+     * @param goodsId
+     * @param specsId
+     * @param sort
+     * @return
+     */
+    @RequestMapping(value = "updateGoodsSpecsIndex")
+    public Object updateGoodsSpecsIndex(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer goodsId,
+                                        Integer specsId, String sort) {
+        try {
+            if (NullUtil.isNullOrEmpty(goodsId) || NullUtil.isNullOrEmpty(specsId) || NullUtil.isNullOrEmpty(sort)) {
+                return AjaxResponse.error("参数错误");
+            }
+            int count = goodsService.selectGoodsSpecsCount(goodsId, user.getId());
+            if (count > 1) {
+                ViewGoodsSpecs specs = goodsService.selectSpecsInfo(specsId, goodsId, user.getId());
+                if (null == specs) {
+                    return AjaxResponse.error("未找到相关记录");
+                }
+                Integer num = null;
+                if (sort.equals("top") && specs.getSpecsIndex().intValue() - 1 > 0) {
+                    num = -1;
+                } else if (sort.equals("bot") && specs.getSpecsIndex() + 1 <= count) {
+                    num = 1;
+                } else {
+                    return AjaxResponse.success("参数错误");
+                }
+                goodsService.updateGoodsSpecsIndex(specs, num);
+            }
+            return AjaxResponse.success();
+        } catch (Exception e) {
+            log.error("更新商品排序出错{}", e);
+            return AjaxResponse.error("操作失败");
         }
     }
 }

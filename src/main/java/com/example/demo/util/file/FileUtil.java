@@ -127,14 +127,20 @@ public class FileUtil {
             String oldRootPath = PathUtil.getClassPath(oldPath);
             File file1 = new File(oldRootPath + oldFileName);
             if (file1.exists()) {
-                // 获取目标文件，如果存在，则删除
+                // 检查目标文件夹是否存在，不存在则创建
                 String newRootPath = PathUtil.getClassPath(newPath);
-                File file2 = new File(newRootPath + newFileName);
-                if (file2.exists()) {
-                    file2.delete();
+                File file2 = new File(newRootPath);
+                if (!file2.exists()) {
+                    file2.mkdir();
                 }
-                // 复制文件至目标目录，并删除原文件
-                Files.copy(file1.toPath(), file2.toPath());
+                // 获取目标文件，如果存在，则删除
+                File file3 = new File(newRootPath + newFileName);
+                if (file3.exists()) {
+                    file3.delete();
+                }
+                // 复制文件至目标目录
+                Files.copy(file1.toPath(), file3.toPath());
+                // 删除原文件
                 file1.delete();
                 return newPath.replace("static\\", "") + newFileName;
             }
@@ -159,30 +165,15 @@ public class FileUtil {
     }
 
     /**
-     * 复制商品封面图
-     *
-     * @param newUrl
-     * @param oldUrl
-     * @return
-     */
-    public static String copyGoodsCoverSrc(String newUrl, String oldUrl) {
-        String newPath = "static\\images\\goods";
-        String result = copyGoodsFile(newUrl, newPath);
-        if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
-            deleteClassFile("static\\" + oldUrl);
-        }
-        return result;
-    }
-
-    /**
      * 复制商品类型图标
      *
+     * @param userId
      * @param newUrl
      * @param oldUrl
      * @return
      */
-    public static String copyGoodsTypeLogo(String newUrl, String oldUrl) {
-        String newPath = "static\\images\\goods\\type";
+    public static String copyGoodsTypeLogo(Integer userId, String newUrl, String oldUrl) {
+        String newPath = "static\\images\\goods\\type\\user" + userId;
         String result = copyGoodsFile(newUrl, newPath);
         if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
             deleteClassFile("static\\" + oldUrl);
@@ -191,14 +182,15 @@ public class FileUtil {
     }
 
     /**
-     * 复制商品展示文件
+     * 复制商品封面图
      *
+     * @param goodsId
      * @param newUrl
      * @param oldUrl
      * @return
      */
-    public static String copyGoodsFileSrc(String newUrl, String oldUrl) {
-        String newPath = "static\\images\\goods\\file";
+    public static String copyGoodsCoverSrc(Integer goodsId, String newUrl, String oldUrl) {
+        String newPath = "static\\images\\goods\\info\\" + goodsId;
         String result = copyGoodsFile(newUrl, newPath);
         if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
             deleteClassFile("static\\" + oldUrl);
@@ -209,12 +201,13 @@ public class FileUtil {
     /**
      * 复制商品规格图片
      *
+     * @param goodsId
      * @param newUrl
      * @param oldUrl
      * @return
      */
-    public static String copyGoodsSpecsSrc(String newUrl, String oldUrl) {
-        String newPath = "static\\images\\goods\\specs";
+    public static String copyGoodsSpecsSrc(Integer goodsId, String newUrl, String oldUrl) {
+        String newPath = "static\\images\\goods\\specs\\" + goodsId;
         String result = copyGoodsFile(newUrl, newPath);
         if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
             deleteClassFile("static\\" + oldUrl);

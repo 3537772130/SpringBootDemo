@@ -39,7 +39,7 @@ public class Constants {
     public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";
 
     // 商品类型数量
-    public static final int GOODS_TYPE_COUNT = 10;
+    public static final int GOODS_TYPE_COUNT = 15;
     // 商品规格数量
     public static final int GOODS_SPECS_COUNT = 20;
 

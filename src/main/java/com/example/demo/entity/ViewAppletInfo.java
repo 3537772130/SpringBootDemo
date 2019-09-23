@@ -15,6 +15,9 @@ public class ViewAppletInfo implements Serializable {
 
     private String nickName;
 
+    private static final long serialVersionUID = 1L;
+    private Integer typeId;
+
     private String appletCode;
 
     private String appletName;
@@ -24,8 +27,7 @@ public class ViewAppletInfo implements Serializable {
     private String licenseCode;
 
     private String businessScope;
-
-    private static final long serialVersionUID = 1L;
+    private String typeName;
 
     private String telephone;
 
@@ -56,12 +58,11 @@ public class ViewAppletInfo implements Serializable {
     private Boolean ifRetail;
 
     private Boolean ifSelling;
-
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_YMD)
-    private Date updateTime;
+    private String licenseSrc;
 
     private Integer status;
-    private String licenseSrc;
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
+    private Date updateTime;
 
     public Integer getId() {
         return id;
@@ -93,6 +94,22 @@ public class ViewAppletInfo implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName == null ? null : nickName.trim();
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName == null ? null : typeName.trim();
     }
 
     public String getAppletCode() {

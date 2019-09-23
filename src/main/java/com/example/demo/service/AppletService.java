@@ -86,40 +86,6 @@ public class AppletService {
     }
 
     /**
-     * 用户分页查询小程序列表
-     *
-     * @param info
-     * @param page
-     * @return
-     */
-    public Page selectAppletInfoToPage(AppletInfo info, Page page) {
-        AppletInfoExample example = new AppletInfoExample();
-        example.setPage(page);
-        example.setOrderByClause("id desc");
-        AppletInfoExample.Criteria c = example.createCriteria().andUserIdEqualTo(info.getUserId());
-        if (NullUtil.isNotNullOrEmpty(info.getAppletCode())) {
-            c.andAppletCodeLike("%" + info.getAppletCode() + "%");
-        }
-        if (NullUtil.isNotNullOrEmpty(info.getAppletName())) {
-            c.andAppletNameLike("%" + info.getAppletName() + "%");
-        }
-        if (NullUtil.isNotNullOrEmpty(info.getIfSelling())) {
-            c.andIfSellingEqualTo(info.getIfSelling());
-        }
-        if (NullUtil.isNotNullOrEmpty(info.getStatus())) {
-            c.andStatusEqualTo(info.getStatus());
-        } else {
-            c.andStatusNotEqualTo(0);
-        }
-        long count = appletInfoMapper.countByExample(example);
-        if (count > 0) {
-            page.setTotalCount(count);
-            page.setDataSource(appletInfoMapper.selectByExample(example));
-        }
-        return page;
-    }
-
-    /**
      * 管理员分页查询小程序列表
      *
      * @param info
@@ -136,6 +102,9 @@ public class AppletService {
         }
         if (NullUtil.isNotNullOrEmpty(info.getAppletName())) {
             c.andAppletNameLike("%" + info.getAppletName() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(info.getTypeId())) {
+            c.andTypeIdEqualTo(info.getTypeId());
         }
         if (NullUtil.isNotNullOrEmpty(info.getMobile())) {
             c.andMobileLike(info.getMobile() + "%");

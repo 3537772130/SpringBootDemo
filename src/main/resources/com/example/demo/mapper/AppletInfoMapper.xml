@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.example.demo.entity.AppletInfo">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="applet_type_id" jdbcType="INTEGER" property="appletTypeId"/>
         <result column="applet_logo" jdbcType="VARCHAR" property="appletLogo"/>
         <result column="applet_code" jdbcType="VARCHAR" property="appletCode"/>
         <result column="applet_name" jdbcType="VARCHAR" property="appletName"/>
@@ -89,10 +90,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_id, applet_logo, applet_code, applet_name, applet_simple, license_code,
-    business_scope, license_src, telephone, manager_account, manager_password, app_id,
-    app_secret, province, city, county, address_simple, address_details, lon, lat, if_retail,
-    if_selling, update_time, status
+    id, user_id, applet_type_id, applet_logo, applet_code, applet_name, applet_simple,
+    license_code, business_scope, license_src, telephone, manager_account, manager_password,
+    app_id, app_secret, province, city, county, address_simple, address_details, lon,
+    lat, if_retail, if_selling, update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.AppletInfoExample" resultMap="BaseResultMap">
         select
@@ -126,23 +127,23 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.AppletInfo">
-    insert into applet_info (id, user_id, applet_logo,
-      applet_code, applet_name, applet_simple,
-      license_code, business_scope, license_src,
-      telephone, manager_account, manager_password,
-      app_id, app_secret, province,
-      city, county, address_simple,
-      address_details, lon, lat,
-      if_retail, if_selling, update_time,
+    insert into applet_info (id, user_id, applet_type_id,
+      applet_logo, applet_code, applet_name,
+      applet_simple, license_code, business_scope,
+      license_src, telephone, manager_account,
+      manager_password, app_id, app_secret,
+      province, city, county,
+      address_simple, address_details, lon,
+      lat, if_retail, if_selling, update_time,
       status)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{appletLogo,jdbcType=VARCHAR},
-      #{appletCode,jdbcType=VARCHAR}, #{appletName,jdbcType=VARCHAR}, #{appletSimple,jdbcType=VARCHAR},
-      #{licenseCode,jdbcType=VARCHAR}, #{businessScope,jdbcType=VARCHAR}, #{licenseSrc,jdbcType=VARCHAR},
-      #{telephone,jdbcType=VARCHAR}, #{managerAccount,jdbcType=VARCHAR}, #{managerPassword,jdbcType=VARCHAR},
-      #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
-      #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{addressSimple,jdbcType=VARCHAR},
-      #{addressDetails,jdbcType=VARCHAR}, #{lon,jdbcType=DOUBLE}, #{lat,jdbcType=DOUBLE},
-      #{ifRetail,jdbcType=BIT}, #{ifSelling,jdbcType=BIT}, #{updateTime,jdbcType=TIMESTAMP},
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{appletTypeId,jdbcType=INTEGER},
+      #{appletLogo,jdbcType=VARCHAR}, #{appletCode,jdbcType=VARCHAR}, #{appletName,jdbcType=VARCHAR},
+      #{appletSimple,jdbcType=VARCHAR}, #{licenseCode,jdbcType=VARCHAR}, #{businessScope,jdbcType=VARCHAR},
+      #{licenseSrc,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{managerAccount,jdbcType=VARCHAR},
+      #{managerPassword,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR},
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR},
+      #{addressSimple,jdbcType=VARCHAR}, #{addressDetails,jdbcType=VARCHAR}, #{lon,jdbcType=DOUBLE},
+      #{lat,jdbcType=DOUBLE}, #{ifRetail,jdbcType=BIT}, #{ifSelling,jdbcType=BIT}, #{updateTime,jdbcType=TIMESTAMP},
       #{status,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" keyProperty="id" parameterType="com.example.demo.entity.AppletInfo"
@@ -154,6 +155,9 @@
             </if>
             <if test="userId != null">
                 user_id,
+            </if>
+            <if test="appletTypeId != null">
+                applet_type_id,
             </if>
             <if test="appletLogo != null">
                 applet_logo,
@@ -231,6 +235,9 @@
             </if>
             <if test="userId != null">
                 #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="appletTypeId != null">
+                #{appletTypeId,jdbcType=INTEGER},
             </if>
             <if test="appletLogo != null">
                 #{appletLogo,jdbcType=VARCHAR},
@@ -318,6 +325,9 @@
             <if test="record.userId != null">
                 user_id = #{record.userId,jdbcType=INTEGER},
             </if>
+            <if test="record.appletTypeId != null">
+                applet_type_id = #{record.appletTypeId,jdbcType=INTEGER},
+            </if>
             <if test="record.appletLogo != null">
                 applet_logo = #{record.appletLogo,jdbcType=VARCHAR},
             </if>
@@ -396,6 +406,7 @@
         update applet_info
         set id = #{record.id,jdbcType=INTEGER},
         user_id = #{record.userId,jdbcType=INTEGER},
+        applet_type_id = #{record.appletTypeId,jdbcType=INTEGER},
         applet_logo = #{record.appletLogo,jdbcType=VARCHAR},
         applet_code = #{record.appletCode,jdbcType=VARCHAR},
         applet_name = #{record.appletName,jdbcType=VARCHAR},
@@ -428,6 +439,9 @@
         <set>
             <if test="userId != null">
                 user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="appletTypeId != null">
+                applet_type_id = #{appletTypeId,jdbcType=INTEGER},
             </if>
             <if test="appletLogo != null">
                 applet_logo = #{appletLogo,jdbcType=VARCHAR},
@@ -504,6 +518,7 @@
     <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.AppletInfo">
     update applet_info
     set user_id = #{userId,jdbcType=INTEGER},
+      applet_type_id = #{appletTypeId,jdbcType=INTEGER},
       applet_logo = #{appletLogo,jdbcType=VARCHAR},
       applet_code = #{appletCode,jdbcType=VARCHAR},
       applet_name = #{appletName,jdbcType=VARCHAR},

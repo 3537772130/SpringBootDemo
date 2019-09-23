@@ -15,6 +15,10 @@ public class ViewAppletAuditList implements Serializable {
 
     private String nickName;
 
+    private Integer typeId;
+
+    private String typeName;
+
     private String appletCode;
 
     private String appletName;
@@ -107,6 +111,22 @@ public class ViewAppletAuditList implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName == null ? null : nickName.trim();
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName == null ? null : typeName.trim();
     }
 
     public String getAppletCode() {

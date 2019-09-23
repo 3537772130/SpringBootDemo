@@ -6,6 +6,8 @@
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
         <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
         <result column="applet_code" jdbcType="VARCHAR" property="appletCode"/>
         <result column="applet_name" jdbcType="VARCHAR" property="appletName"/>
         <result column="applet_simple" jdbcType="VARCHAR" property="appletSimple"/>
@@ -61,10 +63,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, user_id, mobile, nick_name, applet_code, applet_name, applet_simple, license_code,
-    business_scope, license_src, telephone, manager_account, manager_password, app_id,
-    app_secret, province, city, county, address_simple, address_details, lon, lat, applet_logo,
-    if_retail, if_selling, update_time, status
+    id, user_id, mobile, nick_name, type_id, type_name, applet_code, applet_name, applet_simple,
+    license_code, business_scope, license_src, telephone, manager_account, manager_password,
+    app_id, app_secret, province, city, county, address_simple, address_details, lon,
+    lat, applet_logo, if_retail, if_selling, update_time, status
   </sql>
     <select id="selectByExample" parameterType="com.example.demo.entity.ViewAppletInfoExample"
             resultMap="BaseResultMap">

@@ -336,7 +336,7 @@ public class GoodsService {
     public void updateGoodsFile(Integer id, String src, Boolean status) {
         GoodsFile file = new GoodsFile();
         file.setId(id);
-        if (NullUtil.isNotNullOrEmpty(file.getFileSrc())) {
+        if (NullUtil.isNotNullOrEmpty(src)) {
             file.setFileSrc(src.replace("static", ""));
         }
         file.setFileStatus(status);
@@ -393,6 +393,27 @@ public class GoodsService {
         } else {
             goodsSpecsMapper.updateByPrimaryKeySelective(specs);
         }
+    }
+
+    /**
+     * 更新商品规格排序
+     *
+     * @param specs
+     * @param num
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateGoodsSpecsIndex(ViewGoodsSpecs specs, Integer num) {
+        GoodsSpecs record1 = new GoodsSpecs();
+        record1.setSpecsIndex(specs.getSpecsIndex());
+        GoodsSpecsExample example = new GoodsSpecsExample();
+        example.createCriteria().andGoodsIdEqualTo(specs.getGoodsId())
+                .andSpecsIndexEqualTo(specs.getSpecsIndex() + num);
+        goodsSpecsMapper.updateByExampleSelective(record1, example);
+
+        GoodsSpecs record2 = new GoodsSpecs();
+        record2.setId(specs.getId());
+        record2.setSpecsIndex(specs.getSpecsIndex() + num);
+        goodsSpecsMapper.updateByPrimaryKeySelective(record2);
     }
 
     /**

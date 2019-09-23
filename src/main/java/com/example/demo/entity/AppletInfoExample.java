@@ -237,6 +237,66 @@ public class AppletInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andAppletTypeIdIsNull() {
+            addCriterion("applet_type_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdIsNotNull() {
+            addCriterion("applet_type_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdEqualTo(Integer value) {
+            addCriterion("applet_type_id =", value, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdNotEqualTo(Integer value) {
+            addCriterion("applet_type_id <>", value, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdGreaterThan(Integer value) {
+            addCriterion("applet_type_id >", value, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("applet_type_id >=", value, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdLessThan(Integer value) {
+            addCriterion("applet_type_id <", value, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdLessThanOrEqualTo(Integer value) {
+            addCriterion("applet_type_id <=", value, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdIn(List<Integer> values) {
+            addCriterion("applet_type_id in", values, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdNotIn(List<Integer> values) {
+            addCriterion("applet_type_id not in", values, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdBetween(Integer value1, Integer value2) {
+            addCriterion("applet_type_id between", value1, value2, "appletTypeId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppletTypeIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("applet_type_id not between", value1, value2, "appletTypeId");
+            return (Criteria) this;
+        }
+
         public Criteria andAppletLogoIsNull() {
             addCriterion("applet_logo is null");
             return (Criteria) this;
