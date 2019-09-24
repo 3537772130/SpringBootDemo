@@ -22,6 +22,8 @@ import java.util.List;
 @Service
 public class AppletService {
     @Autowired
+    private AppletTypeMapper appletTypeMapper;
+    @Autowired
     private AppletInfoMapper appletInfoMapper;
     @Autowired
     private ViewAppletInfoMapper viewAppletInfoMapper;
@@ -32,7 +34,77 @@ public class AppletService {
     @Autowired
     private ViewAppletAuditListMapper viewAppletAuditListMapper;
     @Autowired
+    private AppletFileMapper appletFileMapper;
+    @Autowired
+    private AppletVersionMapper appletVersionMapper;
+    @Autowired
+    private ViewAppletVersionMapper viewAppletVersionMapper;
+    @Autowired
     private UserInfoMapper userInfoMapper;
+
+    /**
+     * 查询小程序服务类型集合
+     *
+     * @return
+     */
+    public List<AppletType> selectAppletTypeList(Boolean status) {
+        AppletTypeExample example = new AppletTypeExample();
+        if (NullUtil.isNotNullOrEmpty(status)) {
+            example.createCriteria().andTypeStatusEqualTo(status);
+        }
+        return appletTypeMapper.selectByExample(example);
+    }
+
+    /**
+     * 分页查询小程序服务类型列表
+     *
+     * @param type
+     * @param page
+     * @return
+     */
+    public Page selectAppletTypePage(AppletType type, Page page) {
+        AppletTypeExample example = new AppletTypeExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        AppletTypeExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(type.getTypeName())) {
+            c.andTypeNameLike("%" + type.getTypeName() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(type.getTypeStatus())) {
+            c.andTypeStatusEqualTo(type.getTypeStatus());
+        }
+        long count = appletTypeMapper.countByExample(example);
+        if (count > 0) {
+            page.setTotalCount(count);
+            page.setDataSource(appletTypeMapper.selectByExample(example));
+        }
+        return page;
+    }
+
+    /**
+     * 查询小程序服务类型信息
+     *
+     * @param id
+     * @return
+     */
+    public AppletType selectAppletTypeById(Integer id) {
+        return appletTypeMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 更新小程序服务类型信息
+     *
+     * @param record
+     */
+    public void updateAppletType(AppletType record) {
+        record.setUpdateTime(new Date());
+        if (NullUtil.isNotNullOrEmpty(record.getId())) {
+            appletTypeMapper.updateByPrimaryKeySelective(record);
+        } else {
+            appletTypeMapper.insertSelective(record);
+        }
+    }
+
 
     /**
      * 查询小程序信息
@@ -317,10 +389,158 @@ public class AppletService {
 
         if (appletAudit.getResult().intValue() == 2) {
             AppletInfo info = appletInfoMapper.selectByPrimaryKey(appletAudit.getAppletId());
+            // 更新用户身份
             UserInfo user = new UserInfo();
             user.setId(info.getUserId());
             user.setIsDealer(true);
             userInfoMapper.updateByPrimaryKeySelective(user);
+            // 初始化小程序版本信息
+            AppletVersion version = new AppletVersion();
+            version.setAppletId(info.getId());
+            version.setTypeId(info.getTypeId());
+            this.updateAppletVersion(version);
+        }
+    }
+
+    /**
+     * 分页查询小程序版本文件列表
+     *
+     * @param file
+     * @param page
+     * @return
+     */
+    public Page selectAppletFilePage(AppletFile file, Page page) {
+        AppletFileExample example = new AppletFileExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        AppletFileExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(file.getVersionNumber())) {
+            c.andVersionNumberLike("%" + file.getVersionNumber() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(file.getTypeId())) {
+            c.andTypeIdEqualTo(file.getTypeId());
+        }
+        if (NullUtil.isNotNullOrEmpty(file.getFileStatus())) {
+            c.andFileStatusEqualTo(file.getFileStatus());
+        }
+        long count = appletFileMapper.countByExample(example);
+        if (count > 0) {
+            page.setTotalCount(count);
+            page.setDataSource(appletFileMapper.selectByExample(example));
+        }
+        return page;
+    }
+
+    /**
+     * 查询小程序版本文件信息
+     *
+     * @param id
+     * @param typeId
+     * @return
+     */
+    public AppletFile selectAppletFile(Integer id, Integer typeId) {
+        AppletFileExample example = new AppletFileExample();
+        example.createCriteria().andIdEqualTo(id).andTypeIdEqualTo(typeId);
+        List<AppletFile> list = appletFileMapper.selectByExample(example);
+        return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
+    }
+
+    /**
+     * 根据类型编号查询小程序版本文件信息集合
+     *
+     * @param typeId
+     * @return
+     */
+    public List<AppletFile> selectAppletFile(Integer typeId) {
+        AppletFileExample example = new AppletFileExample();
+        example.createCriteria().andTypeIdEqualTo(typeId);
+        return appletFileMapper.selectByExample(example);
+    }
+
+    /**
+     * 查询小程序版本文件信息
+     *
+     * @param id
+     * @return
+     */
+    public AppletFile selectAppletFileById(Integer id) {
+        return appletFileMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 更新小程序版本文件信息
+     *
+     * @param file
+     */
+    public void updateAppletFile(AppletFile file) {
+        file.setUpdateTime(new Date());
+        if (NullUtil.isNullOrEmpty(file.getFilePath())) {
+            file.setFileStatus(false);
+        }
+        if (NullUtil.isNotNullOrEmpty(file.getId())) {
+            appletFileMapper.updateByPrimaryKeySelective(file);
+        } else {
+            appletFileMapper.insertSelective(file);
+        }
+    }
+
+
+    /**
+     * 分页查询小程序版本信息列表
+     *
+     * @param version
+     * @param page
+     * @return
+     */
+    public Page selectAppletVersionPage(ViewAppletVersion version, Page page) {
+        ViewAppletVersionExample example = new ViewAppletVersionExample();
+        example.setPage(page);
+        example.setOrderByClause("id desc");
+        ViewAppletVersionExample.Criteria c = example.createCriteria();
+        if (NullUtil.isNotNullOrEmpty(version.getAppletCode())) {
+            c.andAppletCodeLike(version.getAppletCode() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(version.getAppletName())) {
+            c.andAppletNameLike("%" + version.getAppletName() + "%");
+        }
+        if (NullUtil.isNotNullOrEmpty(version.getTypeId())) {
+            c.andTypeIdEqualTo(version.getTypeId());
+        }
+        if (NullUtil.isNotNullOrEmpty(version.getVersionNumber())) {
+            c.andVersionNumberEqualTo(version.getVersionNumber());
+        }
+        long count = viewAppletVersionMapper.countByExample(example);
+        if (count > 0) {
+            page.setTotalCount(count);
+            page.setDataSource(viewAppletVersionMapper.selectByExample(example));
+        }
+        return page;
+    }
+
+    /**
+     * 查询小程序版本信息
+     *
+     * @param id
+     * @return
+     */
+    public ViewAppletVersion selectAppletVersion(Integer id) {
+        ViewAppletVersionExample example = new ViewAppletVersionExample();
+        example.createCriteria().andIdEqualTo(id);
+        List<ViewAppletVersion> list = viewAppletVersionMapper.selectByExample(example);
+        return NullUtil.isNotNullOrEmpty(list) ? list.get(0) : null;
+    }
+
+    /**
+     * 更新小程序版本信息
+     *
+     * @param record
+     */
+    public void updateAppletVersion(AppletVersion record) {
+        record.setUpdateTime(new Date());
+        if (NullUtil.isNotNullOrEmpty(record.getId())) {
+            appletVersionMapper.updateByPrimaryKeySelective(record);
+        } else {
+            appletVersionMapper.insertSelective(record);
         }
     }
 }

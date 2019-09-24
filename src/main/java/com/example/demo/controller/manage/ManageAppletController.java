@@ -5,14 +5,21 @@ import com.example.demo.entity.*;
 import com.example.demo.service.AppletService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
+import com.example.demo.util.file.PathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: SpringBootDemo
@@ -26,6 +33,61 @@ public class ManageAppletController {
     private static final Logger log = LoggerFactory.getLogger(ManageAppletController.class);
     @Autowired
     private AppletService appletService;
+
+    /**
+     * 查询小程序服务类型列表
+     *
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "queryAppletTypePage")
+    public Object queryAppletTypePage(AppletType type, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        page = appletService.selectAppletTypePage(type, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
+     * 加载小程序服务类型信息
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "loadAppletType")
+    public Object loadAppletType(Integer id) {
+        if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
+            return AjaxResponse.success(appletService.selectAppletTypeById(id));
+        }
+        return AjaxResponse.error("未找到相关信息");
+    }
+
+    /**
+     * 更新小程序服务类型信息
+     *
+     * @param record
+     * @return
+     */
+    @RequestMapping(value = "updateAppletType")
+    public Object updateAppletType(AppletType record) {
+        try {
+            if (null == record) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (NullUtil.isNullOrEmpty(record.getTypeName())) {
+                return AjaxResponse.error("类型名称不能为空");
+            }
+            if (record.getTypeName().trim().length() > 50) {
+                return AjaxResponse.error("类型名称长度过长");
+            } else {
+                record.setTypeName(record.getTypeName().trim());
+            }
+            appletService.updateAppletType(record);
+            return AjaxResponse.success("提交成功");
+        } catch (Exception e) {
+            log.error("更新小程序服务类型出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
+    }
 
     /**
      * 分页查询小程序列表
@@ -203,6 +265,168 @@ public class ManageAppletController {
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("提交小程序审核信息出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
+    }
+
+
+    /**
+     * 分页查询小程序版本文件列表
+     *
+     * @param file
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "queryAppletFilePage")
+    public Object queryAppletFilePage(AppletFile file, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        page = appletService.selectAppletFilePage(file, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
+     * 加载小程序版本文件信息
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "loadAppletFile")
+    public Object loadAppletFile(Integer id) {
+        if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
+            return AjaxResponse.success(appletService.selectAppletFileById(id));
+        }
+        return AjaxResponse.error("未找到相关记录");
+    }
+
+    /**
+     * 更新小程序版本文件信息
+     *
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "updateAppletFile")
+    public Object updateAppletFile(AppletFile file) {
+        try {
+            if (null == file) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (NullUtil.isNullOrEmpty(file.getTypeId())) {
+                return AjaxResponse.error("请选择服务类型");
+            }
+            if (NullUtil.isNullOrEmpty(file.getVersionNumber())) {
+                return AjaxResponse.error("版本号不能为空");
+            }
+            if (file.getVersionNumber().trim().length() > 30) {
+                return AjaxResponse.error("版本号长度过长");
+            } else {
+                file.setVersionNumber(file.getVersionNumber().trim().toUpperCase());
+            }
+            appletService.updateAppletFile(file);
+            return AjaxResponse.success("提交成功");
+        } catch (Exception e) {
+            log.error("提交小程序版本文件信息出错{}", e);
+            return AjaxResponse.error("提交失败");
+        }
+    }
+
+    /**
+     * 上传小程序版本压缩文件
+     *
+     * @param multipartFile
+     * @param id
+     * @param typeId
+     * @return
+     */
+    @RequestMapping(value = "uploadAppletFile")
+    public Object uploadAppletFile(@RequestParam("typeZip") MultipartFile multipartFile, Integer id, Integer typeId) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkTemplateFile(multipartFile, Constants.UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            AppletFile file = appletService.selectAppletFile(id, typeId);
+            if (null == file) {
+                return AjaxResponse.error("信息不符");
+            }
+            String fileName = "APPLET-TYPE-" + file.getVersionNumber() + ".zip";
+            String filePath = "static\\zip\\type" + typeId + "\\";
+            String rootPath = PathUtil.getClassPath(filePath);
+            File file1 = new File(rootPath);
+            if (!file1.exists()) {
+                file1.mkdir();
+            }
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String src = filePath + fileName;
+            file.setFilePath(src.replace("static", "api"));
+            file.setFileStatus(true);
+            appletService.updateAppletFile(file);
+            return AjaxResponse.success();
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.error("上传失败");
+        }
+    }
+
+    /**
+     * 分页查询小程序版本信息
+     *
+     * @param version
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "queryAppletVersionPage")
+    public Object queryAppletVersionPage(ViewAppletVersion version, HttpServletRequest request) {
+        Page page = PageUtil.initPage(request);
+        page = appletService.selectAppletVersionPage(version, page);
+        return AjaxResponse.success(page);
+    }
+
+    /**
+     * 加载小程序版本信息
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "loadAppletVersion")
+    public Object loadAppletVersion(Integer id) {
+        try {
+            if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
+                ViewAppletVersion version = appletService.selectAppletVersion(id);
+                List<AppletFile> list = appletService.selectAppletFile(version.getTypeId());
+                Map map = new HashMap();
+                map.put("info", version);
+                map.put("list", list);
+                return AjaxResponse.success(map);
+            }
+        } catch (Exception e) {
+            log.error("加载小程序版本信息出错{]", e);
+        }
+        return AjaxResponse.error("未找到相关记录");
+    }
+
+    /**
+     * 更新小程序版本信息
+     *
+     * @param version
+     * @return
+     */
+    @RequestMapping(value = "updateAppletVersion")
+    public Object updateAppletVersion(AppletVersion version) {
+        try {
+            if (null == version) {
+                return AjaxResponse.error("参数错误");
+            }
+            if (NullUtil.isNullOrEmpty(version.getId())) {
+                return AjaxResponse.error("参数丢失");
+            }
+            if (NullUtil.isNullOrEmpty(version.getFileId())) {
+                return AjaxResponse.error("请选择版本文件");
+            }
+            appletService.updateAppletVersion(version);
+            return AjaxResponse.success("提交成功");
+        } catch (Exception e) {
+            log.error("更新小程序版本出错{}", e);
             return AjaxResponse.error("提交失败");
         }
     }

@@ -12,7 +12,7 @@ public class AppletInfo implements Serializable {
     private Integer userId;
 
     private static final long serialVersionUID = 1L;
-    private Integer appletTypeId;
+    private Integer typeId;
 
     private String appletCode;
 
@@ -52,11 +52,11 @@ public class AppletInfo implements Serializable {
     private Boolean ifRetail;
 
     private Boolean ifSelling;
-    private String licenseSrc;
 
-    private Integer status;
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date updateTime;
+    private String licenseSrc;
+    private Integer status;
 
     public Integer getId() {
         return id;
@@ -74,12 +74,12 @@ public class AppletInfo implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getAppletTypeId() {
-        return appletTypeId;
+    public Integer getTypeId() {
+        return typeId;
     }
 
-    public void setAppletTypeId(Integer appletTypeId) {
-        this.appletTypeId = appletTypeId;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
     public String getAppletLogo() {
