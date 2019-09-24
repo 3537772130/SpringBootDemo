@@ -36,6 +36,8 @@ public class AppletService {
     @Autowired
     private AppletFileMapper appletFileMapper;
     @Autowired
+    private ViewAppletFileMapper viewAppletFileMapper;
+    @Autowired
     private AppletVersionMapper appletVersionMapper;
     @Autowired
     private ViewAppletVersionMapper viewAppletVersionMapper;
@@ -410,10 +412,10 @@ public class AppletService {
      * @return
      */
     public Page selectAppletFilePage(AppletFile file, Page page) {
-        AppletFileExample example = new AppletFileExample();
+        ViewAppletFileExample example = new ViewAppletFileExample();
         example.setPage(page);
         example.setOrderByClause("id desc");
-        AppletFileExample.Criteria c = example.createCriteria();
+        ViewAppletFileExample.Criteria c = example.createCriteria();
         if (NullUtil.isNotNullOrEmpty(file.getVersionNumber())) {
             c.andVersionNumberLike("%" + file.getVersionNumber() + "%");
         }
@@ -423,10 +425,10 @@ public class AppletService {
         if (NullUtil.isNotNullOrEmpty(file.getFileStatus())) {
             c.andFileStatusEqualTo(file.getFileStatus());
         }
-        long count = appletFileMapper.countByExample(example);
+        long count = viewAppletFileMapper.countByExample(example);
         if (count > 0) {
             page.setTotalCount(count);
-            page.setDataSource(appletFileMapper.selectByExample(example));
+            page.setDataSource(viewAppletFileMapper.selectByExample(example));
         }
         return page;
     }
@@ -453,7 +455,8 @@ public class AppletService {
      */
     public List<AppletFile> selectAppletFile(Integer typeId) {
         AppletFileExample example = new AppletFileExample();
-        example.createCriteria().andTypeIdEqualTo(typeId);
+        example.setOrderByClause("id desc");
+        example.createCriteria().andTypeIdEqualTo(typeId).andFileStatusEqualTo(true);
         return appletFileMapper.selectByExample(example);
     }
 

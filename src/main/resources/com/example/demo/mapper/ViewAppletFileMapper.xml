@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.ViewAppletVersionMapper">
-    <resultMap id="BaseResultMap" type="com.example.demo.entity.ViewAppletVersion">
+<mapper namespace="com.example.demo.mapper.ViewAppletFileMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.ViewAppletFile">
         <result column="id" jdbcType="INTEGER" property="id"/>
-        <result column="applet_id" jdbcType="INTEGER" property="appletId"/>
-        <result column="applet_code" jdbcType="VARCHAR" property="appletCode"/>
-        <result column="applet_name" jdbcType="VARCHAR" property="appletName"/>
         <result column="type_id" jdbcType="INTEGER" property="typeId"/>
         <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
-        <result column="file_id" jdbcType="INTEGER" property="fileId"/>
         <result column="file_path" jdbcType="VARCHAR" property="filePath"/>
         <result column="version_number" jdbcType="VARCHAR" property="versionNumber"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="file_status" jdbcType="BIT" property="fileStatus"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -44,17 +41,16 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, applet_id, applet_code, applet_name, type_id, type_name, file_id, file_path,
-    version_number, update_time
+    id, type_id, type_name, file_path, version_number, update_time, file_status
   </sql>
-    <select id="selectByExample" parameterType="com.example.demo.entity.ViewAppletVersionExample"
+    <select id="selectByExample" parameterType="com.example.demo.entity.ViewAppletFileExample"
             resultMap="BaseResultMap">
         select
         <if test="distinct">
             distinct
         </if>
         <include refid="Base_Column_List"/>
-        from view_applet_version
+        from view_applet_file
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
@@ -63,9 +59,9 @@
         </if>
         <include refid="PageSuffix"/>
     </select>
-    <select id="countByExample" parameterType="com.example.demo.entity.ViewAppletVersionExample"
+    <select id="countByExample" parameterType="com.example.demo.entity.ViewAppletFileExample"
             resultType="java.lang.Long">
-        select count(*) from view_applet_version
+        select count(*) from view_applet_file
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>

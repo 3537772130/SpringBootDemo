@@ -6,6 +6,7 @@ import com.example.demo.service.AppletService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
 import com.example.demo.util.file.PathUtil;
+import com.example.demo.util.file.ZipUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -269,6 +271,16 @@ public class ManageAppletController {
         }
     }
 
+    /**
+     * 加载小程序版本文件列表
+     *
+     * @return
+     */
+    @RequestMapping(value = "loadAppletFilePage")
+    public Object loadAppletFilePage() {
+        List<AppletType> list = appletService.selectAppletTypeList(true);
+        return AjaxResponse.success(list);
+    }
 
     /**
      * 分页查询小程序版本文件列表
@@ -292,10 +304,14 @@ public class ManageAppletController {
      */
     @RequestMapping(value = "loadAppletFile")
     public Object loadAppletFile(Integer id) {
+        Map map = new HashMap();
+        List<AppletType> list = appletService.selectAppletTypeList(true);
+        map.put("typeList", list);
         if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
-            return AjaxResponse.success(appletService.selectAppletFileById(id));
+            map.put("info", appletService.selectAppletFileById(id));
+            return AjaxResponse.success(map);
         }
-        return AjaxResponse.error("未找到相关记录");
+        return AjaxResponse.msg("-1", map);
     }
 
     /**
@@ -358,10 +374,10 @@ public class ManageAppletController {
             }
             multipartFile.transferTo(new File(rootPath + fileName));
             String src = filePath + fileName;
-            file.setFilePath(src.replace("static", "api"));
+            file.setFilePath(src.replace("static", ""));
             file.setFileStatus(true);
             appletService.updateAppletFile(file);
-            return AjaxResponse.success();
+            return AjaxResponse.success("上传成功");
         } catch (IOException e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.error("上传失败");
@@ -428,6 +444,44 @@ public class ManageAppletController {
         } catch (Exception e) {
             log.error("更新小程序版本出错{}", e);
             return AjaxResponse.error("提交失败");
+        }
+    }
+
+    /**
+     * 下载小程序版本文件
+     *
+     * @param id
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "downloadAppletVersionFile")
+    public void downloadAppletVersionFile(Integer id, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (NullUtil.isNullOrEmpty(id)) {
+                return;
+            }
+            ViewAppletVersion version = appletService.selectAppletVersion(id);
+            if (null == version) {
+                return;
+            }
+            if (NullUtil.isNullOrEmpty(version.getFileId())) {
+                return;
+            }
+            String returnURL = request.getHeader("Referer");
+            response.setHeader("Content-type", "text/html;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            String filePath = "static\\" + version.getFilePath();
+            String rootPath = PathUtil.getClassPath(filePath);
+            File file = new File(rootPath);
+            if (file.exists()) {
+                String fileName = version.getAppletName() + "(" + version.getVersionNumber() + ").zip";
+                ZipUtil.zipFiles(request, response, rootPath, fileName);
+            } else {
+                response.getWriter().print("<script>alert('文件不存在');</script>");
+                response.getWriter().print("<script>window.location.href='" + returnURL + "';</script>");
+            }
+        } catch (Exception e) {
+            log.error("下载小程序文件出错");
         }
     }
 }

@@ -6,28 +6,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ViewAppletVersion implements Serializable {
-    private Integer id;
-
-    private Integer appletId;
-
-    private String appletCode;
-
-    private String appletName;
-
-    private Integer typeId;
-
-    private String typeName;
-
+public class ViewAppletFile implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    private Integer id;
+    private Integer typeId;
+    private String typeName;
     private String filePath;
-
     private String versionNumber;
-
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date updateTime;
-    private Integer fileId;
+    private Boolean fileStatus;
 
     public Integer getId() {
         return id;
@@ -35,30 +23,6 @@ public class ViewAppletVersion implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getAppletId() {
-        return appletId;
-    }
-
-    public void setAppletId(Integer appletId) {
-        this.appletId = appletId;
-    }
-
-    public String getAppletCode() {
-        return appletCode;
-    }
-
-    public void setAppletCode(String appletCode) {
-        this.appletCode = appletCode == null ? null : appletCode.trim();
-    }
-
-    public String getAppletName() {
-        return appletName;
-    }
-
-    public void setAppletName(String appletName) {
-        this.appletName = appletName == null ? null : appletName.trim();
     }
 
     public Integer getTypeId() {
@@ -75,14 +39,6 @@ public class ViewAppletVersion implements Serializable {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName == null ? null : typeName.trim();
-    }
-
-    public Integer getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(Integer fileId) {
-        this.fileId = fileId;
     }
 
     public String getFilePath() {
@@ -107,5 +63,13 @@ public class ViewAppletVersion implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Boolean getFileStatus() {
+        return fileStatus;
+    }
+
+    public void setFileStatus(Boolean fileStatus) {
+        this.fileStatus = fileStatus;
     }
 }

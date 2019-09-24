@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ViewAppletVersionExample {
+public class ViewAppletFileExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,24 +15,24 @@ public class ViewAppletVersionExample {
 
     protected Page page;
 
-    public ViewAppletVersionExample() {
+    public ViewAppletFileExample() {
         oredCriteria = new ArrayList<Criteria>();
-    }
-
-    public void setOrderByClause(String orderByClause) {
-        this.orderByClause = orderByClause;
     }
 
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    public void setDistinct(boolean distinct) {
-        this.distinct = distinct;
+    public void setOrderByClause(String orderByClause) {
+        this.orderByClause = orderByClause;
     }
 
     public boolean isDistinct() {
         return distinct;
+    }
+
+    public void setDistinct(boolean distinct) {
+        this.distinct = distinct;
     }
 
     public List<Criteria> getOredCriteria() {
@@ -68,12 +68,12 @@ public class ViewAppletVersionExample {
         distinct = false;
     }
 
-    public void setPage(Page page) {
-        this.page = page;
-    }
-
     public Page getPage() {
         return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
     }
 
     protected abstract static class GeneratedCriteria {
@@ -174,206 +174,6 @@ public class ViewAppletVersionExample {
 
         public Criteria andIdNotBetween(Integer value1, Integer value2) {
             addCriterion("id not between", value1, value2, "id");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdIsNull() {
-            addCriterion("applet_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdIsNotNull() {
-            addCriterion("applet_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdEqualTo(Integer value) {
-            addCriterion("applet_id =", value, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdNotEqualTo(Integer value) {
-            addCriterion("applet_id <>", value, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdGreaterThan(Integer value) {
-            addCriterion("applet_id >", value, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("applet_id >=", value, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdLessThan(Integer value) {
-            addCriterion("applet_id <", value, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdLessThanOrEqualTo(Integer value) {
-            addCriterion("applet_id <=", value, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdIn(List<Integer> values) {
-            addCriterion("applet_id in", values, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdNotIn(List<Integer> values) {
-            addCriterion("applet_id not in", values, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdBetween(Integer value1, Integer value2) {
-            addCriterion("applet_id between", value1, value2, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("applet_id not between", value1, value2, "appletId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeIsNull() {
-            addCriterion("applet_code is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeIsNotNull() {
-            addCriterion("applet_code is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeEqualTo(String value) {
-            addCriterion("applet_code =", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeNotEqualTo(String value) {
-            addCriterion("applet_code <>", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeGreaterThan(String value) {
-            addCriterion("applet_code >", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("applet_code >=", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeLessThan(String value) {
-            addCriterion("applet_code <", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeLessThanOrEqualTo(String value) {
-            addCriterion("applet_code <=", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeLike(String value) {
-            addCriterion("applet_code like", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeNotLike(String value) {
-            addCriterion("applet_code not like", value, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeIn(List<String> values) {
-            addCriterion("applet_code in", values, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeNotIn(List<String> values) {
-            addCriterion("applet_code not in", values, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeBetween(String value1, String value2) {
-            addCriterion("applet_code between", value1, value2, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletCodeNotBetween(String value1, String value2) {
-            addCriterion("applet_code not between", value1, value2, "appletCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameIsNull() {
-            addCriterion("applet_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameIsNotNull() {
-            addCriterion("applet_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameEqualTo(String value) {
-            addCriterion("applet_name =", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameNotEqualTo(String value) {
-            addCriterion("applet_name <>", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameGreaterThan(String value) {
-            addCriterion("applet_name >", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameGreaterThanOrEqualTo(String value) {
-            addCriterion("applet_name >=", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameLessThan(String value) {
-            addCriterion("applet_name <", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameLessThanOrEqualTo(String value) {
-            addCriterion("applet_name <=", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameLike(String value) {
-            addCriterion("applet_name like", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameNotLike(String value) {
-            addCriterion("applet_name not like", value, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameIn(List<String> values) {
-            addCriterion("applet_name in", values, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameNotIn(List<String> values) {
-            addCriterion("applet_name not in", values, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameBetween(String value1, String value2) {
-            addCriterion("applet_name between", value1, value2, "appletName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAppletNameNotBetween(String value1, String value2) {
-            addCriterion("applet_name not between", value1, value2, "appletName");
             return (Criteria) this;
         }
 
@@ -504,66 +304,6 @@ public class ViewAppletVersionExample {
 
         public Criteria andTypeNameNotBetween(String value1, String value2) {
             addCriterion("type_name not between", value1, value2, "typeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdIsNull() {
-            addCriterion("file_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdIsNotNull() {
-            addCriterion("file_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdEqualTo(Integer value) {
-            addCriterion("file_id =", value, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdNotEqualTo(Integer value) {
-            addCriterion("file_id <>", value, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdGreaterThan(Integer value) {
-            addCriterion("file_id >", value, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("file_id >=", value, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdLessThan(Integer value) {
-            addCriterion("file_id <", value, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdLessThanOrEqualTo(Integer value) {
-            addCriterion("file_id <=", value, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdIn(List<Integer> values) {
-            addCriterion("file_id in", values, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdNotIn(List<Integer> values) {
-            addCriterion("file_id not in", values, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdBetween(Integer value1, Integer value2) {
-            addCriterion("file_id between", value1, value2, "fileId");
-            return (Criteria) this;
-        }
-
-        public Criteria andFileIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("file_id not between", value1, value2, "fileId");
             return (Criteria) this;
         }
 
@@ -766,6 +506,66 @@ public class ViewAppletVersionExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andFileStatusIsNull() {
+            addCriterion("file_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusIsNotNull() {
+            addCriterion("file_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusEqualTo(Boolean value) {
+            addCriterion("file_status =", value, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusNotEqualTo(Boolean value) {
+            addCriterion("file_status <>", value, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusGreaterThan(Boolean value) {
+            addCriterion("file_status >", value, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("file_status >=", value, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusLessThan(Boolean value) {
+            addCriterion("file_status <", value, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusLessThanOrEqualTo(Boolean value) {
+            addCriterion("file_status <=", value, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusIn(List<Boolean> values) {
+            addCriterion("file_status in", values, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusNotIn(List<Boolean> values) {
+            addCriterion("file_status not in", values, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusBetween(Boolean value1, Boolean value2) {
+            addCriterion("file_status between", value1, value2, "fileStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileStatusNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("file_status not between", value1, value2, "fileStatus");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
@@ -791,38 +591,6 @@ public class ViewAppletVersionExample {
         private boolean listValue;
 
         private String typeHandler;
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
-        }
 
         protected Criterion(String condition) {
             super();
@@ -858,6 +626,38 @@ public class ViewAppletVersionExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
+        }
+
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
         }
     }
 }
