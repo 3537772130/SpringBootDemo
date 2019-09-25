@@ -156,7 +156,7 @@ public class FileUtil {
      * @param newPath
      * @return
      */
-    public static String copyGoodsFile(String url, String newPath) {
+    public static String copyFile(String url, String newPath) {
         int index = url.lastIndexOf("\\");
         String fileName = "\\" + url.substring(index + 1, url.length());
         String oldPath = "static\\images\\upload";
@@ -173,7 +173,7 @@ public class FileUtil {
      */
     public static String copyGoodsTypeLogo(Integer userId, String newUrl, String oldUrl) {
         String newPath = "static\\images\\goods\\type\\user" + userId;
-        String result = copyGoodsFile(newUrl, newPath);
+        String result = copyFile(newUrl, newPath);
         if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
             deleteClassFile("static\\" + oldUrl);
         }
@@ -190,7 +190,7 @@ public class FileUtil {
      */
     public static String copyGoodsCoverSrc(Integer goodsId, String newUrl, String oldUrl) {
         String newPath = "static\\images\\goods\\info\\" + goodsId;
-        String result = copyGoodsFile(newUrl, newPath);
+        String result = copyFile(newUrl, newPath);
         if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
             deleteClassFile("static\\" + oldUrl);
         }
@@ -207,7 +207,24 @@ public class FileUtil {
      */
     public static String copyGoodsSpecsSrc(Integer goodsId, String newUrl, String oldUrl) {
         String newPath = "static\\images\\goods\\specs\\" + goodsId;
-        String result = copyGoodsFile(newUrl, newPath);
+        String result = copyFile(newUrl, newPath);
+        if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
+            deleteClassFile("static\\" + oldUrl);
+        }
+        return result;
+    }
+
+    /**
+     * 复制小程序页面元素图标
+     *
+     * @param elementId
+     * @param newUrl
+     * @param oldUrl
+     * @return
+     */
+    public static String copyPageElementIcon(Integer elementId, String newUrl, String oldUrl) {
+        String newPath = "static\\images\\applet\\page\\element\\" + elementId;
+        String result = copyFile(newUrl, newPath);
         if (NullUtil.isNotNullOrEmpty(result) && NullUtil.isNotNullOrEmpty(oldUrl)) {
             deleteClassFile("static\\" + oldUrl);
         }
