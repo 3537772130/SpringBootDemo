@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>Netty-Websocket</title>
+    <script src="/js/jquery/jquery-1.10.2.min.js"  type="text/javascript"></script>
+    <script src="/js/layer/layer.js"  type="text/javascript"></script>
+    <script th:src="@{'/js/web-socket.js?sId='+ ${sId}}"  type="text/javascript"></script>
+</head>
+<body style="margin: auto;padding: 10px;">
+<form onSubmit="return false;">
+    <label>ID</label><input name="sId" th:value="${sId}" type="text"/> <br/>
+    <label>TEXT</label><input name="message" placeholder="这里输入消息" type="text" value=""/> <br/>
+    <br/> <input onClick="send(this.form.sId.value+':'+this.form.message.value)" type="button"
+                 value="发送ws消息"/>
+    <hr color="black"/>
+    <h3>服务端返回的应答消息</h3>
+    <textarea id="responseText" style="width: 1024px;height: 300px;"></textarea>
+    <button onclick="sendImitateSystemNews()">模拟系统发送消息</button>
+</form>
+</body>
+</html>

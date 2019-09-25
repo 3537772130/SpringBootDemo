@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>主页</title>
+    <link href="/js/layui/css/layui.css" rel="stylesheet" type="text/css">
+    <script src="/js/jquery/jquery-3.1.1.min.js"  type="text/javascript"></script>
+    <script src="/js/layui/layui.js"  type="text/javascript"></script>
+    <script src="/js/layer/layer.js"  type="text/javascript"></script>
+</head>
+<body class="layui-layout-body mian">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">layui 后台布局</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left" style="left: auto;right: 200px;">
+            <li class="layui-nav-item"><a href="">控制台</a></li>
+            <li class="layui-nav-item"><a href="">商品管理</a></li>
+            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right" style="width: 195px;padding: 0px;">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img class="layui-nav-img" src="/images/pc/default-avatar.jpeg">
+                    <span th:text="${manager.nickName}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a th:text="${manager.userName + '(' + manager.roleName + ')'}"></a>
+                    </dd>
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                    <dd><a href="javascript:exitLogin()">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="applet-site-menu">
+                <li class="layui-nav-item layui-nav-itemed"><a class="applet-site-active"
+                                                               data-type="tabAdd" id="menu_0"
+                                                               onclick="setTab('tab_0', '账户信息', '/pc/manage/loadAccountInfo')">账户信息</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">用户信息</a>
+                    <dl class="layui-nav-child">
+                        <dd><a class="applet-site-active" data-type="tabAdd"
+                               id="menu_1" onclick="setTab('tab_1', '管理员列表', '/pc/manage/loadManagerList')">管理员列表</a>
+                        </dd>
+                        <dd><a class="applet-site-active" data-type="tabAdd"
+                               id="menu_2" onclick="setTab('tab_2', 'socket', '/pc/manage/loadSocket')">socket</a>
+                        </dd>
+                        <dd><a href="javascript:;">列表三</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">列表一</a></dd>
+                        <dd><a href="javascript:;">列表二</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">云市场</a></li>
+                <li class="layui-nav-item"><a href="">发布商品</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div class="layui-tab" lay-allowclose="true" lay-filter="applet-site-tab">
+                <ul class="layui-tab-title">
+                    <!--                    <li class="layui-this" lay-id="tab_0">网站设置</li>-->
+                </ul>
+                <div class="layui-tab-content">
+                    <!--                    <div class="layui-tab-item layui-show">-->
+                    <!--                        -->
+                    <!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    var menuId, tabId = 'tab_0', tabName = '账户信息', tabPath = '/pc/manage/loadAccountInfo';
+    var tabInfo = {id: '', name: '', path: ''};
+    var tabList = [];
+
+    layui.use('element', function () {
+        var $ = layui.jquery,
+            element = layui.element;
+        // 调整样式
+        $(".layui-body").attr("style", "overflow-y: hidden;");
+        $(".layui-body>div").attr("style", "padding: 0px;");
+        $(".layui-body>div>.layui-tab").attr("style", "margin: 10px 0px 0px 0px;");
+        $(".layui-body>div>.layui-tab>.layui-tab-content").attr("style", "padding: 0px;overflow-y: auto;");
+        var height = $(".layui-body").height();
+
+        // 触发事件
+        var active = {
+            tabAdd: function () {
+                // 新增一个Tab项
+                var bool = true;
+                for (var i = 0; i < tabList.length; i++) {
+                    tabInfo = tabList[i];
+                    if (tabInfo.id == tabId) {
+                        bool = false;
+                        break;
+                    }
+                }
+                if (bool) {
+                    tabList.push({'id': tabId, 'name': tabName, 'path': tabPath});
+                    element.tabAdd('applet-site-tab', {
+                        title: tabName,
+                        content: '<div id="' + tabId + '" style="widows: 100%;height: ' + (height - 51) + 'px;"></div>',
+                        id: tabId
+                    })
+                    $('#' + tabId).load(tabPath);
+                }
+                element.tabChange('applet-site-tab', tabId);
+            }
+            , tabDelete: function (othis) {
+                //删除指定Tab项
+                othis.addClass('layui-btn-disabled');
+                alert("删除了" + othis.id)
+            }
+            , tabChange: function (othis) {
+                //切换到指定Tab项
+                element.tabChange('applet-site-tab', '22'); //切换到：用户管理
+                alert("打开了" + othis.id)
+            }
+        };
+
+        $('.applet-site-active').on('click', function () {
+            var othis = $(this), type = othis.data('type');
+            active[type] ? active[type].call(this, othis) : '';
+        });
+
+        // tab切换回调事件
+        element.on('tab(applet-site-tab)', function (data) {
+            menuId = $(this).attr("lay-id").replace("tab", "menu");
+            $(".layui-nav-item").removeClass('layui-nav-itemed');
+            $(".layui-nav-item>dl>dd").removeClass('layui-this');
+            if (menuId == "menu_0") {
+                $("#" + menuId).parent("li").addClass('layui-nav-itemed');
+            } else {
+                $("#" + menuId).parent("dd").parent("dl").parent("li").addClass('layui-nav-itemed');
+                $("#" + menuId).parent("dd").addClass('layui-this');
+            }
+        });
+
+        // tab关闭回调事件
+        element.on('tabDelete(applet-site-tab)', function (data) {
+            tabId = $(this).parent("li").attr("lay-id");
+            var list = [];
+            for (var i = 0; i < tabList.length; i++) {
+                tabInfo = tabList[i];
+                if (tabInfo.id != tabId) {
+                    list.push(tabInfo);
+                    break;
+                }
+            }
+            tabList = list;
+            if (tabList.length == 0) {
+                $(".layui-nav-item").removeClass('layui-nav-itemed');
+                $(".layui-nav-item>dl>dd").removeClass('layui-this');
+            } else {
+                menuId = tabId.replace("tab", "menu");
+                $("#" + menuId).removeClass('.layui-nav-itemed');
+            }
+        });
+
+        $("#menu_0").click();
+    });
+
+    function setTab(id, name, path) {
+        tabId = id;
+        tabName = name;
+        tabPath = path;
+    }
+
+    function exitLogin() {
+        layer.confirm('确定退出吗?', {icon: 3, title: '温馨提示'}, function (index) {
+            var index1 = layer.load();
+            $.ajax({
+                url: "/web/exitLogin",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+                    layer.msg(data.data);
+                    if (data.code == "1") {
+                        window.location.href = "/pc/loadLogin";
+                    }
+                },
+                complete: function () {
+                    layer.close(index1);
+                }
+            });
+            layer.close(index);
+        });
+    }
+</script>
+</html>

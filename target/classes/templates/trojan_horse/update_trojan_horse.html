@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="content-type">
+    <title>登录</title>
+    <script src="/js/jquery/jquery-3.1.1.min.js"  type="text/javascript"></script>
+    <script src="/js/layer/layer.js"  type="text/javascript"></script>
+    <link href="/js/validation/jquery.validator.css" rel="stylesheet" type="text/css">
+    <script src="/js/validation/jquery.validator.js"  type="text/javascript"></script>
+    <script src="/js/validation/local/zh-CN.js"  type="text/javascript"></script>
+    <style type="text/css">
+        .parent-level {
+            width: 100%;
+            height: 100%;
+            margin: auto;
+        }
+
+        .p-main {
+            width: 950px;
+            height: 100%;
+            margin: auto;
+        }
+
+        .m-content {
+            /*border:1px red solid;*/
+        }
+
+        .c-title {
+            font-size: 24px;
+            font-weight: bold;
+            height: 120px;
+            line-height: 120px;
+            text-indent: 35px;
+        }
+
+        .c-img {
+            width: 100%;
+            height: 270px;
+            background-color: #0e90d2;
+            box-shadow: 10px 10px 5px #D3D3D3;
+        }
+
+        .m-form {
+            width: 350px;
+            height: 600px;
+            position: relative;
+            top: -350px;
+            left: 550px;
+            box-shadow: 0px 10px 5px #DCDCDC;
+            background-color: #FFFFFF;
+        }
+
+        .m-form > table {
+            width: 100%;
+        }
+
+        .f-title {
+            width: 100%;
+            height: 150px;
+            line-height: 150px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .f-lab {
+            width: 35%;
+            height: 30px;
+            line-height: 30px;
+            text-align: right;
+        }
+
+        .f-data {
+            width: 65%;
+            height: 30px;
+            line-height: 30px;
+            text-align: left;
+        }
+
+        .f-data > span {
+            color: red;
+            font-size: 14px;
+        }
+
+        .f-data > button {
+            width: 75px;
+            height: 30px;
+            line-height: 30px;
+            border: 1px #0e90d2 solid;
+            font-size: 14px;
+            font-weight: bold;
+            color: #0e90d2;
+            text-align: center;
+            background: -webkit-linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* Firefox 3.6 - 15 */
+            background: linear-gradient(#FFFFFF, #FFFFFF, #FFFFFF, #E1FFFF); /* 标准的语法 */
+        }
+    </style>
+</head>
+<body>
+<div class="parent-level">
+    <div class="p-main">
+        <div class="m-content">
+            <div class="c-title">便携式木马检测系统</div>
+            <div class="c-img"></div>
+        </div>
+        <div class="m-form">
+            <form id="loginForm">
+                <table>
+                    <tr>
+                        <td class="f-title" colspan="2">登录木马检测平台</td>
+                    </tr>
+                    <tr>
+                        <td class="f-lab">用户名：</td>
+                        <td class="f-data"><input id="userName" name="userName" th:value="adm" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td class="f-lab">密&nbsp;&nbsp;&nbsp;码：</td>
+                        <td class="f-data"><input id="password" name="password" th:value="aaa123456" type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="f-lab"></td>
+                        <td class="f-data">
+                            <checkbox></checkbox>
+                            <span>记住密码</span></td>
+                    </tr>
+                    <tr>
+                        <td class="f-lab"></td>
+                        <td class="f-data">
+                            <button type="submit">登录</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<button id="but" onclick="launchFullscreen(document.documentElement)" style="display: none;"></button>
+</body>
+<script language="JavaScript">
+    $(function () {
+        $("#but").click();
+
+        $('#loginForm').validator({
+            stopOnError: true,
+            fields: {
+                'userName': '用户名:required;length[1~20];',
+                'password': '密码:required;length[6~20];'
+            },
+            valid: function (e, form) {
+                var index = layer.load();
+                $.ajax({
+                    url: "${sysPath}/admin/mall/mallInfo/addOrModifyMallInfo",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: $("#loginForm").serialize(),
+                    success: function (data) {
+                        layer.alert(data.data);
+                        if (data.code == "1") {
+                            var parentIndex = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(parentIndex); //再执行关闭
+                        }
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            },
+            messages: function (element) {
+
+            }
+        })
+    })
+
+    function launchFullscreen(element) {
+        if (typeof window.ActiveXObject != "undefined") {
+            //for IE8，这里和fullScreen相同，模拟按下F11键退出全屏
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript != null) {
+                wscript.SendKeys("{F11}");
+            }
+        } else {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else {
+                element.msRequestFullscreen();
+            }
+        }
+    }
+
+</script>
+</html>
