@@ -1,9 +1,6 @@
 package com.example.demo.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -135,7 +132,7 @@ public class GetImageUtil {
      * @return
      * @throws Exception
      */
-    public static byte[] readInputStream(InputStream inStream) throws Exception {
+    public static byte[] readInputStream(InputStream inStream) throws IOException {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int len = 0;

@@ -9,7 +9,7 @@ import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.DesUtil;
 import com.example.demo.util.encryption.MD5Util;
-import com.example.demo.util.file.PathUtil;
+import com.example.demo.util.qiniu.QiNiuUtil;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -263,28 +261,16 @@ public class ManagerInfoController {
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            String filePath = "static\\images\\head-portrait\\";
-            String fileName = null;
-            String avatarUrl = null;
-            if (NullUtil.isNotNullOrEmpty(manager.getAvatarUrl())) {
-                fileName = manager.getAvatarUrl()
-                        .replace("api\\", "")
-                        .replace("images\\", "")
-                        .replace("head-portrait\\", "");
-            } else {
-                fileName = "MANAGER-" + manager.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
-                avatarUrl = filePath + fileName;
-                ManagerInfo newInfo = new ManagerInfo();
-                newInfo.setId(manager.getId());
-                newInfo.setAvatarUrl(avatarUrl.replace("static\\", ""));
-                managerService.updateManagerInfo(newInfo, manager.getId(), request);
-                manager.setAvatarUrl("api\\" + newInfo.getAvatarUrl());
+            String fileKey = NullUtil.isNotNullOrEmpty(manager.getAvatarUrl()) ?
+                    manager.getAvatarUrl() : "/api/image/M" + manager.getId() + "-A" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileKey);
+            if (NullUtil.isNullOrEmpty(manager.getAvatarUrl())) {
+                manager.setAvatarUrl(fileKey);
+                managerService.updateManagerInfo(manager, manager.getId(), request);
                 request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
             }
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
             return AjaxResponse.success("1");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("管理员上传头像出错{}", e);
             return AjaxResponse.success("-1");
         }

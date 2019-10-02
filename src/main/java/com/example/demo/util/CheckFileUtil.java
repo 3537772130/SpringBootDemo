@@ -104,8 +104,8 @@ public class CheckFileUtil {
         if (NullUtil.isNullOrEmpty(fileName) && file.getSize() == 0) {
             return new CheckResult("压缩包内容为空");
         }
-        if (file.getSize() > 2 * 1048576) {
-            return new CheckResult("文件大于2MB");
+        if (file.getSize() > 50 * 1048576) {
+            return new CheckResult("文件大于50MB");
         }
         String type = file.getContentType();
         if (Constants.UPLOAD_FILE_TYPE_ZIP.indexOf(type) < 0) {

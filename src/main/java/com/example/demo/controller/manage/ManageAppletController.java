@@ -5,8 +5,7 @@ import com.example.demo.entity.*;
 import com.example.demo.service.AppletService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
-import com.example.demo.util.file.PathUtil;
-import com.example.demo.util.file.ZipUtil;
+import com.example.demo.util.qiniu.QiNiuUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,34 +32,6 @@ public class ManageAppletController {
     private static final Logger log = LoggerFactory.getLogger(ManageAppletController.class);
     @Autowired
     private AppletService appletService;
-
-    /**
-     * 上传小程序图片
-     *
-     * @param user
-     * @param multipartFile
-     * @return
-     */
-    @RequestMapping(value = "uploadAppletImage")
-    public Object uploadAppletImage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user,
-                                    @RequestParam("image") MultipartFile multipartFile) {
-        try {
-            //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
-            if (!result.getBool()) {
-                return AjaxResponse.error(result.getMsg());
-            }
-            String fileName = "A" + user.getId() + "-" + RandomUtil.getRandomStr32() + ".jpg";
-            String filePath = "static\\images\\upload\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName;
-            return AjaxResponse.success(src.replace("static", "api"));
-        } catch (IOException e) {
-            log.error("上传头像出错{}", e);
-            return AjaxResponse.error("上传失败");
-        }
-    }
 
     /**
      * 查询小程序服务类型列表
@@ -393,20 +362,16 @@ public class ManageAppletController {
             if (null == file) {
                 return AjaxResponse.error("信息不符");
             }
-            String fileName = "APPLET-TYPE-" + file.getVersionNumber() + ".zip";
-            String filePath = "static\\zip\\type" + typeId + "\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            File file1 = new File(rootPath);
-            if (!file1.exists()) {
-                file1.mkdir();
+            String fileKey = NullUtil.isNotNullOrEmpty(file.getFilePath()) ?
+                    file.getFilePath() : "/api/zip/AT" + typeId + "/" + file.getVersionNumber() + ".zip";
+            QiNiuUtil.uploadFile(multipartFile, fileKey);
+            if (NullUtil.isNullOrEmpty(file.getFilePath())) {
+                file.setFilePath(fileKey);
+                file.setFileStatus(true);
+                appletService.updateAppletFile(file);
             }
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName;
-            file.setFilePath(src.replace("static", ""));
-            file.setFileStatus(true);
-            appletService.updateAppletFile(file);
             return AjaxResponse.success("上传成功");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.error("上传失败");
         }
@@ -479,11 +444,10 @@ public class ManageAppletController {
      * 下载小程序版本文件
      *
      * @param id
-     * @param request
      * @param response
      */
     @RequestMapping(value = "downloadAppletVersionFile")
-    public void downloadAppletVersionFile(Integer id, HttpServletRequest request, HttpServletResponse response) {
+    public void downloadAppletVersionFile(Integer id, HttpServletResponse response) {
         try {
             if (NullUtil.isNullOrEmpty(id)) {
                 return;
@@ -495,19 +459,7 @@ public class ManageAppletController {
             if (NullUtil.isNullOrEmpty(version.getFileId())) {
                 return;
             }
-            String returnURL = request.getHeader("Referer");
-            response.setHeader("Content-type", "text/html;charset=UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            String filePath = "static\\" + version.getFilePath();
-            String rootPath = PathUtil.getClassPath(filePath);
-            File file = new File(rootPath);
-            if (file.exists()) {
-                String fileName = version.getAppletName() + "(" + version.getVersionNumber() + ").zip";
-                ZipUtil.zipFiles(request, response, rootPath, fileName);
-            } else {
-                response.getWriter().print("<script>alert('文件不存在');</script>");
-                response.getWriter().print("<script>window.location.href='" + returnURL + "';</script>");
-            }
+            response.sendRedirect(QiNiuUtil.getZipDownURL(version.getFilePath()));
         } catch (Exception e) {
             log.error("下载小程序文件出错");
         }

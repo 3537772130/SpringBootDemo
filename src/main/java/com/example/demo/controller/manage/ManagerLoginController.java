@@ -68,9 +68,6 @@ public class ManagerLoginController {
                 return AjaxResponse.error("该账户已禁用");
             }
             ManagerInfo manager = managerService.selectManagerInfoById(managerInfo.getId());
-            if (NullUtil.isNotNullOrEmpty(manager.getAvatarUrl())) {
-                managerInfo.setAvatarUrl("api\\" + manager.getAvatarUrl());
-            }
             request.getSession().setAttribute(Constants.WEB_MANAGER_INFO, SerializeUtil.serialize(manager.getManagerInfo(manager)));
             // 格式化菜单
             List<Map> menuList = formatMenu(manager.getRoleId());

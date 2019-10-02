@@ -253,20 +253,20 @@ public class QiNiuUtil {
     /**
      * 获取访问凭证
      *
-     * @param bucket
+     * @param key
      * @return
      */
-    public static String getDownURL(String bucket) {
-        if (bucket.indexOf("/public") >= 0) {
-            return getPublicDownURL(bucket);
-        } else if (bucket.indexOf("/image") >= 0) {
-            return getImageDownURL(bucket);
-        } else if (bucket.indexOf("/audio") >= 0) {
-            return getAudioDownURL(bucket);
-        } else if (bucket.indexOf("/video") >= 0) {
-            return getVideoDownURL(bucket);
-        } else if (bucket.indexOf("/zip") >= 0) {
-            return getZipDownURL(bucket);
+    public static String getDownURL(String key) {
+        if (key.indexOf("/public") >= 0) {
+            return getPublicDownURL(key);
+        } else if (key.indexOf("/image") >= 0) {
+            return getImageDownURL(key);
+        } else if (key.indexOf("/audio") >= 0) {
+            return getAudioDownURL(key);
+        } else if (key.indexOf("/video") >= 0) {
+            return getVideoDownURL(key);
+        } else if (key.indexOf("/zip") >= 0) {
+            return getZipDownURL(key);
         }
         return null;
     }
@@ -489,7 +489,6 @@ public class QiNiuUtil {
         }
         return item;
     }
-
 
     public static void main(String[] args) {
         try {
