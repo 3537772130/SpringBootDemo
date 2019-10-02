@@ -357,7 +357,7 @@ public class ManageAppletController {
     public Object uploadAppletFile(@RequestParam("typeZip") MultipartFile multipartFile, Integer id, Integer typeId) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkTemplateFile(multipartFile, Constants.UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkZipFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }

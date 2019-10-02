@@ -1,10 +1,10 @@
 package com.example.demo.config;
 
 import com.example.demo.config.argumentResolver.SessionScopeMethod;
+import com.example.demo.config.intercepors.FileInterceptor;
 import com.example.demo.config.intercepors.LoginInterceptor;
 import com.example.demo.config.intercepors.ManagerInterceptor;
 import com.example.demo.config.intercepors.UserInterceptor;
-import com.example.demo.config.intercepors.VueStaticInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -94,7 +94,11 @@ public class ApplicationConfigurer extends WebMvcConfigurationSupport {
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/pc/manage/**");
         registry.addInterceptor(new ManagerInterceptor()).addPathPatterns("/api/manage/**");
         registry.addInterceptor(new UserInterceptor()).addPathPatterns("/api/user/**");
-        registry.addInterceptor(new VueStaticInterceptor()).addPathPatterns("/api/images/**");
+        registry.addInterceptor(new FileInterceptor()).addPathPatterns("/api/public/**");
+        registry.addInterceptor(new FileInterceptor()).addPathPatterns("/api/image/**");
+        registry.addInterceptor(new FileInterceptor()).addPathPatterns("/api/audio/**");
+        registry.addInterceptor(new FileInterceptor()).addPathPatterns("/api/video/**");
+        registry.addInterceptor(new FileInterceptor()).addPathPatterns("/api/zip/**");
         super.addInterceptors(registry);
         log.info("已注入拦截器");
     }

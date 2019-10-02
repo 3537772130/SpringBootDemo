@@ -178,7 +178,7 @@ public class ManagerInfoController {
      * @param mobile
      * @param email
      * @param qqAccount
-     * @param weChantAccount
+     * @param weChatAccount
      * @param request
      * @return
      */
@@ -259,7 +259,7 @@ public class ManagerInfoController {
                                       HttpServletRequest request) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }

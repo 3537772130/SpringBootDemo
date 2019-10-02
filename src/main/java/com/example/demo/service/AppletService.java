@@ -5,7 +5,6 @@ import com.example.demo.mapper.*;
 import com.example.demo.util.NullUtil;
 import com.example.demo.util.Page;
 import com.example.demo.util.RandomUtil;
-import com.example.demo.util.file.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -218,21 +217,25 @@ public class AppletService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveAppletInfo(AppletInfo info) {
-        boolean bool = false;
-        info.setAppletLogo(null);
-        info.setLicenseSrc(null);
         info.setUpdateTime(new Date());
         if (NullUtil.isNullOrEmpty(info.getId())) {
             info.setStatus(0);
             info.setAppletCode("AC" + RandomUtil.getTimeStamp());
             info.setIfSelling(false);
             appletInfoMapper.insertSelective(info);
-            bool = true;
         } else {
+
             this.updateAppletInfo(info);
         }
-        // 更新图片
-        updateAppletPic(info, bool);
+
+        // 添加审核记录
+        AppletAudit audit = new AppletAudit();
+        audit.setAppletId(info.getId());
+        audit.setAppletCode(info.getAppletCode());
+        audit.setResult(0);
+        audit.setRemark("提交信息");
+        audit.setAuditTime(new Date());
+        appletAuditMapper.insertSelective(audit);
     }
 
     /**
@@ -242,33 +245,6 @@ public class AppletService {
      */
     public int updateAppletInfo(AppletInfo info) {
         return appletInfoMapper.updateByPrimaryKeySelective(info);
-    }
-
-    /**
-     * 更新小程序图片
-     *
-     * @param info
-     */
-    public void updateAppletPic(AppletInfo info, boolean bool) {
-        String appletLogo = FileUtil.copyFile("static\\images\\applet-logo\\draft\\", "U" + info.getUserId() + "-APPLET-LOGO.jpg",
-                "static\\images\\applet-logo\\", info.getAppletCode() + ".jpg");
-        String licenseSrc = FileUtil.copyFile("static\\images\\applet-license\\draft\\", "U" + info.getUserId() + "-APPLET-LICENSE.jpg",
-                "static\\images\\applet-license\\", info.getAppletCode() + ".jpg");
-        if (bool) {
-            AppletInfo appletInfo = new AppletInfo();
-            appletInfo.setId(info.getId());
-            appletInfo.setAppletLogo(appletLogo);
-            appletInfo.setLicenseSrc(licenseSrc);
-            appletInfoMapper.updateByPrimaryKeySelective(info);
-        }
-        // 添加审核记录
-        AppletAudit audit = new AppletAudit();
-        audit.setAppletId(info.getId());
-        audit.setAppletCode(info.getAppletCode());
-        audit.setResult(0);
-        audit.setRemark("提交信息");
-        audit.setAuditTime(new Date());
-        appletAuditMapper.insertSelective(audit);
     }
 
     /**

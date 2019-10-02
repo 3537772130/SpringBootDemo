@@ -5,18 +5,18 @@ import com.example.demo.entity.*;
 import com.example.demo.service.GoodsService;
 import com.example.demo.util.*;
 import com.example.demo.util.file.FileUtil;
-import com.example.demo.util.file.PathUtil;
+import com.example.demo.util.qiniu.QiNiuUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +29,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping(value = "/api/user/goods/")
+@Component
 public class UserGoodsController {
     private static final Logger log = LoggerFactory.getLogger(UserGoodsController.class);
     @Autowired
@@ -45,20 +46,29 @@ public class UserGoodsController {
                                    @RequestParam("image") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            String fileName = "G" + user.getId() + "-" + RandomUtil.getRandomStr32() + ".jpg";
-            String filePath = "static\\images\\upload\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName;
-            return AjaxResponse.success(src.replace("static", "api"));
-        } catch (IOException e) {
+            String fileKey = "/api/public/U" + user.getId() + "-GT" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileKey);
+            return AjaxResponse.success(fileKey);
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.error("上传失败");
         }
+    }
+
+    /**
+     * 转移存储空间文件
+     *
+     * @param oldKey
+     * @param newKey
+     * @throws Exception
+     */
+    @Async
+    public void removeFile(String oldKey, String newKey) throws Exception {
+        QiNiuUtil.removeFile(oldKey, newKey);
     }
 
     /**
@@ -104,7 +114,7 @@ public class UserGoodsController {
         if (null == goodsType) {
             return AjaxResponse.error("未找到相关信息");
         }
-        goodsType.setTypeLogo("api\\" + goodsType.getTypeLogo());
+        goodsType.setTypeLogo(goodsType.getTypeLogo());
         return AjaxResponse.success(goodsType);
     }
 
@@ -137,16 +147,19 @@ public class UserGoodsController {
                 goodsType.setTypeIndex(count + 1);
             }
             goodsType.setUserId(user.getId());
+            String typeLogo = "/api/image/GTLOGO-" + RandomUtil.getTimeStamp();
             if (NullUtil.isNotNullOrEmpty(goodsType.getId())) {
                 GoodsType record = goodsService.selectGoodsType(goodsType.getId(), user.getId());
                 if (null == record) {
                     return AjaxResponse.error("信息不符");
                 }
-                if (NullUtil.isNotNullOrEmpty(goodsType.getTypeLogo())) {
-                    goodsType.setTypeLogo(goodsType.getTypeLogo().replace("api\\", ""));
-                    String newPath = FileUtil.copyGoodsTypeLogo(goodsType.getUserId(), goodsType.getTypeLogo(), record.getTypeLogo());
-                    goodsType.setTypeLogo(newPath);
+                if (NullUtil.isNotNullOrEmpty(record.getTypeLogo())) {
+                    typeLogo = goodsType.getTypeLogo().equals(record.getTypeLogo()) ? null : record.getTypeLogo();
                 }
+            }
+            if (NullUtil.isNotNullOrEmpty(typeLogo)) {
+                this.removeFile(goodsType.getTypeLogo(), typeLogo);
+                goodsType.setTypeLogo(typeLogo);
             }
             goodsService.updateGoodsType(goodsType);
             return AjaxResponse.success("提交成功");
@@ -236,7 +249,7 @@ public class UserGoodsController {
         map.put("typeList", list);
         if (NullUtil.isNotNullOrEmpty(id) && id.intValue() != 0) {
             GoodsInfo goods = goodsService.selectGoodsInfo(id, user.getId());
-            goods.setCoverSrc("api\\" + goods.getCoverSrc());
+            goods.setCoverSrc(goods.getCoverSrc());
             map.put("goods", goods);
             return AjaxResponse.success(map);
         }
@@ -256,6 +269,9 @@ public class UserGoodsController {
             if (null == goods) {
                 return AjaxResponse.error("参数错误");
             }
+            if (NullUtil.isNullOrEmpty(goods.getCoverSrc())) {
+                return AjaxResponse.error("请上传商品封面图片");
+            }
             if (NullUtil.isNullOrEmpty(goods.getGoodsName())) {
                 return AjaxResponse.error("商品名称不能为空");
             }
@@ -267,34 +283,30 @@ public class UserGoodsController {
             if (NullUtil.isNullOrEmpty(goods.getTypeId())) {
                 return AjaxResponse.error("请选择商品类型");
             }
-            if (NullUtil.isNullOrEmpty(goods.getCoverSrc())) {
-                return AjaxResponse.error("请上传商品封面图片");
-            }
             GoodsType type = goodsService.selectGoodsType(goods.getTypeId(), user.getId());
             if (null == type) {
                 return AjaxResponse.error("商品类型选择错误");
             }
-            boolean bool = false;
+
+            String coverSrc = "/api/image/GC-" + RandomUtil.getTimeStamp();
             if (NullUtil.isNotNullOrEmpty(goods.getId())) {
-                // 修改商品信息时，更新封面图地址
-                GoodsInfo oldInfo = goodsService.selectGoodsInfo(goods.getId(), user.getId());
-                if (null == oldInfo) {
+                GoodsInfo record = goodsService.selectGoodsInfo(goods.getId(), user.getId());
+                if (null == record){
                     return AjaxResponse.error("信息不符");
                 }
-                goods = this.setGoodsCoverSrc(oldInfo.getCoverSrc(), goods);
-            } else {
-                bool = true;
+                if (NullUtil.isNotNullOrEmpty(goods.getCoverSrc())) {
+                    coverSrc = goods.getCoverSrc().equals(record.getCoverSrc()) ? null : record.getCoverSrc();
+                }
             }
+            if (NullUtil.isNotNullOrEmpty(coverSrc)) {
+                QiNiuUtil.removeFile(goods.getCoverSrc(), coverSrc);
+                goods.setCoverSrc(coverSrc);
+            }
+
             goods.setUserId(user.getId());
             goods.setMinPrice(null);
             goods.setMaxPrice(null);
             goodsService.updateGoodsInfo(goods);
-
-            if (bool) {
-                // 新增商品信息时，更新封面图地址
-                goods = this.setGoodsCoverSrc(goods.getCoverSrc(), goods);
-                goodsService.updateGoodsInfo(goods);
-            }
             return AjaxResponse.success("提交成功");
         } catch (Exception e) {
             log.error("更新商品信息出错{}", e);
@@ -304,7 +316,7 @@ public class UserGoodsController {
 
     public GoodsInfo setGoodsCoverSrc(String oldCoverSrc, GoodsInfo newInfo) {
         // 更新封面图地址
-        newInfo.setCoverSrc(newInfo.getCoverSrc().replace("api\\", ""));
+        newInfo.setCoverSrc(newInfo.getCoverSrc().replace("api/", ""));
         String newPath = FileUtil.copyGoodsCoverSrc(newInfo.getId(), newInfo.getCoverSrc(), oldCoverSrc);
         newInfo.setCoverSrc(newPath);
         return newInfo;
@@ -414,7 +426,7 @@ public class UserGoodsController {
                                      @RequestParam("goodsFile") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
@@ -425,27 +437,15 @@ public class UserGoodsController {
             if (null == record) {
                 return AjaxResponse.error("未找到相关记录");
             }
-            String rootPath = "";
-            if (NullUtil.isNullOrEmpty(record.getFileSrc())) {
-                String filePath = "static\\images\\goods\\file\\" + goodsId + "\\";
-                rootPath = PathUtil.getClassPath(filePath);
-                File file = new File(rootPath);
-                if (!file.exists()) {
-                    file.mkdir();
-                }
-                String fileName = "GI-" + RandomUtil.getRandomStr32() + ".jsp";
-                rootPath += fileName;
-                record.setFileSrc(filePath.replace("static", "") + fileName);
-            } else {
-                rootPath = PathUtil.getClassPath("static\\" + record.getFileSrc());
-            }
-            multipartFile.transferTo(new File(rootPath));
-            goodsService.updateGoodsFile(fileId, record.getFileSrc(), true);
+            String fileSrc = NullUtil.isNotNullOrEmpty(record.getFileSrc()) ?
+                    record.getFileSrc() : "/api/image/GI-" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileSrc);
+            goodsService.updateGoodsFile(fileId, fileSrc, true);
             Map map = new HashMap();
-            map.put("src", record.getFileSrc() + "?token=" + RandomUtil.getRandomStr32());
+            map.put("src", fileSrc);
             map.put("id", fileId);
             return AjaxResponse.success(map);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.success("上传失败");
         }
@@ -476,27 +476,15 @@ public class UserGoodsController {
             if (null == record) {
                 return AjaxResponse.error("未找到相关记录");
             }
-            String rootPath = "";
-            if (NullUtil.isNullOrEmpty(record.getFileSrc())) {
-                String filePath = "static\\images\\goods\\file\\" + goodsId + "\\";
-                rootPath = PathUtil.getClassPath(filePath);
-                File file = new File(rootPath);
-                if (!file.exists()) {
-                    file.mkdir();
-                }
-                String fileName = "GV-" + RandomUtil.getRandomStr32() + result.getMsg();
-                rootPath += fileName;
-                record.setFileSrc(filePath.replace("static", "") + fileName);
-            } else {
-                rootPath = PathUtil.getClassPath("static\\" + record.getFileSrc());
-            }
-            multipartFile.transferTo(new File(rootPath));
-            goodsService.updateGoodsFile(fileId, record.getFileSrc(), true);
+            String fileSrc = NullUtil.isNotNullOrEmpty(record.getFileSrc()) ?
+                    record.getFileSrc() : "/api/video/GV-" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileSrc);
+            goodsService.updateGoodsFile(fileId, fileSrc, true);
             Map map = new HashMap();
-            map.put("src", record.getFileSrc() + "?token=" + RandomUtil.getRandomStr32());
+            map.put("src", fileSrc + "?token=" + RandomUtil.getTimeStamp());
             map.put("id", fileId);
             return AjaxResponse.success(map);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.success("上传失败");
         }
@@ -573,7 +561,7 @@ public class UserGoodsController {
         if (NullUtil.isNotNullOrEmpty(specsId) && specsId.intValue() != 0) {
             ViewGoodsSpecs record = goodsService.selectSpecsInfo(specsId, goodsId, user.getId());
             if (null != record) {
-                record.setSpecsSrc("api\\" + record.getSpecsSrc());
+                record.setSpecsSrc(record.getSpecsSrc());
                 return AjaxResponse.success(record);
             }
         }
@@ -602,6 +590,9 @@ public class UserGoodsController {
             if (NullUtil.isNullOrEmpty(specs.getSellPrice())) {
                 return AjaxResponse.error("出售价格不能为空");
             }
+            if (specs.getSellPrice().doubleValue() <= 0.00d) {
+                return AjaxResponse.error("出售价格不能低于0.01");
+            }
             if (specs.getSellPrice().doubleValue() > 99999.99d) {
                 return AjaxResponse.error("出售价格不能高于99999.99");
             }
@@ -617,18 +608,20 @@ public class UserGoodsController {
                     return AjaxResponse.error("商品规格创建数量已达上限");
                 }
             }
-            if (NullUtil.isNotNullOrEmpty(specs.getSpecsSrc())) {
-                specs.setSpecsSrc(specs.getSpecsSrc().replace("api\\", ""));
-                String oldUrl = null;
-                if (NullUtil.isNotNullOrEmpty(specs.getId())) {
-                    ViewGoodsSpecs record = goodsService.selectSpecsInfo(specs.getId(), specs.getGoodsId(), user.getId());
-                    oldUrl = record.getSpecsSrc();
-                }
-                String newPath = FileUtil.copyGoodsSpecsSrc(specs.getGoodsId(), specs.getSpecsSrc(), oldUrl);
-                specs.setSpecsSrc(newPath);
-            }
             boolean bool = (NullUtil.isNullOrEmpty(specs.getId()) && !specs.getSpecsStatus()) ? false : true;
             specs.setActualPrice(specs.getSellPrice() * specs.getDiscount() / 100);
+            String specsSrc = "/api/image/GS-" + RandomUtil.getTimeStamp();
+            if (NullUtil.isNotNullOrEmpty(specs.getId()) && NullUtil.isNotNullOrEmpty(specs.getSpecsSrc())) {
+                ViewGoodsSpecs record = goodsService.selectSpecsInfo(specs.getId(), specs.getGoodsId(), user.getId());
+                if (null == record) {
+                    return AjaxResponse.error("信息不符");
+                }
+                specsSrc = specs.getSpecsSrc().equals(record.getSpecsSrc()) ? null : record.getSpecsSrc();
+            }
+            if (NullUtil.isNotNullOrEmpty(specsSrc)) {
+                this.removeFile(specs.getSpecsSrc(), specsSrc);
+                specs.setSpecsSrc(specsSrc);
+            }
             goodsService.updateGoodsSpecs(specs, user.getId());
             if (bool) {
                 goodsService.checkGoodsValue(specs.getGoodsId(), user.getId(), true);

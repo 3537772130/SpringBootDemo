@@ -16,10 +16,9 @@ public class CheckFileUtil {
      * 校验图片文件
      *
      * @param file
-     * @param fileType
      * @return
      */
-    public static CheckResult checkImageFile(MultipartFile file, String fileType) {
+    public static CheckResult checkImageFile(MultipartFile file) {
         if (file == null) {
             return new CheckResult("未解析到文件");
         }
@@ -31,32 +30,34 @@ public class CheckFileUtil {
             return new CheckResult("文件大于5MB");
         }
         String type = file.getContentType();
-        if (fileType.indexOf(type) < 0) {
+        if (Constants.UPLOAD_FILE_TYPE_IMAGE.indexOf(type) < 0) {
             return new CheckResult("不支持的文件类型");
         }
         return new CheckResult();
     }
 
     /**
-     * 校验压缩文件
+     * 校验音频文件
      *
      * @param file
-     * @param fileType
      * @return
      */
-    public static CheckResult checkTemplateFile(MultipartFile file, String fileType) {
+    public static CheckResult checkAudioFile(MultipartFile file) {
         if (file == null) {
             return new CheckResult("未解析到文件");
         }
         String fileName = file.getOriginalFilename();
         if (NullUtil.isNullOrEmpty(fileName) && file.getSize() == 0) {
-            return new CheckResult("压缩包内容为空");
+            return new CheckResult("音频内容为空");
         }
-        if (file.getSize() > 2 * 1048576) {
-            return new CheckResult("文件大于2MB");
+        if (file.getSize() > 10 * 1048576) {
+            return new CheckResult("文件大于10MB");
+        }
+        if (!FileUtil.isVedioFile(fileName)) {
+            return new CheckResult("不支持的文件类型");
         }
         String type = file.getContentType();
-        if (fileType.indexOf(type) < 0) {
+        if (Constants.UPLOAD_FILE_TYPE_AUDIO.indexOf(type) < 0) {
             return new CheckResult("不支持的文件类型");
         }
         return new CheckResult();
@@ -83,8 +84,73 @@ public class CheckFileUtil {
             return new CheckResult("不支持的文件类型");
         }
         String type = file.getContentType();
-        String specs = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-        return new CheckResult(true, specs);
+        if (Constants.UPLOAD_FILE_TYPE_VIDEO.indexOf(type) < 0) {
+            return new CheckResult("不支持的文件类型");
+        }
+        return new CheckResult();
     }
+
+    /**
+     * 校验压缩文件
+     *
+     * @param file
+     * @return
+     */
+    public static CheckResult checkZipFile(MultipartFile file) {
+        if (file == null) {
+            return new CheckResult("未解析到文件");
+        }
+        String fileName = file.getOriginalFilename();
+        if (NullUtil.isNullOrEmpty(fileName) && file.getSize() == 0) {
+            return new CheckResult("压缩包内容为空");
+        }
+        if (file.getSize() > 2 * 1048576) {
+            return new CheckResult("文件大于2MB");
+        }
+        String type = file.getContentType();
+        if (Constants.UPLOAD_FILE_TYPE_ZIP.indexOf(type) < 0) {
+            return new CheckResult("不支持的文件类型");
+        }
+        return new CheckResult();
+    }
+
+
+    /**
+     * 检查系统文件
+     *
+     * @param file
+     * @return
+     */
+    public static CheckResult checkFile(MultipartFile file) {
+        if (file == null) {
+            return new CheckResult("未解析到文件");
+        }
+        String fileName = file.getOriginalFilename();
+        if (NullUtil.isNullOrEmpty(fileName) && file.getSize() == 0) {
+            return new CheckResult("文件内容为空");
+        }
+        String type = file.getContentType();
+        if (Constants.UPLOAD_FILE_TYPE_IMAGE.indexOf(type) >= 0) {
+            if (file.getSize() > 5 * 1048576) {
+                return new CheckResult("图片大于5MB");
+            }
+        } else if (Constants.UPLOAD_FILE_TYPE_ZIP.indexOf(type) >= 0) {
+            if (file.getSize() > 10 * 1048576) {
+                return new CheckResult("压缩包大于10MB");
+            }
+        } else if (Constants.UPLOAD_FILE_TYPE_VIDEO.indexOf(type) >= 0) {
+            if (file.getSize() > 10 * 1048576) {
+                return new CheckResult("视频大于10MB");
+            }
+        } else if (Constants.UPLOAD_FILE_TYPE_AUDIO.indexOf(type) >= 0) {
+            if (file.getSize() > 5 * 1048576) {
+                return new CheckResult("音频大于5MB");
+            }
+        } else {
+            return new CheckResult("不支持的文件类型");
+        }
+        return new CheckResult();
+    }
+
 
 }

@@ -78,9 +78,6 @@ public class UserLoginController {
                 log.error("用户：{}，输入的密码错误：{}", info.getMobile(), info.getPassword());
                 return AjaxResponse.error("用户名或密码不匹配");
             }
-            if (NullUtil.isNotNullOrEmpty(userInfo.getAvatarUrl())) {
-                userInfo.setAvatarUrl("api\\" + userInfo.getAvatarUrl());
-            }
             request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
             try {
                 userInfoService.saveUserLoginLog(userInfo.getId(), request);

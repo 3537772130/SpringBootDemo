@@ -28,7 +28,7 @@ public class PropertiesLoadUtils {
      */
     public static boolean isRun(){
         String runtime =  readValue("environment");
-        if(null != runtime && runtime.equals("production")){
+        if (null != runtime && runtime.equals("run")) {
             //当前为生产环境
             return true;
         }else{

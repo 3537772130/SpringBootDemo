@@ -1,5 +1,8 @@
 package com.example.demo.entity;
 
+import com.example.demo.util.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,6 +27,7 @@ public class ViewGoodsInfo implements Serializable {
     private Double minPrice;
     private Double maxPrice;
 
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = Constants.DATE_TIME_JDK)
     private Date updateTime;
 
     private Integer goodsStatus;

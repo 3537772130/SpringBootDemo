@@ -6,8 +6,7 @@ import com.example.demo.service.AppletService;
 import com.example.demo.service.ManagerService;
 import com.example.demo.util.*;
 import com.example.demo.util.encryption.EncryptionUtil;
-import com.example.demo.util.file.FileUtil;
-import com.example.demo.util.file.PathUtil;
+import com.example.demo.util.qiniu.QiNiuUtil;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,8 +76,6 @@ public class UserAppletController {
      */
     @RequestMapping(value = "queryAppletInfo")
     public Object queryAppletInfo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, Integer id) {
-        FileUtil.deleteClassFile("static\\images\\applet-logo\\draft\\", "U" + user.getId() + "-APPLET-LOGO.jpg");
-        FileUtil.deleteClassFile("static\\images\\applet-license\\draft\\", "U" + user.getId() + "-APPLET-LICENSE.jpg");
         Map map = new HashMap<>();
         map.put("regions", new JSONArray(Constants.REGION_MAP_TO_NAME).toString());
         map.put("typeList", appletService.selectAppletTypeList(true));
@@ -99,8 +94,6 @@ public class UserAppletController {
                     appletInfo.setManagerPassword(EncryptionUtil.decryptAppletRSA(appletInfo.getManagerPassword()));
                     appletInfo.setAppId(EncryptionUtil.decryptAppletRSA(appletInfo.getAppId()));
                     appletInfo.setAppSecret(EncryptionUtil.decryptAppletRSA(appletInfo.getAppSecret()));
-                    appletInfo.setAppletLogo("api\\" + appletInfo.getAppletLogo());
-                    appletInfo.setLicenseSrc("api\\" + appletInfo.getLicenseSrc());
                     map.put("applet", appletInfo);
                     return AjaxResponse.success(map);
                 }
@@ -128,8 +121,6 @@ public class UserAppletController {
                 appletInfo.setManagerPassword(EncryptionUtil.decryptAppletRSA(appletInfo.getManagerPassword()));
                 appletInfo.setAppId(EncryptionUtil.decryptAppletRSA(appletInfo.getAppId()));
                 appletInfo.setAppSecret(EncryptionUtil.decryptAppletRSA(appletInfo.getAppSecret()));
-                appletInfo.setAppletLogo("api" + appletInfo.getAppletLogo());
-                appletInfo.setLicenseSrc("api" + appletInfo.getLicenseSrc());
                 return AjaxResponse.success(appletInfo);
             }
         } catch (Exception e) {
@@ -142,25 +133,22 @@ public class UserAppletController {
     /**
      * 上传小程序头像到草稿
      *
-     * @param userInfo
+     * @param user
      * @param multipartFile
      * @return
      */
     @RequestMapping(value = "uploadAppletLogo")
-    public Object uploadAppletLogo(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("appletLogo") MultipartFile multipartFile) {
+    public Object uploadAppletLogo(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, @RequestParam("appletLogo") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            String fileName = "U" + userInfo.getId() + "-APPLET-LOGO.jpg";
-            String filePath = "static\\images\\applet-logo\\draft\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName + "?token=" + RandomUtil.getRandomStr32();
-            return AjaxResponse.success(src.replace("static", "api"));
-        } catch (IOException e) {
+            String fileKey = "/api/public/U" + user.getId() + "-AL" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileKey);
+            return AjaxResponse.success(fileKey);
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.success("上传失败");
         }
@@ -169,25 +157,23 @@ public class UserAppletController {
     /**
      * 上传小程序执照许可到草稿
      *
-     * @param userInfo
+     * @param user
      * @param multipartFile
      * @return
      */
     @RequestMapping(value = "uploadAppletLicense")
-    public Object uploadAppletLicense(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("appletLicense") MultipartFile multipartFile) {
+    public Object uploadAppletLicense(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, @RequestParam("appletLicense") MultipartFile multipartFile) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            String fileName = "U" + userInfo.getId() + "-APPLET-LICENSE.jpg";
-            String filePath = "static\\images\\applet-license\\draft\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String src = filePath + fileName + "?token=" + RandomUtil.getRandomStr32();
-            return AjaxResponse.success(src.replace("static", "api"));
-        } catch (IOException e) {
+            String fileKey = NullUtil.isNotNullOrEmpty(user.getAvatarUrl()) ?
+                    user.getAvatarUrl() : "/api/public/U" + user.getId() + "-AL" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileKey);
+            return AjaxResponse.success(fileKey);
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.success("上传失败");
         }
@@ -284,6 +270,23 @@ public class UserAppletController {
                 return AjaxResponse.error("SECRET过长");
             }
             appletInfo.setAppSecret(EncryptionUtil.encryptAppletRSA(appletInfo.getAppSecret()));
+
+            String appletLogo = "/api/image/LOGO-" + RandomUtil.getTimeStamp();
+            String licenseSrc = "/api/image/LICENSE-" + RandomUtil.getTimeStamp();
+            if (NullUtil.isNotNullOrEmpty(appletInfo.getId())) {
+                AppletInfo oldInfo = appletService.selectAppletInfoById(appletInfo.getId());
+                appletLogo = oldInfo.getAppletLogo().equals(appletInfo.getAppletLogo()) ? null : oldInfo.getAppletLogo();
+                licenseSrc = oldInfo.getLicenseSrc().equals(appletInfo.getLicenseSrc()) ? null : oldInfo.getLicenseSrc();
+            }
+            if (NullUtil.isNotNullOrEmpty(appletLogo)) {
+                QiNiuUtil.removeFile(appletInfo.getAppletLogo(), appletLogo);
+                appletInfo.setAppletLogo(appletLogo);
+            }
+            if (NullUtil.isNotNullOrEmpty(licenseSrc)) {
+                QiNiuUtil.removeFile(appletInfo.getLicenseSrc(), licenseSrc);
+                appletInfo.setLicenseSrc(licenseSrc);
+            }
+
             // 保存小程序信息
             appletService.saveAppletInfo(appletInfo);
             return AjaxResponse.success("提交成功");

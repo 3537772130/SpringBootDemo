@@ -35,16 +35,21 @@ public class Constants {
     // logo路径
     public static final String APPLET_UPLOAD_ID = "APPLET_UPLOAD_ID";
 
-    // 图片上传格式
-    public static final String UPLOAD_PIC_FILE_TYPE = "image/png,image/jpeg";
 
-    // 商品类型数量
-    public static final int GOODS_TYPE_COUNT = 15;
     // 商品规格数量
     public static final int GOODS_SPECS_COUNT = 20;
+    // 商品类型数量
+    public static final int GOODS_TYPE_COUNT = 15;
 
-    // 系统压缩文件格式
-    public static final String UPLOAD_TEMPLATE_COMPRESS_FILE_TYPE = "application/x-zip-compressed,application/x-7z-compressed,application/x-gzip";//上传模板压缩文件类型
+    // 系统文件上传格式
+    // 图片
+    public static final String UPLOAD_FILE_TYPE_IMAGE = "image/png,image/jpeg";
+    // 音频
+    public static final String UPLOAD_FILE_TYPE_AUDIO = "audio/mpeg,audio/mp3,audio/mp4";
+    // 视频
+    public static final String UPLOAD_FILE_TYPE_VIDEO = "video/mpeg,video/mp4,video/3gpp,video/quicktime,video/x-ms-wmv";//上传视频文件类型
+    // 压缩文件
+    public static final String UPLOAD_FILE_TYPE_ZIP = "application/x-zip-compressed,application/x-7z-compressed,application/x-gzip";//上传模板压缩文件类型
 
     // 地域信息集合
     // v-k：ID => NAME

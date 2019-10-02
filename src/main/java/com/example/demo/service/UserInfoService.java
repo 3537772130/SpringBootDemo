@@ -11,6 +11,7 @@ import com.example.demo.util.http.IpUtil;
 import jodd.datetime.JDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.Map;
  * @create: 2019-06-14 14:52
  **/
 @Service
+@Component
 public class UserInfoService {
     @Autowired
     private UserInfoMapper userInfoMapper;
@@ -198,13 +200,13 @@ public class UserInfoService {
      * 修改用户头像
      *
      * @param id
-     * @param headPortrait
+     * @param avatarUrl
      * @return
      */
-    public String updateUserInfoByAvatarUrl(Integer id, String headPortrait) {
+    public String updateUserInfoByAvatarUrl(Integer id, String avatarUrl) {
         UserInfo info = new UserInfo();
         info.setId(id);
-        info.setAvatarUrl(headPortrait.replace("static\\", ""));
+        info.setAvatarUrl(avatarUrl);
         userInfoMapper.updateByPrimaryKeySelective(info);
         return info.getAvatarUrl();
     }

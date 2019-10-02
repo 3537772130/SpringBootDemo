@@ -336,9 +336,7 @@ public class GoodsService {
     public void updateGoodsFile(Integer id, String src, Boolean status) {
         GoodsFile file = new GoodsFile();
         file.setId(id);
-        if (NullUtil.isNotNullOrEmpty(src)) {
-            file.setFileSrc(src.replace("static", ""));
-        }
+        file.setFileSrc(src);
         file.setFileStatus(status);
         goodsFileMapper.updateByPrimaryKeySelective(file);
 

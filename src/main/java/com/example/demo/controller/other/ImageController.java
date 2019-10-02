@@ -15,7 +15,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.net.URLEncoder;
 
 /**
  * @program: SpringBootDemo
@@ -24,6 +23,7 @@ import java.net.URLEncoder;
  * @create: 2019-08-12 17:16
  **/
 @Controller
+@RequestMapping(value = "/api/images/")
 public class ImageController {
     private static final Logger log = LoggerFactory.getLogger(ImageController.class);
 
@@ -33,7 +33,7 @@ public class ImageController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping("/image/getImage")
+    @RequestMapping("getImage")
     public void getImage(ImageInfo info, HttpServletResponse response) throws Exception {
         if (NullUtil.isNullOrEmpty(info.getText())) {
             throw new Exception("生成图片失败，缺少内容");
@@ -51,29 +51,6 @@ public class ImageController {
         } finally {
             out.close();
         }
-    }
-
-    /**
-     * 获取设置图片
-     *
-     * @param info
-     * @return
-     */
-    @RequestMapping("/api/image/getImage")
-    public String getApiImage(ImageInfo info) throws Exception {
-        String fontFamily = NullUtil.isNotNullOrEmpty(info.getFontFamily()) ? URLEncoder.encode(info.getFontFamily(), "utf-8") : null;
-        String text = NullUtil.isNotNullOrEmpty(info.getText()) ? URLEncoder.encode(info.getText(), "utf-8") : null;
-        String param = "?italic=" + info.getItalic() +
-                "&bold=" + info.getBold() +
-                "&layout=" + info.getLayout() +
-                "&align=" + info.getAlign() +
-                "&fontFamily=" + fontFamily +
-                "&fontSize=" + info.getFontSize() +
-                "&color=" + info.getColor() +
-                "&text=" + text +
-                "&width=" + info.getWidth() +
-                "&height=" + info.getHeight();
-        return "redirect:/image/getImage" + param;
     }
 
     /**

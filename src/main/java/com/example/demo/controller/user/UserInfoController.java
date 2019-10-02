@@ -6,7 +6,7 @@ import com.example.demo.entity.UserInfo;
 import com.example.demo.entity.UserLoginLog;
 import com.example.demo.service.UserInfoService;
 import com.example.demo.util.*;
-import com.example.demo.util.file.PathUtil;
+import com.example.demo.util.qiniu.QiNiuUtil;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,35 +126,27 @@ public class UserInfoController {
     /**
      * 上传用户头像
      *
-     * @param userInfo
+     * @param user
      * @param multipartFile
      * @return
      */
     @RequestMapping(value = "uploadUserAvatar")
-    public Object uploadUserAvatar(@SessionScope(Constants.VUE_USER_INFO) UserInfo userInfo, @RequestParam("avatar") MultipartFile multipartFile,
-                                         HttpServletRequest request) {
+    public Object uploadUserAvatar(@SessionScope(Constants.VUE_USER_INFO) UserInfo user, @RequestParam("avatar") MultipartFile multipartFile,
+                                   HttpServletRequest request) {
         try {
             //校验文件信息
-            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile);
             if (!result.getBool()) {
                 return AjaxResponse.error(result.getMsg());
             }
-            if (NullUtil.isNotNullOrEmpty(userInfo.getAvatarUrl())) {
-                File file = new File(PathUtil.getClassPath("static\\" + userInfo.getAvatarUrl()));
-                if (file.exists()) {
-                    file.delete();
-                }
-            }
-            String fileName = "USER-" + userInfo.getId() + "-" + RandomUtil.getTimeStamp() + ".jpg";
-            String filePath = "static\\images\\head-portrait\\";
-            String rootPath = PathUtil.getClassPath(filePath);
-            multipartFile.transferTo(new File(rootPath + fileName));
-            String avatarUrl = filePath + fileName;
-            avatarUrl = userInfoService.updateUserInfoByAvatarUrl(userInfo.getId(), avatarUrl);
-            userInfo.setAvatarUrl("api\\" + avatarUrl);
-            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(userInfo.getUserInfo(userInfo)));
+            String fileKey = NullUtil.isNotNullOrEmpty(user.getAvatarUrl()) ?
+                    user.getAvatarUrl() : "/api/image/U" + user.getId() + "-A" + RandomUtil.getTimeStamp();
+            QiNiuUtil.uploadFile(multipartFile, fileKey);
+            userInfoService.updateUserInfoByAvatarUrl(user.getId(), fileKey);
+            user.setAvatarUrl(fileKey);
+            request.getSession().setAttribute(Constants.VUE_USER_INFO, SerializeUtil.serialize(user.getUserInfo(user)));
             return AjaxResponse.success("上传成功");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("上传头像出错{}", e);
             return AjaxResponse.success("上传失败");
         }
