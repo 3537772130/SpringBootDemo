@@ -37,6 +37,34 @@ public class ManageAppletController {
     private AppletService appletService;
 
     /**
+     * 上传小程序图片
+     *
+     * @param user
+     * @param multipartFile
+     * @return
+     */
+    @RequestMapping(value = "uploadAppletImage")
+    public Object uploadAppletImage(@SessionScope(Constants.VUE_USER_INFO) UserInfo user,
+                                    @RequestParam("image") MultipartFile multipartFile) {
+        try {
+            //校验文件信息
+            CheckResult result = CheckFileUtil.checkImageFile(multipartFile, Constants.UPLOAD_PIC_FILE_TYPE);
+            if (!result.getBool()) {
+                return AjaxResponse.error(result.getMsg());
+            }
+            String fileName = "A" + user.getId() + "-" + RandomUtil.getRandomStr32() + ".jpg";
+            String filePath = "static\\images\\upload\\";
+            String rootPath = PathUtil.getClassPath(filePath);
+            multipartFile.transferTo(new File(rootPath + fileName));
+            String src = filePath + fileName;
+            return AjaxResponse.success(src.replace("static", "api"));
+        } catch (IOException e) {
+            log.error("上传头像出错{}", e);
+            return AjaxResponse.error("上传失败");
+        }
+    }
+
+    /**
      * 查询小程序服务类型列表
      *
      * @param type

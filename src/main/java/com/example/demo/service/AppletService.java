@@ -437,6 +437,20 @@ public class AppletService {
     }
 
     /**
+     * 查询服务类型其他可继承版本集合
+     *
+     * @param id
+     * @param typeId
+     * @return
+     */
+    public List<AppletFile> selectAppletFileList(Integer id, Integer typeId) {
+        AppletFileExample example = new AppletFileExample();
+        example.setOrderByClause("id desc");
+        example.createCriteria().andIdNotEqualTo(id).andTypeIdEqualTo(typeId).andFileStatusEqualTo(true);
+        return appletFileMapper.selectByExample(example);
+    }
+
+    /**
      * 查询小程序版本文件信息
      *
      * @param id
